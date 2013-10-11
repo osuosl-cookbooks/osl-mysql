@@ -58,7 +58,7 @@ node.default['mysql']['tunable']['innodb_buffer_pool_size'] = "#{(Integer(mem * 
 node.default['mysql']['tunable']['innodb_buffer_pool_instances'] = (mem * 0.75 * 0.2 / 1024).ceil
 
 # Avoid swap with O_DIRECT
-node.default['sysctl']['params']['vm']['swapiness'] = "0"
+node.default['sysctl']['params']['vm']['swappiness'] = "0"
 
 # Install the percona nagios plugins
 node.default['nagios']['nrpe']['packages'] = "percona-nagios-plugins"
