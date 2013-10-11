@@ -18,10 +18,11 @@
 #
 
 # ORVSD Specific configuration
-node.default['mysql']['tunable']['innodb_log_file_size'] = "512M"
+node.override['mysql']['tunable']['innodb_log_file_size'] = "512M"
+node.override['mysql']['pid_file'] = "/var/run/mysql/mysql.pid"
 
 # SSD Optimizations
-node.default['mysql']['tunable']['innodb_adaptive_flushing'] = "true"
+node.override['mysql']['tunable']['innodb_adaptive_flushing'] = "true"
 #node.default['mysql']['tunable']['innodb_adaptive_flushing_method'] = "keep_average"
 
 include_recipe "osl-mysql::server"
