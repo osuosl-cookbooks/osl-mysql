@@ -61,7 +61,7 @@ node.default['mysql']['tunable']['innodb_buffer_pool_instances'] = (mem * 0.75 *
 node.default['sysctl']['params']['vm']['swappiness'] = "0"
 
 # Install the percona nagios plugins
-node.default['nagios']['nrpe']['packages'] = "percona-nagios-plugins"
+node.default['nagios']['nrpe']['packages'] = ["percona-nagios-plugins"]
 
 # Add and pin the mysql uid/gid
 group "mysql" do
