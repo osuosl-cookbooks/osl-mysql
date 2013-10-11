@@ -53,9 +53,6 @@ Vagrant.configure("2") do |config|
   # information on available options.
   config.omnibus.chef_version = :latest
 
-  config.ssh.max_tries = 40
-  config.ssh.timeout   = 120
-
   # The path to the Berksfile to use with Vagrant Berkshelf
   # config.berkshelf.berksfile_path = "./Berksfile"
 
@@ -81,7 +78,7 @@ Vagrant.configure("2") do |config|
     }
 
     chef.run_list = [
-        "recipe[osl-mysql::default]"
+        "recipe[osl-mysql::server]"
     ]
   end
 end
