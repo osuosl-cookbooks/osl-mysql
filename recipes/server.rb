@@ -86,7 +86,6 @@ end
 # Enable Percona repo and install Percona MySQL Server
 include_recipe "mysql::percona_repo"
 include_recipe "mysql::server"
-include_recipe "sysctl"
 
 # Copy .my.cnf into place to ease MySQL administration
 template "/root/.my.cnf" do
