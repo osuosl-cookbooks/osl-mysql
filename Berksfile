@@ -1,8 +1,7 @@
 source 'https://api.berkshelf.com'
 
+cookbook "percona", ">= 0.15.0"
 cookbook "mysql"
-cookbook "percona"
-cookbook "yum", "> 3.0.0"
 
 
 metadata

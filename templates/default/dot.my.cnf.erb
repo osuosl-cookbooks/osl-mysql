@@ -1,11 +1,11 @@
 [client]
 user = root
-password = <%= node['mysql']['server_root_password'] %>
+password = <%= @passwords['root'] %>
 
 [mysqladmin]
 user = root
-password = <%= node['mysql']['server_root_password'] %>
+password = <%= @passwords ['root'] %>
 
 [mysqldump]
 user = root
-password = <%= node['mysql']['server_root_password'] %>
+password = <%= @passwords ['root'] %>

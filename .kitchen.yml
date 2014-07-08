@@ -4,6 +4,11 @@ driver:
 
 provisioner:
   name: chef_solo
+  encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+  data_bags_path: test/integration/data_bags
+  attributes:
+    percona:
+      encrypted_data_bag: percona
 
 platforms:
   - name: centos-6.5
@@ -18,4 +23,7 @@ suites:
       - recipe[osl-mysql::orvsd]
   - name: server
     run_list:
-      - recipe[osl-mysql::server]
+      - recipe[osl-mysql::server2]
+  - name: server2
+    run_list:
+      - recipe[osl-mysql::server2]

@@ -3,8 +3,8 @@ require 'serverspec'
 include Serverspec::Helper::Exec
 include Serverspec::Helper::DetectOS
 
-%w[ Percona-Server-shared-55
-Percona-Server-server-55
+%w[ Percona-Server-shared-56
+Percona-Server-server-56
 percona-toolkit
 percona-xtrabackup ].each do |p|
   describe package(p) do
@@ -26,4 +26,9 @@ end
 end
 describe port(3306) do
   it { should be_listening }
+end
+
+describe file('/root/.my.cnf') do
+  it { should be_file }
+  its(:content) { should match /jzYY0cQUnPAMcqvIxYaC/ }
 end
