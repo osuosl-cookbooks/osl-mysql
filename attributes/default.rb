@@ -2,8 +2,8 @@ default['percona']['server']['tmpdir'] = '/tmp'
 default['percona']['server']['socket'] = '/var/lib/mysql/mysql.sock'
 default['percona']['server']['pidfile'] = '/var/lib/mysql/mysql.pid'
 
-default['percona']['bind_address'] = '0.0.0.0'
-default['mysql']['old_passwords'] = 0
+default['percona']['server']['bind_address'] = '0.0.0.0'
+default['percona']['server']['old_passwords'] = 0
 
 # Tunables
 default['percona']['server']['binlog_format'] = "mixed"
