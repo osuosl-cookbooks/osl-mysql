@@ -14,16 +14,9 @@ platforms:
   - name: centos-6.5
 
 suites:
-  - name: default
-    run_list:
-      - recipe[osl-mysql::default]
-    attributes:
   - name: orvsd
     run_list:
       - recipe[osl-mysql::orvsd]
   - name: server
     run_list:
-      - recipe[osl-mysql::server2]
-  - name: server2
-    run_list:
-      - recipe[osl-mysql::server2]
+      - recipe[osl-mysql::server]
