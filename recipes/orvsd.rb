@@ -18,11 +18,7 @@
 #
 
 # ORVSD Specific configuration
-node.override['mysql']['tunable']['innodb_log_file_size'] = "512M"
-node.override['mysql']['pid_file'] = "/var/run/mysql/mysql.pid"
-
-# SSD Optimizations
-node.override['mysql']['tunable']['innodb_adaptive_flushing'] = "true"
-#node.default['mysql']['tunable']['innodb_adaptive_flushing_method'] = "keep_average"
+node.override['percona']['server']['innodb_log_file_size'] = "512M"
+node.override['percona']['server']['pidfile'] = "/var/run/mysql/mysql.pid"
 
 include_recipe "osl-mysql::server"
