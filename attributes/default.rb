@@ -1,5 +1,11 @@
+default['percona']['server']['debian_username'] = 'root'
+default['percona']['skip_passwords'] = false
+
 default['percona']['server']['tmpdir'] = '/tmp'
-default['percona']['server']['socket'] = '/var/lib/mysql/mysql.sock'
+
+default['percona']['server']['socket'] = value_for_platform_family(
+  "debian" => "/var/run/mysqld/mysqld.sock", # Changing this is painful
+  "default" => "/var/lib/mysql/mysql.sock" )
 default['percona']['server']['pidfile'] = '/var/lib/mysql/mysql.pid'
 
 default['percona']['server']['bind_address'] = '0.0.0.0'
