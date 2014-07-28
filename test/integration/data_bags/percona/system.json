@@ -1,0 +1,9 @@
+{
+  "id": "system",
+  "root": {
+    "encrypted_data": "O3tk7rmsFLJ/aP3/oUf4rmXqhWXWNZX1NUiMGeIy/ptmSRZKafIkofhFZSrd\nbayF\n",
+    "iv": "s7ghunt2LA4Q7gPgZHTVjQ==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}
