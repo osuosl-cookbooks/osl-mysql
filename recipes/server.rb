@@ -22,10 +22,3 @@ include_recipe "percona::backup"
 
 passwords = Chef::EncryptedDataBagItem.load(node['percona']['encrypted_data_bag'], 'mysql')
 
-template "/root/.my.cnf" do
-  source "dot.my.cnf.erb"
-  owner "root"
-  group "root"
-  mode 0600
-  variables :passwords => passwords
-end
