@@ -21,4 +21,11 @@
 node.override['percona']['server']['innodb_log_file_size'] = "512M"
 node.override['percona']['server']['pidfile'] = "/var/run/mysql/mysql.pid"
 
+directory "/var/run/mysql" do
+  action :create
+  owner "mysql"
+  group "mysql"
+  recursive true
+end
+
 include_recipe "osl-mysql::server"
