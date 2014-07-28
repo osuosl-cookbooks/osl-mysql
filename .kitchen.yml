@@ -9,9 +9,12 @@ provisioner:
   attributes:
     percona:
       encrypted_data_bag: percona
+      encrypted_data_bag_secret_file: /etc/chef/encrypted_data_bag_secret
+
 
 platforms:
   - name: centos-6.5
+  - name: debian-7.4
 
 suites:
   - name: orvsd
