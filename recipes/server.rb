@@ -19,6 +19,3 @@
 include_recipe "percona::server"
 include_recipe "percona::toolkit"
 include_recipe "percona::backup"
-
-passwords = Chef::EncryptedDataBagItem.load(node['percona']['encrypted_data_bag'], 'mysql')
-
