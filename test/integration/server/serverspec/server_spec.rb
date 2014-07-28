@@ -3,10 +3,17 @@ require 'serverspec'
 include Serverspec::Helper::Exec
 include Serverspec::Helper::DetectOS
 
-%w[ Percona-Server-shared-56
-Percona-Server-server-56
-percona-toolkit
-percona-xtrabackup ].each do |p|
+case os[:family].downcase
+when 'redhat', 'centos', 'fedora'
+  packages = [ 'Percona-Server-shared-56', 'Percona-Server-server-56',
+               'percona-toolkit', 'percona-xtrabackup' ]
+when 'debian', 'ubuntu'
+  packages = [ 'percona-server-server-5.6', 'percona-server-common-5.6',
+               'percona-server-client-5.6', 'percona-toolkit',
+               'percona-xtrabackup' ]
+end
+
+packages.each do |p|
   describe package(p) do
     it { should be_installed }
   end
