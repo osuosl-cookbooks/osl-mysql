@@ -1,6 +1,6 @@
-cookbook "mysql", git: "https://github.com/opscode-cookbooks/mysql", tag: "v3.0.12"
-cookbook "yum", "< 3.0.0"
+source 'https://api.berkshelf.com'
 
-site :opscode
+cookbook "percona", ">= 0.15.0"
+
 
 metadata
