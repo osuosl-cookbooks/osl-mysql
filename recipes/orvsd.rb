@@ -20,6 +20,7 @@
 # ORVSD Specific configuration
 node.override['percona']['server']['innodb_log_file_size'] = "512M"
 node.override['percona']['server']['pidfile'] = "/var/run/mysql/mysql.pid"
+node.override['percona']['conf']['mysqld']['log_queries_not_using_index'] = false
 
 directory "/var/run/mysql" do
   action :create
