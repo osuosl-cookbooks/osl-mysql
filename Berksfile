@@ -1,4 +1,4 @@
-source 'https://api.berkshelf.com'
+source 'https://supermarket.getchef.com'
 
 cookbook "percona", ">= 0.15.0"
 
