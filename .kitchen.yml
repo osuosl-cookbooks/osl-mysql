@@ -13,8 +13,8 @@ provisioner:
 
 
 platforms:
-  - name: centos-6.5
-  - name: debian-7.4
+  - name: centos-6.6
+  - name: centos-7.0
 
 suites:
   - name: orvsd

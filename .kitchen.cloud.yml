@@ -23,16 +23,16 @@ provisioner:
       encrypted_data_bag_secret_file: /etc/chef/encrypted_data_bag_secret
 
 platforms:
-- name: centos-6.5
+- name: centos-6.6
   driver_plugin: openstack
   driver_config:
     username: centos
-    image_ref: "CentOS 6.5"
-- name: debian-7
+    image_ref: "CentOS 6.6"
+- name: centos-7.1
   driver_plugin: openstack
   driver_config:
-    username: ubuntu
-    image_ref: "Debian 7"
+    username: centos
+    image_ref: "CentOS 7.1"
 
 suites:
   - name: orvsd
