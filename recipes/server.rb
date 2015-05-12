@@ -18,16 +18,7 @@
 #
 node.default['percona']['server']['debian_username'] = 'root'
 node.default['percona']['skip_passwords'] = false
-
-node.default['percona']['server']['tmpdir'] = '/tmp'
-
-node.default['percona']['server']['socket'] = value_for_platform_family(
-  "debian" => "/var/run/mysqld/mysqld.sock", # Changing this is painful
-  "default" => "/var/lib/mysql/mysql.sock" )
-node.default['percona']['server']['pidfile'] = '/var/lib/mysql/mysql.pid'
-
 node.default['percona']['server']['bind_address'] = '0.0.0.0'
-node.default['percona']['server']['old_passwords'] = 0
 
 # Tunables
 node.default['percona']['server']['binlog_format'] = "mixed"
