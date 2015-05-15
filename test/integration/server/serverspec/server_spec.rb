@@ -14,13 +14,17 @@ set :backend, :exec
 end
 
 # Mysql packages should not be installed
-%w[ mysql mysql-libs mysql55-libs ].each do |p|
+%w(
+  mysql
+  mysql-libs
+  mysql55-libs
+).each do |p|
   describe package(p) do
     it { should_not be_installed }
   end
 end
 
-%w[ mysqld_safe mysqld ].each do |p|
+%w(mysqld_safe mysqld).each do |p|
   describe process(p) do
     it { should be_running }
   end
@@ -31,5 +35,5 @@ end
 
 describe file('/root/.my.cnf') do
   it { should be_file }
-  its(:content) { should match /jzYY0cQUnPAMcqvIxYaC/ }
+  its(:content) { should match(/jzYY0cQUnPAMcqvIxYaC/) }
 end

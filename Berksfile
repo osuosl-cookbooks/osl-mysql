@@ -1,6 +1,6 @@
-source 'https://supermarket.getchef.com'
+source 'https://supermarket.chef.io'
 
-cookbook "percona", ">= 0.15.0"
+cookbook 'percona', '>= 0.15.0'
 cookbook 'sysctl'
 
 metadata
