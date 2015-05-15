@@ -2,17 +2,12 @@ require 'serverspec'
 
 set :backend, :exec
 
-case os[:family].downcase
-when 'redhat', 'centos', 'fedora'
-  packages = [ 'Percona-Server-shared-56', 'Percona-Server-server-56',
-               'percona-toolkit', 'percona-xtrabackup' ]
-when 'debian', 'ubuntu'
-  packages = [ 'percona-server-server-5.6', 'percona-server-common-5.6',
-               'percona-server-client-5.6', 'percona-toolkit',
-               'percona-xtrabackup' ]
-end
-
-packages.each do |p|
+%w(
+  Percona-Server-server-56
+  Percona-Server-shared-56
+  percona-toolkit
+  percona-xtrabackup
+).each do |p|
   describe package(p) do
     it { should be_installed }
   end
