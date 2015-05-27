@@ -62,6 +62,7 @@ rescue NoMethodError
   node.default['nagios']['nrpe']['packages'] = ['percona-nagios-plugins']
 end
 
+include_recipe 'firewall::mysql'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
