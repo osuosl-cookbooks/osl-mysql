@@ -23,7 +23,28 @@ include_recipe 'percona::monitoring'
 include_recipe 'nagios::client_package'
 include_recipe 'nagios::client'
 
-passwords = EncryptedPasswords.new(node, node['percona']['encrypted_data_bag'])
+passwords = Chef::EncryptedDataBagItem.load(
+  node['percona']['encrypted_data_bag'],
+  'mysql')
+
+mysql2_chef_gem 'default' do
+  provider Chef::Provider::Mysql2ChefGem::Percona
+  action :install
+end
+
+# Create monitor mysql user
+mysql_conn = {
+  host: '127.0.0.1',
+  username: 'root',
+  password: passwords['root']
+}
+
+mysql_database_user node['osl-mysql']['monitor_user'] do
+  connection mysql_conn
+  password passwords['monitor']
+  privileges [:super, :process, 'replication client']
+  action [:create, :grant]
+end
 
 # Add defaults file for mysql nagios checks
 template "#{node['nagios']['nrpe']['conf_dir']}/mysql.cnf" do
@@ -31,7 +52,7 @@ template "#{node['nagios']['nrpe']['conf_dir']}/mysql.cnf" do
   mode 0600
   owner node['nagios']['user']
   group node['nagios']['group']
-  variables(password: passwords.root_password)
+  variables(password: passwords['monitor'])
   sensitive true
 end
 

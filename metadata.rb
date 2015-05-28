@@ -6,8 +6,10 @@ description      'Installs/Configures osl-mysql'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.0'
 
+depends          'database'
 depends          'firewall'
-depends          'yum'
+depends          'mysql2_chef_gem'
 depends          'nagios'
-depends          'sysctl'
 depends          'percona'
+depends          'sysctl'
+depends          'yum'

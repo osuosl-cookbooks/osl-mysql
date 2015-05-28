@@ -3,8 +3,8 @@ require 'serverspec'
 set :backend, :exec
 
 describe file('/etc/nagios/mysql.cnf') do
-  its(:content) { should match(/user = root/) }
-  its(:content) { should match(/password = jzYY0cQUnPAMcqvIxYaC/) }
+  its(:content) { should match(/user = monitor/) }
+  its(:content) { should match(/password = ToJzwUyqQmyV4GgMVpz0/) }
   it { should be_mode 600 }
   it { should be_owned_by 'nagios' }
   it { should be_grouped_into 'nagios' }
