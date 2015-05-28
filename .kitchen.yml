@@ -23,6 +23,10 @@ suites:
   - name: server
     run_list:
       - recipe[osl-mysql::server]
+  - name: mon
+    provisioner: chef_zero
+    run_list:
+      - recipe[osl-mysql::mon]
   - name: server-sysctl
     run_list:
       - recipe[osl-mysql::server]
