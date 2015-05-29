@@ -51,6 +51,17 @@ include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
 
+# XXX: temporary add this until its fixed upstream
+yum_repository 'percona-noarch' do
+  description 'Percona noarch Packages'
+  baseurl 'http://repo.percona.com/centos/' \
+    "#{node['platform_version'].to_i}/os/noarch/"
+  gpgkey node['percona']['yum']['gpgkey']
+  gpgcheck node['percona']['yum']['gpgcheck']
+  sslverify node['percona']['yum']['sslverify']
+  only_if { platform_family?('rhel') }
+end
+
 sysctl_param 'vm.swappiness' do
   value 0
 end
