@@ -27,7 +27,3 @@ suites:
     provisioner: chef_zero
     run_list:
       - recipe[osl-mysql::mon]
-  - name: server-sysctl
-    run_list:
-      - recipe[osl-mysql::server]
-      - recipe[sysctl::apply]

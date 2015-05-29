@@ -37,3 +37,12 @@ describe file('/root/.my.cnf') do
   it { should be_file }
   its(:content) { should match(/jzYY0cQUnPAMcqvIxYaC/) }
 end
+
+describe command('sysctl vm.swappiness') do
+  its(:stdout) { should match(/vm.swappiness = 0/) }
+  its(:exit_status) { should eq 0 }
+end
+
+describe file('/etc/sysctl.d/99-chef-attributes.conf') do
+  its(:content) { should match(/vm.swappiness=0/) }
+end

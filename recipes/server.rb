@@ -46,10 +46,11 @@ mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
   "#{(Integer(mem * 0.75))}M"
 
-# sysctl attrs
-node.default['sysctl']['params']['vm']['swappiness'] = 0
-
-include_recipe 'firewall::mysql'
+include_recipe 'sysctl::default'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
+
+sysctl_param 'vm.swappiness' do
+  value 0
+end
