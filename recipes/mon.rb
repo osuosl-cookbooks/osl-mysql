@@ -22,6 +22,7 @@ include_recipe 'osl-mysql::server'
 include_recipe 'percona::monitoring'
 include_recipe 'nagios::client_package'
 include_recipe 'nagios::client'
+include_recipe 'osl-munin::client'
 
 passwords = Chef::EncryptedDataBagItem.load(
   node['percona']['encrypted_data_bag'],
@@ -46,6 +47,14 @@ mysql_database_user node['osl-mysql']['monitor_user'] do
   action [:create, :grant]
 end
 
+# select access is required for some munin plugins
+mysql_database_user node['osl-mysql']['monitor_user'] do
+  connection mysql_conn
+  privileges [:select]
+  database_name 'mysql'
+  action [:grant]
+end
+
 # Add defaults file for mysql nagios checks
 template "#{node['nagios']['nrpe']['conf_dir']}/mysql.cnf" do
   source 'nagios/mysql.cnf.erb'
@@ -65,5 +74,42 @@ end
   nagios_nrpecheck "pmp-check-mysql-#{c}" do
     command "#{node['nagios']['plugin_dir']}/pmp-check-mysql-#{c}"
     action :add
+  end
+end
+
+template "#{node['munin']['basedir']}/plugin-conf.d/mysql" do
+  source 'munin/mysql.erb'
+  owner 'munin'
+  group 'munin'
+  variables(password: passwords['monitor'])
+  mode 0600
+end
+
+# Perl dep required for some munin plugins
+package 'perl-Cache-Cache'
+
+%w(
+  mysql_queries
+  mysql_slowqueries
+  mysql_threads
+).each do |p|
+  munin_plugin p
+end
+
+%w(
+  bin_relay_log
+  commands
+  connections
+  innodb_bpool
+  innodb_bpool_act
+  innodb_semaphores
+  qcache
+  qcache_mem
+  slow
+  table_locks
+  tmp_tables
+).each do |p|
+  munin_plugin 'mysql_' do
+    plugin "mysql_#{p}"
   end
 end
