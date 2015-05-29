@@ -49,19 +49,6 @@ node.default['percona']['server']['innodb_buffer_pool_size'] =
 # sysctl attrs
 node.default['sysctl']['params']['vm']['swappiness'] = 0
 
-# nrpe attrs
-# add to nrpe packages if they already exist.
-begin
-  if node['nagios']['nrpe']['packages']
-    node.override['nagios']['nrpe']['packages'] =
-      node['nagios']['nrpe']['packages'] + ['percona-nagios-plugins']
-  else
-    node.default['nagios']['nrpe']['packages'] = ['percona-nagios-plugins']
-  end
-rescue NoMethodError
-  node.default['nagios']['nrpe']['packages'] = ['percona-nagios-plugins']
-end
-
 include_recipe 'firewall::mysql'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
