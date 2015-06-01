@@ -1,0 +1,11 @@
+{
+  "chef_type": "role",
+  "default_attributes": {
+    "percona": {
+      "encrypted_data_bag": "percona",
+      "encrypted_data_bag_secret_file": "/etc/chef/encrypted_data_bag_secret"
+    }
+  },
+  "json_class": "Chef::Role",
+  "name": "mysql-vip"
+}

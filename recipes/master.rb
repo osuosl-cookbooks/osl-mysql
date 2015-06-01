@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: osl-mysql
-# Recipe:: default
+# Recipe:: master
 #
-# Copyright (C) 2013 Oregon State University
+# Copyright (C) 2013-2015 Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,3 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+node.default['percona']['server']['role'] = 'master'
+node.default['percona']['server']['replication']['username'] = 'replication'
+include_recipe 'osl-mysql::server'

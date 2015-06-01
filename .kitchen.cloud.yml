@@ -1,0 +1,47 @@
+---
+driver_config:
+  openstack_username: <%= ENV['OS_USERNAME'] %>
+  openstack_api_key: <%= ENV['OS_PASSWORD'] %>
+  openstack_auth_url: <%= "#{ENV['OS_AUTH_URL']}/tokens" %>
+  key_name: <%= ENV['OS_SSH_KEYPAIR'] %>
+  private_key_path: <%= ENV['OS_PRIVATE_SSH_KEY'] %>
+  public_key_path: <%= ENV['OS_PUBLIC_SSH_KEY'] %>
+  openstack_tenant: <%= ENV['OS_TENANT_NAME'] %>
+  floating_ip: <%= ENV['OS_FLOATING_IP'] %>
+  floating_ip_pool: <%= ENV['OS_FLOATING_IP_POOL'] %>
+  flavor_ref: 'm1.medium'
+
+provisioner:
+  name: chef_solo
+  encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
+  data_bags_path: test/integration/data_bags
+  attributes:
+    omnibus_updater:
+      disabled: true
+    percona:
+      encrypted_data_bag: percona
+      encrypted_data_bag_secret_file: /etc/chef/encrypted_data_bag_secret
+
+platforms:
+- name: centos-6.6
+  driver_plugin: openstack
+  driver_config:
+    username: centos
+    image_ref: "CentOS 6.6"
+- name: centos-7.1
+  driver_plugin: openstack
+  driver_config:
+    username: centos
+    image_ref: "CentOS 7.1"
+
+suites:
+  - name: orvsd
+    run_list:
+      - recipe[osl-mysql::orvsd]
+  - name: server
+    run_list:
+      - recipe[osl-mysql::server]
+  - name: mon
+    provisioner: chef_zero
+    run_list:
+      - recipe[osl-mysql::mon]

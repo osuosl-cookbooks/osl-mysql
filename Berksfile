@@ -1,6 +1,9 @@
-cookbook "mysql", git: "https://github.com/opscode-cookbooks/mysql", tag: "v3.0.12"
-cookbook "yum", "< 3.0.0"
+source 'https://supermarket.chef.io'
 
-site :opscode
+# cookbook 'percona', '>= 0.15.0'
+cookbook 'percona', github: 'phlipper/chef-percona'
+cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
+cookbook 'nagios', git: 'git@github.com:osuosl-cookbooks/nagios'
+cookbook 'osl-munin', git: 'git@github.com:osuosl-cookbooks/osl-munin'
 
 metadata
