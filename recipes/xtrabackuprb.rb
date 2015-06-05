@@ -1,4 +1,5 @@
 include_recipe 'git'
+include_recipe 'percona::package_repo'
 
 resources('git_client[default]').run_action(:install)
 version = node['osl-mysql']['xtrabackuprb']['version']
@@ -19,3 +20,5 @@ end
 link '/usr/local/sbin/xtrabackup-rb' do
   to '/opt/chef/embedded/bin/xtrabackup-rb'
 end
+
+package 'percona-xtrabackup'
