@@ -27,3 +27,9 @@ suites:
     provisioner: chef_zero
     run_list:
       - recipe[osl-mysql::mon]
+  - name: backup
+    run_list:
+      - recipe[osl-mysql::backup]
+  - name: xtrabackuprb
+    run_list:
+      - recipe[osl-mysql::xtrabackuprb]

@@ -8,6 +8,7 @@ version          '1.0.0'
 
 depends          'database'
 depends          'firewall'
+depends          'git'
 depends          'mysql2_chef_gem'
 depends          'nagios'
 depends          'osl-munin'
