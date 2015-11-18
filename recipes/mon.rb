@@ -20,8 +20,7 @@ node.default['percona']['plugins_version'] = nil
 node.default['percona']['plugins_packages'] = %w(percona-nagios-plugins)
 include_recipe 'osl-mysql::server'
 include_recipe 'percona::monitoring'
-include_recipe 'nagios::client_package'
-include_recipe 'nagios::client'
+include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
 
 passwords = Chef::EncryptedDataBagItem.load(
@@ -58,11 +57,11 @@ mysql_database_user 'mysql_monitor_database' do
 end
 
 # Add defaults file for mysql nagios checks
-template "#{node['nagios']['nrpe']['conf_dir']}/mysql.cnf" do
+template "#{node['nrpe']['conf_dir']}/mysql.cnf" do
   source 'nagios/mysql.cnf.erb'
   mode 0600
-  owner node['nagios']['user']
-  group node['nagios']['group']
+  owner node['nrpe']['user']
+  group node['nrpe']['group']
   variables(password: passwords['monitor'])
   sensitive true
 end
@@ -73,8 +72,8 @@ end
   processlist
   replication-delay
 ).each do |c|
-  nagios_nrpecheck "pmp-check-mysql-#{c}" do
-    command "#{node['nagios']['plugin_dir']}/pmp-check-mysql-#{c}"
+  nrpe_check "pmp-check-mysql-#{c}" do
+    command "#{node['nrpe']['plugin_dir']}/pmp-check-mysql-#{c}"
     action :add
   end
 end
