@@ -15,3 +15,6 @@ depends          'osl-munin'
 depends          'percona'
 depends          'sysctl'
 depends          'yum'
+
+supports         'centos', '~> 6'
+supports         'centos', '~> 7'
