@@ -16,5 +16,5 @@ depends          'percona'
 depends          'sysctl'
 depends          'yum'
 
-supports         'centos', '~> 6'
-supports         'centos', '~> 7'
+supports         'centos', '~> 6.0'
+supports         'centos', '~> 7.0'
