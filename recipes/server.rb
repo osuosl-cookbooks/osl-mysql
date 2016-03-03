@@ -50,6 +50,7 @@ include_recipe 'sysctl::default'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
+include_recipe 'firewall::mysql'
 
 # XXX: temporary add this until its fixed upstream
 yum_repository 'percona-noarch' do
