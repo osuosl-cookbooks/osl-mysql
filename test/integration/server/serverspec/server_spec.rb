@@ -50,3 +50,8 @@ end
 describe yumrepo('percona-noarch') do
   it { should be_enabled }
 end
+
+describe cron do
+   it { should have_entry '@daily /usr/local/bin/mysql-accounting' }
+end
+
