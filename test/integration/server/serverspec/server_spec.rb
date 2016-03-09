@@ -52,6 +52,9 @@ describe yumrepo('percona-noarch') do
 end
 
 describe cron do
-   it { should have_entry '@daily /usr/local/bin/mysql-accounting' }
+   it { should have_entry '@daily /usr/local/libexec/mysql-accounting' }
 end
 
+describe command('/usr/local/libexec/mysql-accounting') do
+  its(:exit_status) { should eq 0}
+end
