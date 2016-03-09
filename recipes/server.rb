@@ -66,3 +66,13 @@ end
 sysctl_param 'vm.swappiness' do
   value 0
 end
+
+cookbook_file '/usr/local/libexec/mysql-accounting' do
+  source 'mysql-accounting'
+  mode '0755'
+end
+
+cron 'mysql-accounting' do
+  command '/usr/local/libexec/mysql-accounting'
+  time :daily
+end
