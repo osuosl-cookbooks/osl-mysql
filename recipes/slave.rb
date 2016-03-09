@@ -16,6 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+ip = Percona::ConfigHelper.bind_to(master_node.first,
+                                   replication['master_interface'])
+
+node.default['percona']['server']['role'] = 'slave'
+node.default['percona']['server']['server_id'] = 2
+node.default['percona']['server']['replication']['read_only'] = true
+node.default['percona']['server']['replication']['host'] = ip
+node.default['percona']['server']['replication']['username'] = 'replication'
+
 replication = node['osl-mysql']['replication']
 
 master_node = []
@@ -29,11 +39,4 @@ end
 
 fail 'You should have one master node' unless master_node.length == 1
 
-ip = Percona::ConfigHelper.bind_to(master_node.first,
-                                   replication['master_interface'])
-node.default['percona']['server']['role'] = 'slave'
-node.default['percona']['server']['server_id'] = 2
-node.default['percona']['server']['replication']['read_only'] = true
-node.default['percona']['server']['replication']['host'] = ip
-node.default['percona']['server']['replication']['username'] = 'replication'
 include_recipe 'osl-mysql::server'
