@@ -1,7 +1,7 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-ChefSpec::Coverage.start! { add_filter 'osl-postgresql' }
+ChefSpec::Coverage.start! { add_filter 'osl-mysql' }
 
 CENTOS_7_OPTS = {
   platform: 'centos',
@@ -20,10 +20,4 @@ ALLPLATFORMS = [
 
 RSpec.configure do |config|
   config.log_level = :fatal
-end
-
-shared_context 'server' do
-  before do
-    stub_command('ls /recovery.conf')
-  end
 end
