@@ -4,3 +4,6 @@ AllCops:
     - '**/Cheffile'
   Exclude:
     - 'metadata.rb'
+
+Style/NumericLiteralPrefix:
+  EnforcedOctalStyle: zero_only

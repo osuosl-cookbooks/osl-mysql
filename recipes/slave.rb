@@ -27,7 +27,7 @@ else
   end
 end
 
-fail 'You should have one master node' unless master_node.length == 1
+raise 'You should have one master node' unless master_node.length == 1
 
 ip = Percona::ConfigHelper.bind_to(master_node.first,
                                    replication['master_interface'])
