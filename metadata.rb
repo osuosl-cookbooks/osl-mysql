@@ -1,4 +1,6 @@
 name             'osl-mysql'
+issues_url       'https://github.com/osuosl-cookbooks/osl-mysql/issues'
+source_url       'https://github.com/osuosl-cookbooks/osl-mysql'
 maintainer       'Oregon State University'
 maintainer_email 'systems@osuosl.org'
 license          'Apache 2.0'

@@ -44,7 +44,7 @@ node.default['percona']['server']['innodb_flush_log_at_trx_commit'] = 2
 # Ohai reports memory in kB
 mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
-  "#{(Integer(mem * 0.75))}M"
+  "#{Integer(mem * 0.75)}M"
 
 include_recipe 'sysctl::default'
 include_recipe 'percona::server'

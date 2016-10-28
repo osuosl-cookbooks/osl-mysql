@@ -25,7 +25,8 @@ include_recipe 'osl-munin::client'
 
 passwords = Chef::EncryptedDataBagItem.load(
   node['percona']['encrypted_data_bag'],
-  'mysql')
+  'mysql'
+)
 
 mysql2_chef_gem 'default' do
   provider Chef::Provider::Mysql2ChefGem::Percona
