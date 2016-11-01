@@ -29,3 +29,6 @@ suites:
   - name: xtrabackuprb
     run_list:
       - recipe[osl-mysql::xtrabackuprb]
+  - name: client
+    run_list:
+      - recipe[osl-mysql::client]
