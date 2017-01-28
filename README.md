@@ -15,7 +15,6 @@ include_recipe "osl-mysql::server" and run Chef.  It should take care of the res
 
 # Recipes
 server.rb:: OSL default MySQL server configuration.  Sets defaults, pins 'mysql' uid/gid to 400, and installs Percona MySQL Server.
-orvsd.rb:: ORVSD specific server configuration.  Includes a legacy setting for iblog size and tunes Percona for SSD performance.
 
 default.rb:: Does nothing of importance.
 

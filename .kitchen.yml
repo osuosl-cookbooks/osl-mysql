@@ -13,9 +13,6 @@ provisioner:
       encrypted_data_bag_secret_file: "/etc/chef/encrypted_data_bag_secret"
 
 suites:
-  - name: orvsd
-    run_list:
-      - recipe[osl-mysql::orvsd]
   - name: server
     run_list:
       - recipe[osl-mysql::server]
