@@ -35,7 +35,7 @@ end
 
 # Create monitor mysql user
 mysql_conn = {
-  host: '127.0.0.1',
+  host: 'localhost',
   username: 'root',
   password: passwords['root']
 }
