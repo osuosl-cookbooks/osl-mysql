@@ -17,6 +17,7 @@ depends          'osl-munin'
 depends          'percona'
 depends          'sysctl'
 depends          'yum'
+depends          'postgresql', '< 6.1.2'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'
