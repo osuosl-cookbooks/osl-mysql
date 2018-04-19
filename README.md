@@ -6,7 +6,7 @@ This Cookbook sets up MySQL configuration defaults, enables the Percona yum repo
 # Requirements
 Cookbooks:: yum, nagios, sysctl, mysql
 
-Tested on CentOS 6.x
+Tested on CentOS 6.x and 7.x
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
