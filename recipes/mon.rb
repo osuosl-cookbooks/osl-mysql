@@ -37,7 +37,7 @@ end
 mysql_conn = {
   host: 'localhost',
   username: 'root',
-  password: passwords['root']
+  password: passwords['root'],
 }
 
 mysql_database_user 'mysql_monitor_grant' do
