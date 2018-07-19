@@ -1,23 +1,16 @@
 require 'spec_helper'
 
-describe 'osl-mysql::client' do
+describe 'osl-mysql::master' do
   [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
+      before do
+        allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('osl-mysql::server')
+      end
       it do
         expect { chef_run }.to_not raise_error
-      end
-      case pltfrm
-      when CENTOS_7_OPTS
-        it do
-          expect(chef_run).to install_package('mariadb')
-        end
-      when CENTOS_6_OPTS
-        it do
-          expect(chef_run).to create_mysql_client('default')
-        end
       end
     end
   end

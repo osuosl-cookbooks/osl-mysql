@@ -11,7 +11,7 @@ end.run_action(:sync)
 execute 'gem build xtrabackup-rb.gemspec' do
   cwd '/usr/local/src/xtrabackup-rb'
   not_if { ::File.exist?('/opt/chef/embedded/bin/xtrabackup-rb') }
-end.run_action(:run)
+end
 
 chef_gem 'xtrabackup-rb' do
   source "/usr/local/src/xtrabackup-rb/xtrabackup-rb-#{version}.gem"
