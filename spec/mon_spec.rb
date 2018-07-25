@@ -7,15 +7,24 @@ describe 'osl-mysql::mon' do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       before do
-        stub_data_bag('enc_data_bag').and_return(['passwords'])
-        stub_data_bag_item('enc_data_bag', 'passwords').and_return(root: 'root_pw', monitor: 'monitor_pw')
-        allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('osl-mysql::server')
-        allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('osl-mysql::nrpe')
-        allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('osl-mysql::munin')
-        allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('percona::monitoring')
+        stub_data_bag_item('passwords', 'mysql').and_return(root: 'root_pw', monitor: 'monitor_pw')
+        stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
+        stub_command("mysqladmin --user=root --password='' version").and_return(true)
       end
       it do
         expect { chef_run }.to_not raise_error
+      end
+      it do
+        expect(chef_run).to include_recipe('osl-mysql::server')
+      end
+      it do
+        expect(chef_run).to include_recipe('percona::monitoring')
+      end
+      it do
+        expect(chef_run).to include_recipe('osl-nrpe')
+      end
+      it do
+        expect(chef_run).to include_recipe('osl-munin::client')
       end
       it do
         expect(chef_run).to install_mysql2_chef_gem('default')
@@ -29,7 +38,8 @@ describe 'osl-mysql::mon' do
             connection: {
               host: 'localhost',
               username: 'root',
-              password: 'root_pw' },
+              password: 'root_pw',
+            },
             username: 'monitor',
             password: 'monitor_pw',
             privileges: [:super, :process, 'replication client']
@@ -61,14 +71,14 @@ describe 'osl-mysql::mon' do
           )
       end
       it do
-        expect(chef_run).to create_template('nrpe_conf_dir/mysql.cnf')
+        expect(chef_run).to create_template('/etc/nagios/mysql.cnf')
           .with(
             source: 'nagios/mysql.cnf.erb',
             mode: 0600,
-            owner: 'nrpe_user',
-            group: 'nrpe_gruop',
+            owner: 'nrpe',
+            group: 'nrpe',
             variables: {
-              password: 'monitor',
+              password: 'monitor_pw',
             },
             sensitive: true
           )
@@ -77,18 +87,18 @@ describe 'osl-mysql::mon' do
         it do
           expect(chef_run).to add_nrpe_check("pmp-check-mysql-#{c}")
             .with(
-              command: "nrpe_plugin_dir/pmp-check-mysql-#{c}"
+              command: "/usr/lib64/nagios/plugins/pmp-check-mysql-#{c}"
             )
         end
       end
       it do
-        expect(chef_run).to create_template('munin_basedir/plugin-conf.d/mysql')
+        expect(chef_run).to create_template('/etc/munin/plugin-conf.d/mysql')
           .with(
             source: 'munin/mysql.erb',
             owner: 'munin',
             group: 'munin',
             variables: {
-              passwlrd: 'monitor',
+              password: 'monitor_pw',
             }
           )
       end
@@ -97,7 +107,7 @@ describe 'osl-mysql::mon' do
       end
       %w(mysql_queries mysql_slowqueries mysql_threads).each do |p|
         it do
-          expect(chef_run).to create_munin_plugin(p.to_s)
+          expect(chef_run.link("/etc/munin/plugins/#{p}")).to link_to("/usr/share/munin/plugins/#{p}")
         end
       end
       %w(
@@ -114,10 +124,7 @@ describe 'osl-mysql::mon' do
         tmp_tables
       ).each do |p|
         it do
-          expect(chef_run).to create_munin_plugin('mysql_')
-            .with(
-              plugin: "mysql_#{p}"
-            )
+          expect(chef_run.link("/etc/munin/plugins/mysql_#{p}")).to link_to('/usr/share/munin/plugins/mysql_')
         end
       end
     end

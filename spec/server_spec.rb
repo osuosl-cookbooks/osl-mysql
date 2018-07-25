@@ -6,11 +6,15 @@ describe 'osl-mysql::server' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
+      before do
+        stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
+        stub_command("mysqladmin --user=root --password='' version").and_return(true)
+      end
       it do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to include_recipe('sysctl::default')
+        expect(chef_run).to include_recipe('base::sysctl')
       end
       it do
         expect(chef_run).to include_recipe('percona::server')
@@ -29,14 +33,14 @@ describe 'osl-mysql::server' do
         expect(chef_run).to create_yum_repository('percona-noarch')
           .with(
             description: 'Percona noarch Packages',
-            baseurl: "http://repo.percona.com/centos/#{pltfrm[:version]}/os/noarch/"
+            baseurl: "http://repo.percona.com/centos/#{pltfrm[:version].to_i}/os/noarch/"
           )
       end
 
       it do
-        expect(chef_run).to create_sysctl_param('vm.swappiness')
+        expect(chef_run).to apply_sysctl_param('vm.swappiness')
           .with(
-            value: 0
+            value: '0'
           )
       end
 

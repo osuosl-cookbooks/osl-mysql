@@ -23,7 +23,7 @@ include_recipe 'percona::monitoring'
 include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
 
-passwords = Chef::EncryptedDataBagItem.load(
+passwords = data_bag_item(
   node['percona']['encrypted_data_bag'],
   'mysql'
 )

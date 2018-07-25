@@ -1,68 +1,43 @@
 require 'spec_helper'
 
 describe 'osl-mysql::slave' do
-  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
-    context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
+  ALLPLATFORMS.each do |pltfrm|
+    context 'SoloRunner' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       it do
-        expect { chef_run }.to_not raise_error
-      end
-      it do
-        expect(chef_run).to include_recipe('osl-mysql::server')
+        expect { chef_run }.to raise_error.with_message('You should have one master node')
       end
     end
 
-    context 'Chef Solo true' do
+    context 'ServerRunner with master node' do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
-      end
-
-      before do
-        Chef::Config.stub(:[]).with(:solo).and_return(true)
-      end
-      it do
-        expect(Chef::Log).to receive(:warn).with('This recipe uses search which Chef Solo does not support')
+        master_node = stub_node('master_node', pltfrm) do |node|
+          node.automatic['run_list'] = ['recipe[osl-mysql::master]', 'role[mysql-vip]']
+        end
+        ChefSpec::ServerRunner.new(pltfrm) do |node, server|
+          server.create_node(master_node)
+        end.converge(described_recipe)
       end
       it do
-        expect(chef_run).to raise_error.with_message('You should have one master node')
+        expect { chef_run }.not_to raise_error
       end
     end
 
-    context 'Chef Solo false, no master node' do
+    context 'ServerRunner without master node' do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
-      end
-
-      before do
-        Chef::Config.stub(:[]).with(:solo).and_return(true)
-        node.normal['osl-mysql']['replication'] = 'osl-mysql-replication'
-        stub_search(:node, 'roles:osl-mysql-replication').and_return([
-                                                                       { percona: { server: { role: 'slave' } } },
-                                                                     ])
+        slave_node = stub_node('slave', pltfrm) do |node|
+          node.automatic['run_list'] = ["osl-mysql::slave"]
+        end
+        ChefSpec::ServerRunner.new(pltfrm) do |node, server|
+          server.create_node(slave_node)
+        end.converge(described_recipe)
       end
       it do
-        expect(chef_run).to raise_error.with_message('You should have one master node')
+        expect { chef_run }.to raise_error.with_message('You should have one master node')
       end
     end
-    context 'Chef Solo false, one master node' do
-      cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
-      end
 
-      before do
-        Chef::Config.stub(:[]).with(:solo).and_return(true)
-        node.normal['osl-mysql']['replication'] = 'osl-mysql-replication'
-        stub_search(:node, 'roles:osl-mysql-replication').and_return([
-                                                                       { percona: { server: { role: 'master' } } },
-                                                                       { percona: { server: { role: 'slave1' } } },
-                                                                       { percona: { server: { role: 'slave2' } } },
-                                                                     ])
-      end
-      it do
-        expect(chef_run).to_not raise_error
-      end
-    end
   end
 end

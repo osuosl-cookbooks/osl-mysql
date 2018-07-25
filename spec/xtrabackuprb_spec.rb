@@ -15,9 +15,6 @@ describe 'osl-mysql::xtrabackuprb' do
       it do
         expect(chef_run).to include_recipe('percona::package_repo')
       end
-      #it do
-      #  expect(chef_run).to install_resources('git_client[default]')
-      #end
       it do
         expect(chef_run).to sync_git('/usr/local/src/xtrabackup-rb')
           .with(
@@ -46,8 +43,11 @@ describe 'osl-mysql::xtrabackuprb' do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       before do
-        File.stub(:exist?).and_call_original
-        File.stub(:exist?).with('/opt/chef/embedded/bin/xtrabackup-rb').and_return(true)
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with('/opt/chef/embedded/bin/xtrabackup-rb').and_return(true)
+      end
+      it do
+        expect { chef_run }.to_not raise_error
       end
       it do
         expect(chef_run).to_not run_execute('gem build xtrabackup-rb.gemspec')
@@ -62,8 +62,11 @@ describe 'osl-mysql::xtrabackuprb' do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       before do
-        File.stub(:exist?).and_call_original
-        File.stub(:exist?).with('/opt/chef/embedded/bin/xtrabackup-rb').and_return(false)
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with('/opt/chef/embedded/bin/xtrabackup-rb').and_return(false)
+      end
+      it do
+        expect { chef_run }.to_not raise_error
       end
       it do
         expect(chef_run).to run_execute('gem build xtrabackup-rb.gemspec')

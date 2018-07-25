@@ -1,6 +1,7 @@
 source 'https://supermarket.chef.io'
 
 # cookbook 'percona', '>= 0.15.0'
+cookbook 'base', git: 'git@github.com:osuosl-cookbooks/base'
 cookbook 'percona', github: 'phlipper/chef-percona'
 cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
 cookbook 'munin', git: 'git@github.com:osuosl-cookbooks/munin'
