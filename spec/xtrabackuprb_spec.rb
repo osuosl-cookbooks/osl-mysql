@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'osl-mysql::xtrabackuprb' do
-  [CENTOS_7_OPTS, CENTOS_6_OPTS].each do |pltfrm|
+  ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
@@ -14,6 +14,9 @@ describe 'osl-mysql::xtrabackuprb' do
       end
       it do
         expect(chef_run).to include_recipe('percona::package_repo')
+      end
+      it do
+        expect(chef_run).to include_recipe('yum-epel')
       end
       it do
         expect(chef_run).to sync_git('/usr/local/src/xtrabackup-rb')
@@ -34,11 +37,14 @@ describe 'osl-mysql::xtrabackuprb' do
           )
       end
       it do
+        expect(chef_run).to install_package('libev')
+      end
+      it do
         expect(chef_run).to install_package('percona-xtrabackup')
       end
     end
 
-    context 'File /opt/chef/embedded/bin/xtrabackup-rb stubbed' do
+    context 'File /opt/chef/embedded/bin/xtrabackup-rb exist' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
@@ -57,7 +63,7 @@ describe 'osl-mysql::xtrabackuprb' do
       end
     end
 
-    context 'File /opt/chef/embedded/bin/xtrabackup-rb not stubbed' do
+    context 'File /opt/chef/embedded/bin/xtrabackup-rb not exist' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end

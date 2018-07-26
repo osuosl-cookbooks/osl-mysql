@@ -14,11 +14,15 @@ describe 'osl-mysql::slave' do
     context 'ServerRunner with master node' do
       cached(:chef_run) do
         master_node = stub_node('master_node', pltfrm) do |node|
-          node.automatic['run_list'] = ['recipe[osl-mysql::master]', 'role[mysql-vip]']
+          node.run_list << 'recipe[osl-mysql::master]'
         end
         ChefSpec::ServerRunner.new(pltfrm) do |node, server|
           server.create_node(master_node)
+          node.run_list << 'role[mysql-vip]'
         end.converge(described_recipe)
+      end
+      it do
+        expect(chef_run.node.run_list.recipes).to eq('recipe[osl-mysql::master]')
       end
       it do
         expect { chef_run }.not_to raise_error
@@ -28,9 +32,9 @@ describe 'osl-mysql::slave' do
     context 'ServerRunner without master node' do
       cached(:chef_run) do
         slave_node = stub_node('slave', pltfrm) do |node|
-          node.automatic['run_list'] = ["osl-mysql::slave"]
+          node.automatic['run_list'] = ['osl-mysql::slave']
         end
-        ChefSpec::ServerRunner.new(pltfrm) do |node, server|
+        ChefSpec::ServerRunner.new(pltfrm) do |_node, server|
           server.create_node(slave_node)
         end.converge(described_recipe)
       end
@@ -38,6 +42,5 @@ describe 'osl-mysql::slave' do
         expect { chef_run }.to raise_error.with_message('You should have one master node')
       end
     end
-
   end
 end

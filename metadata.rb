@@ -8,6 +8,7 @@ description      'Installs/Configures osl-mysql'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.7'
 
+depends          'base'
 depends          'database'
 depends          'firewall'
 depends          'git'
@@ -17,6 +18,7 @@ depends          'osl-munin'
 depends          'percona'
 depends          'sysctl'
 depends          'yum'
+depends          'yum-epel'
 depends          'postgresql', '< 6.1.2'
 
 supports         'centos', '~> 6.0'
