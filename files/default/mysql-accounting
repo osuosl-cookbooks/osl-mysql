@@ -1,7 +1,7 @@
 #!/bin/bash
 # Output current disk usage for each database
 DATE=$(date +%Y%m%d)
-ACCOUNTING_DIR="/var/lib/accounting/mysql"
+ACCOUNTING_DIR="/var/lib/mysql-files"
 mkdir -p $ACCOUNTING_DIR
 chown mysql:mysql $ACCOUNTING_DIR
 mysql --defaults-extra-file=/root/.my.cnf -e "SELECT table_schema 'DB Name',

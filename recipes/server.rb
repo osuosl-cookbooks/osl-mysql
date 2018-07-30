@@ -46,6 +46,9 @@ mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
   "#{Integer(mem * 0.75)}M"
 
+include_recipe 'yum-epel'
+package 'libev'
+
 include_recipe 'base::sysctl'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
@@ -71,6 +74,8 @@ cookbook_file '/usr/local/libexec/mysql-accounting' do
   source 'mysql-accounting'
   mode '0755'
 end
+
+package 'cronie'
 
 cron 'mysql-accounting' do
   command '/usr/local/libexec/mysql-accounting'

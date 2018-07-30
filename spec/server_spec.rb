@@ -14,6 +14,12 @@ describe 'osl-mysql::server' do
         expect { chef_run }.to_not raise_error
       end
       it do
+        expect(chef_run).to include_recipe('yum-epel')
+      end
+      it do
+        expect(chef_run).to install_package('libev')
+      end
+      it do
         expect(chef_run).to include_recipe('base::sysctl')
       end
       it do
@@ -50,6 +56,10 @@ describe 'osl-mysql::server' do
             source: 'mysql-accounting',
             mode: '0755'
           )
+      end
+
+      it do
+        expect(chef_run).to install_package('cronie')
       end
 
       it do
