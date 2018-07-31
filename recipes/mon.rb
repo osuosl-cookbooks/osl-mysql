@@ -23,6 +23,9 @@ include_recipe 'percona::monitoring'
 include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
 
+# required for mysql2_chef_gem
+package "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
+
 passwords = data_bag_item(
   node['percona']['encrypted_data_bag'],
   'mysql'

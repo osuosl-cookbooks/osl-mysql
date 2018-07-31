@@ -27,6 +27,9 @@ describe 'osl-mysql::mon' do
         expect(chef_run).to include_recipe('osl-munin::client')
       end
       it do
+        expect(chef_run).to install_package('Percona-Server-devel-56')
+      end
+      it do
         expect(chef_run).to install_mysql2_chef_gem('default')
           .with(
             provider: Chef::Provider::Mysql2ChefGem::Percona
