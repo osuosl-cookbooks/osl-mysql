@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'osl-mysql::mon' do
+  include_context 'common_stubs'
+
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
@@ -8,8 +10,6 @@ describe 'osl-mysql::mon' do
       end
       before do
         stub_data_bag_item('passwords', 'mysql').and_return(root: 'root_pw', monitor: 'monitor_pw')
-        stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
-        stub_command("mysqladmin --user=root --password='' version").and_return(true)
       end
       it do
         expect { chef_run }.to_not raise_error

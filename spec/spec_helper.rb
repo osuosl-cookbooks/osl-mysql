@@ -23,3 +23,10 @@ ALLPLATFORMS = [
 RSpec.configure do |config|
   config.log_level = :fatal
 end
+
+shared_context 'common_stubs' do
+  before do
+    stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
+    stub_command("mysqladmin --user=root --password='' version").and_return(true)
+  end
+end
