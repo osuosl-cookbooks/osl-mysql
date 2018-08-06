@@ -66,7 +66,8 @@ yum_repository 'percona-noarch' do
   only_if { platform_family?('rhel') }
 end
 
-sysctl_param 'vm.swappiness' do
+sysctl_param 'set vm.swappiness to 0' do
+  key 'vm.swappiness'
   value 0
 end
 

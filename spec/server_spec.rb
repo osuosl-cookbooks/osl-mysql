@@ -45,8 +45,9 @@ describe 'osl-mysql::server' do
       end
 
       it do
-        expect(chef_run).to apply_sysctl_param('vm.swappiness')
+        expect(chef_run).to apply_sysctl_param('set vm.swappiness to 0')
           .with(
+            key: 'vm.swappiness',
             value: '0'
           )
       end

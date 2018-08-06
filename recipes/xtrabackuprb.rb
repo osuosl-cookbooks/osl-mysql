@@ -16,6 +16,7 @@ end.run_action(:run)
 
 chef_gem 'xtrabackup-rb' do
   source "/usr/local/src/xtrabackup-rb/xtrabackup-rb-#{version}.gem"
+  compile_time true
 end
 
 link '/usr/local/sbin/xtrabackup-rb' do
