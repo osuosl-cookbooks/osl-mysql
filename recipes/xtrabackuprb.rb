@@ -2,6 +2,12 @@ include_recipe 'git'
 include_recipe 'percona::package_repo'
 include_recipe 'yum-epel'
 
+package 'rubygems' do
+end.run_action(:install)
+
+package 'libev'
+package 'percona-xtrabackup'
+
 resources('git_client[default]').run_action(:install)
 version = node['osl-mysql']['xtrabackuprb']['version']
 
@@ -16,12 +22,9 @@ end.run_action(:run)
 
 chef_gem 'xtrabackup-rb' do
   source "/usr/local/src/xtrabackup-rb/xtrabackup-rb-#{version}.gem"
-  compile_time true
+  compile_time false
 end
 
 link '/usr/local/sbin/xtrabackup-rb' do
   to '/opt/chef/embedded/bin/xtrabackup-rb'
 end
-
-package 'libev'
-package 'percona-xtrabackup'
