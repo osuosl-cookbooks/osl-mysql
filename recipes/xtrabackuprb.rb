@@ -1,11 +1,6 @@
 include_recipe 'git'
 include_recipe 'percona::package_repo'
-include_recipe 'yum-epel'
 
-package 'rubygems' do
-end.run_action(:install)
-
-package 'libev'
 package 'percona-xtrabackup'
 
 resources('git_client[default]').run_action(:install)
@@ -22,7 +17,7 @@ end.run_action(:run)
 
 chef_gem 'xtrabackup-rb' do
   source "/usr/local/src/xtrabackup-rb/xtrabackup-rb-#{version}.gem"
-  compile_time false
+  compile_time true
 end
 
 link '/usr/local/sbin/xtrabackup-rb' do

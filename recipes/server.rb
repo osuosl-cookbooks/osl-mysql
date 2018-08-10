@@ -46,8 +46,10 @@ mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
   "#{Integer(mem * 0.75)}M"
 
-include_recipe 'yum-epel'
-package 'libev'
+if platform_family?('rhel') && node['platform_version'].to_i == 6
+  include_recipe 'yum-epel'
+  package 'libev'
+end
 
 include_recipe 'base::sysctl'
 include_recipe 'percona::server'
@@ -66,8 +68,7 @@ yum_repository 'percona-noarch' do
   only_if { platform_family?('rhel') }
 end
 
-sysctl_param 'set vm.swappiness to 0' do
-  key 'vm.swappiness'
+sysctl_param 'vm.swappiness' do
   value 0
 end
 
@@ -76,7 +77,9 @@ cookbook_file '/usr/local/libexec/mysql-accounting' do
   mode '0755'
 end
 
-package 'cronie'
+if platform_family?('rhel') && node['platform_version'].to_i == 6
+  package 'cronie'
+end
 
 cron 'mysql-accounting' do
   command '/usr/local/libexec/mysql-accounting'
