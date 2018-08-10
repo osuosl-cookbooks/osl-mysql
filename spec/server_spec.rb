@@ -15,8 +15,7 @@ describe 'osl-mysql::server' do
         expect { chef_run }.to_not raise_error
       end
 
-      case pltfrm[:version].to_i
-      when 6
+      if pltfrm[:version].to_i == 6
         it do
           expect(chef_run).to include_recipe('yum-epel')
         end
