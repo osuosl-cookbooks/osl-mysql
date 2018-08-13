@@ -1,11 +1,6 @@
 include_recipe 'git'
 include_recipe 'percona::package_repo'
 
-if platform_family?('rhel') && node['platform_version'].to_i == 6
-  include_recipe 'yum-epel'
-  package 'libev'
-end
-
 package 'percona-xtrabackup'
 
 resources('git_client[default]').run_action(:install)

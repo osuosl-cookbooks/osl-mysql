@@ -14,29 +14,6 @@ describe 'osl-mysql::server' do
       it do
         expect { chef_run }.to_not raise_error
       end
-
-      if pltfrm[:version].to_i == 6
-        it do
-          expect(chef_run).to include_recipe('yum-epel')
-        end
-        it do
-          expect(chef_run).to install_package('libev')
-        end
-        it do
-          expect(chef_run).to install_package('cronie')
-        end
-      else
-        it do
-          expect(chef_run).to_not include_recipe('yum-epel')
-        end
-        it do
-          expect(chef_run).to_not install_package('libev')
-        end
-        it do
-          expect(chef_run).to_not install_package('cronie')
-        end
-      end
-
       it do
         expect(chef_run).to include_recipe('base::sysctl')
       end

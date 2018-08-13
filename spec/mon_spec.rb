@@ -14,17 +14,10 @@ describe 'osl-mysql::mon' do
       it do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to include_recipe('osl-mysql::server')
-      end
-      it do
-        expect(chef_run).to include_recipe('percona::monitoring')
-      end
-      it do
-        expect(chef_run).to include_recipe('osl-nrpe')
-      end
-      it do
-        expect(chef_run).to include_recipe('osl-munin::client')
+      %w(osl-mysql::server percona::monitoring osl-nrpe osl-munin::client).each do |recipe|
+        it do
+          expect(chef_run).to include_recipe(recipe)
+        end
       end
       it do
         expect(chef_run).to install_package('Percona-Server-devel-56')
