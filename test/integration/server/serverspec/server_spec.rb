@@ -3,12 +3,10 @@ require 'serverspec'
 set :backend, :exec
 
 %w(
-  libev
   Percona-Server-server-56
   Percona-Server-shared-56
   percona-toolkit
   percona-xtrabackup
-  cronie
 ).each do |p|
   describe package(p) do
     it { should be_installed }

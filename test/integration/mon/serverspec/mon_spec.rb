@@ -2,12 +2,6 @@ require 'serverspec'
 
 set :backend, :exec
 
-%w(Percona-Server-devel-56 perl-Cache-Cache).each do |p|
-  describe package(p.to_s) do
-    it { should be_installed }
-  end
-end
-
 describe file('/etc/nagios/mysql.cnf') do
   its(:content) { should match(/user = monitor/) }
   its(:content) { should match(/password = ToJzwUyqQmyV4GgMVpz0/) }

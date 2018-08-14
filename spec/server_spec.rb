@@ -14,22 +14,11 @@ describe 'osl-mysql::server' do
       it do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to include_recipe('base::sysctl')
+      %w{base::sysctl percona::server percona::toolkit percona::backup firewall::mysql}.each do |recipe|
+        it do
+          expect(chef_run).to include_recipe(recipe)
+        end
       end
-      it do
-        expect(chef_run).to include_recipe('percona::server')
-      end
-      it do
-        expect(chef_run).to include_recipe('percona::toolkit')
-      end
-      it do
-        expect(chef_run).to include_recipe('percona::backup')
-      end
-      it do
-        expect(chef_run).to include_recipe('firewall::mysql')
-      end
-
       it do
         expect(chef_run).to create_yum_repository('percona-noarch')
           .with(

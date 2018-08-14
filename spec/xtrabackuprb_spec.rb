@@ -16,15 +16,9 @@ describe 'osl-mysql::xtrabackuprb' do
         it do
           expect(chef_run).to include_recipe('yum-epel')
         end
-        it do
-          expect(chef_run).to install_package('libev')
-        end
       else
         it do
           expect(chef_run).to_not include_recipe('yum-epel')
-        end
-        it do
-          expect(chef_run).to_not install_package('libev')
         end
       end
       it do
