@@ -18,7 +18,7 @@ describe 'osl-mysql::slave' do
         master = stub_node('master', pltfrm) do |node|
           node.normal['recipes'] = ['osl-mysql::master']
           node.normal['roles'] = ['mysql-vip']
-          node.default['percona']['server']['role'] = 'master'
+          node.normal['percona']['server']['role'] = 'master'
         end
         ChefSpec::ServerRunner.new(pltfrm) do |_node, server|
           server.create_node(master)
@@ -37,7 +37,7 @@ describe 'osl-mysql::slave' do
         slave = stub_node('slave', pltfrm) do |node|
           node.normal['recipes'] = ['osl-mysql::slave']
           node.normal['roles'] = ['mysql-vip']
-          node.default['percona']['server']['role'] = 'slave'
+          node.normal['percona']['server']['role'] = 'slave'
         end
         ChefSpec::ServerRunner.new(pltfrm) do |_node, server|
           server.create_node(slave)

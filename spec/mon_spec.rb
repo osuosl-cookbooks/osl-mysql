@@ -14,13 +14,15 @@ describe 'osl-mysql::mon' do
       it do
         expect { chef_run }.to_not raise_error
       end
-      %w(osl-mysql::server percona::monitoring osl-nrpe osl-munin::client).each do |recipe|
+      %w(
+        osl-mysql::server
+        percona::monitoring
+        osl-nrpe
+        osl-munin::client
+      ).each do |recipe|
         it do
           expect(chef_run).to include_recipe(recipe)
         end
-      end
-      it do
-        expect(chef_run).to install_package('Percona-Server-devel-56')
       end
       it do
         expect(chef_run).to install_mysql2_chef_gem('default')
@@ -79,7 +81,12 @@ describe 'osl-mysql::mon' do
             sensitive: true
           )
       end
-      %w(innodb pidfile processlist replication-delay).each do |c|
+      %w(
+        innodb
+        pidfile
+        processlist
+        replication-delay
+      ).each do |c|
         it do
           expect(chef_run).to add_nrpe_check("pmp-check-mysql-#{c}")
             .with(
@@ -101,7 +108,11 @@ describe 'osl-mysql::mon' do
       it do
         expect(chef_run).to install_package('perl-Cache-Cache')
       end
-      %w(mysql_queries mysql_slowqueries mysql_threads).each do |p|
+      %w(
+        mysql_queries
+        mysql_slowqueries
+        mysql_threads
+      ).each do |p|
         it do
           expect(chef_run.link("/etc/munin/plugins/#{p}")).to link_to("/usr/share/munin/plugins/#{p}")
         end

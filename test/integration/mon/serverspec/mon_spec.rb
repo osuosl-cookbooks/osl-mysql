@@ -56,3 +56,7 @@ end
     its(:exit_status) { should eq 0 }
   end
 end
+
+describe command('/usr/local/libexec/mysql-accounting') do
+  its(:exit_status) { should eq 0 }
+end

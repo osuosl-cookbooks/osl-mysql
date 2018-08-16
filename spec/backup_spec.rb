@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'osl-mysql::backup' do
+  include_context 'common_stubs'
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do

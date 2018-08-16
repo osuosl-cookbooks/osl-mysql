@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'osl-mysql::xtrabackuprb' do
+  include_context 'common_stubs'
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
@@ -59,7 +60,7 @@ describe 'osl-mysql::xtrabackuprb' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to_not run_execute('gem build xtrabackup-rb.gemspec')
+        expect(chef_run).to_not run_execute('/opt/chef/embedded/bin/gem build xtrabackup-rb.gemspec')
           .with(
             cwd: '/usr/local/src/xtrabackup-rb'
           )
@@ -78,7 +79,7 @@ describe 'osl-mysql::xtrabackuprb' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to run_execute('gem build xtrabackup-rb.gemspec')
+        expect(chef_run).to run_execute('/opt/chef/embedded/bin/gem build xtrabackup-rb.gemspec')
           .with(
             cwd: '/usr/local/src/xtrabackup-rb'
           )

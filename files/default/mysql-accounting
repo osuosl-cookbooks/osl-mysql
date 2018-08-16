@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/bin/bash -eu
 # Output current disk usage for each database
 DATE=$(date +%Y%m%d)
 ACCOUNTING_DIR="/var/lib/accounting/mysql"
-mkdir -p $ACCOUNTING_DIR
-chown mysql:mysql $ACCOUNTING_DIR
+if [ -e "/var/lib/mysql-files/${DATE}.csv" ]; then
+  rm -f /var/lib/mysql-files/${DATE}.csv
+fi
 mysql --defaults-extra-file=/root/.my.cnf -e "SELECT table_schema 'DB Name',
   round(sum( data_length + index_length ) / 1024 / 1024, 1) 'Data Base Size in MB'
   FROM information_schema.TABLES
   GROUP BY table_schema
-  INTO OUTFILE '${ACCOUNTING_DIR}/${DATE}.csv'
+  INTO OUTFILE '/var/lib/mysql-files/${DATE}.csv'
   FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';"
-gzip ${ACCOUNTING_DIR}/${DATE}.csv
+mv -f /var/lib/mysql-files/${DATE}.csv ${ACCOUNTING_DIR}/${DATE}.csv
+gzip -f ${ACCOUNTING_DIR}/${DATE}.csv

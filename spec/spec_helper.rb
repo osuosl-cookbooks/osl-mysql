@@ -28,5 +28,6 @@ shared_context 'common_stubs' do
   before do
     stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
     stub_command("mysqladmin --user=root --password='' version").and_return(true)
+    stub_command('/usr/bin/test /etc/alternatives/mta -ef /usr/sbin/sendmail.postfix').and_return(true)
   end
 end

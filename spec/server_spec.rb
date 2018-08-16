@@ -7,18 +7,23 @@ describe 'osl-mysql::server' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
-      before do
-        stub_command('rpm -qa | grep Percona-Server-shared-56').and_return(true)
-        stub_command("mysqladmin --user=root --password='' version").and_return(true)
-      end
+
       it do
         expect { chef_run }.to_not raise_error
       end
-      %w{base::sysctl percona::server percona::toolkit percona::backup firewall::mysql}.each do |recipe|
+
+      %w(
+        base::sysctl
+        percona::server
+        percona::toolkit
+        percona::backup
+        firewall::mysql
+      ).each do |recipe|
         it do
           expect(chef_run).to include_recipe(recipe)
         end
       end
+
       it do
         expect(chef_run).to create_yum_repository('percona-noarch')
           .with(
@@ -31,6 +36,22 @@ describe 'osl-mysql::server' do
         expect(chef_run).to apply_sysctl_param('vm.swappiness')
           .with(
             value: '0'
+          )
+      end
+
+      it do
+        expect(chef_run).to create_directory('/var/lib/mysql-files')
+          .with(
+            owner: 'mysql',
+            group: 'mysql'
+          )
+      end
+
+      it do
+        expect(chef_run).to create_directory('/var/lib/accounting/mysql')
+          .with(
+            recursive: true,
+            mode: '0700'
           )
       end
 

@@ -67,6 +67,16 @@ sysctl_param 'vm.swappiness' do
   value 0
 end
 
+directory '/var/lib/mysql-files' do
+  owner 'mysql'
+  group 'mysql'
+end
+
+directory '/var/lib/accounting/mysql' do
+  recursive true
+  mode '0700'
+end
+
 cookbook_file '/usr/local/libexec/mysql-accounting' do
   source 'mysql-accounting'
   mode '0755'
