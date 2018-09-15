@@ -44,7 +44,7 @@ mysql_database_user 'mysql_monitor_grant' do
   connection mysql_conn
   username node['osl-mysql']['monitor_user']
   password passwords['monitor']
-  privileges [:super, :process, 'replication client']
+  privileges [:super, :process, 'replication client', 'replication slave']
   action [:create, :grant]
 end
 
