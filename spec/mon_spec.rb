@@ -40,7 +40,7 @@ describe 'osl-mysql::mon' do
             },
             username: 'monitor',
             password: 'monitor_pw',
-            privileges: [:super, :process, 'replication client']
+            privileges: [:super, :process, 'replication client', 'replication slave']
           )
       end
       it do
@@ -52,7 +52,7 @@ describe 'osl-mysql::mon' do
               password: 'root_pw' },
             username: 'monitor',
             password: 'monitor_pw',
-            privileges: [:super, :process, 'replication client']
+            privileges: [:super, :process, 'replication client', 'replication slave']
           )
       end
       it do
@@ -118,7 +118,6 @@ describe 'osl-mysql::mon' do
         end
       end
       %w(
-        bin_relay_log
         commands
         connections
         innodb_bpool
