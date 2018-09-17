@@ -36,8 +36,10 @@ describe file('/etc/munin/plugin-conf.d/mysql') do
   it { should be_grouped_into 'munin' }
 end
 
+# bin_relay_log
+# is excluded from here since it doesn't work
+# for a single-node mysql installation
 %w(
-  bin_relay_log
   commands
   connections
   innodb_bpool
