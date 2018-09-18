@@ -33,7 +33,7 @@ ip = Percona::ConfigHelper.bind_to(master_node.first,
                                    replication['master_interface'])
 node.default['percona']['server']['role'] = 'slave'
 node.default['percona']['server']['server_id'] = 2
-node.default['percona']['server']['replication']['read_only'] = true
+node.default['percona']['server']['replication']['read_only'] = node['osl-mysql']['master_master'] ? false : true
 node.default['percona']['server']['replication']['host'] = ip
 node.default['percona']['server']['replication']['username'] = 'replication'
 include_recipe 'osl-mysql::server'

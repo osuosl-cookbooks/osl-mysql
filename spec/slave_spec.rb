@@ -30,6 +30,25 @@ describe 'osl-mysql::slave' do
       it do
         expect { chef_run }.not_to raise_error
       end
+      it do
+        expect(chef_run).to render_file('/etc/my.cnf').with_content(/^read_only$/)
+      end
+    end
+    context 'ServerRunner with master node & master-master' do
+      cached(:chef_run) do
+        master = stub_node('master', pltfrm) do |node|
+          node.normal['recipes'] = ['osl-mysql::master']
+          node.normal['roles'] = ['mysql-vip']
+          node.normal['percona']['server']['role'] = 'master'
+        end
+        ChefSpec::ServerRunner.new(pltfrm) do |node, server|
+          node.normal['osl-mysql']['master_master'] = true
+          server.create_node(master)
+        end.converge(described_recipe)
+      end
+      it do
+        expect(chef_run).to_not render_file('/etc/my.cnf').with_content(/^read_only$/)
+      end
     end
 
     context 'ServerRunner without master node' do
