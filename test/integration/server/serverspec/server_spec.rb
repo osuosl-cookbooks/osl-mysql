@@ -43,8 +43,8 @@ describe command('sysctl vm.swappiness') do
   its(:exit_status) { should eq 0 }
 end
 
-describe file('/etc/sysctl.d/99-chef-attributes.conf') do
-  its(:content) { should match(/vm.swappiness=0/) }
+describe file('/etc/sysctl.d/99-chef-vm.swappiness.conf') do
+  its(:content) { should match(/vm.swappiness = 0/) }
 end
 
 describe yumrepo('percona-noarch') do

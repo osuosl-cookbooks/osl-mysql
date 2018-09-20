@@ -6,8 +6,8 @@ describe file('/etc/nagios/mysql.cnf') do
   its(:content) { should match(/user = monitor/) }
   its(:content) { should match(/password = ToJzwUyqQmyV4GgMVpz0/) }
   it { should be_mode 600 }
-  it { should be_owned_by 'nagios' }
-  it { should be_grouped_into 'nagios' }
+  it { should be_owned_by 'nrpe' }
+  it { should be_grouped_into 'nrpe' }
 end
 
 %w(
@@ -36,8 +36,10 @@ describe file('/etc/munin/plugin-conf.d/mysql') do
   it { should be_grouped_into 'munin' }
 end
 
+# bin_relay_log
+# is excluded from here since it doesn't work
+# for a single-node mysql installation
 %w(
-  bin_relay_log
   commands
   connections
   innodb_bpool
@@ -55,4 +57,8 @@ end
   describe command("/usr/sbin/munin-run mysql_#{p}") do
     its(:exit_status) { should eq 0 }
   end
+end
+
+describe command('/usr/local/libexec/mysql-accounting') do
+  its(:exit_status) { should eq 0 }
 end

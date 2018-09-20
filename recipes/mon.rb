@@ -23,7 +23,7 @@ include_recipe 'percona::monitoring'
 include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
 
-passwords = Chef::EncryptedDataBagItem.load(
+passwords = data_bag_item(
   node['percona']['encrypted_data_bag'],
   'mysql'
 )
@@ -37,14 +37,14 @@ end
 mysql_conn = {
   host: 'localhost',
   username: 'root',
-  password: passwords['root']
+  password: passwords['root'],
 }
 
 mysql_database_user 'mysql_monitor_grant' do
   connection mysql_conn
   username node['osl-mysql']['monitor_user']
   password passwords['monitor']
-  privileges [:super, :process, 'replication client']
+  privileges [:super, :process, 'replication client', 'replication slave']
   action [:create, :grant]
 end
 

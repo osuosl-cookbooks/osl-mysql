@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe 'osl-mysql::client' do
+describe 'osl-mysql::master' do
+  include_context 'common_stubs'
+
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
@@ -9,15 +11,8 @@ describe 'osl-mysql::client' do
       it do
         expect { chef_run }.to_not raise_error
       end
-      case pltfrm
-      when CENTOS_7_OPTS
-        it do
-          expect(chef_run).to install_package('mariadb')
-        end
-      when CENTOS_6_OPTS
-        it do
-          expect(chef_run).to create_mysql_client('default')
-        end
+      it do
+        expect(chef_run).to include_recipe('osl-mysql::server')
       end
     end
   end
