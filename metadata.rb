@@ -7,7 +7,7 @@ license          'Apache-2.0'
 chef_version     '>=12.18' if respond_to?(:chef_version)
 description      'Installs/Configures osl-mysql'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '2.0.0'
+version          '2.0.1'
 
 depends          'base'
 depends          'database'
