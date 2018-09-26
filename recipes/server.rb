@@ -23,7 +23,7 @@ node.default['percona']['server']['bind_address'] = '0.0.0.0'
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'
 node.default['percona']['server']['myisam_recover'] = 'FORCE,BACKUP'
-node.default['percona']['server']['max_connections'] = 500
+node.default['percona']['server']['max_connections'] = 1_000
 node.default['percona']['server']['max_allowed_packet'] = '128M'
 node.default['percona']['server']['max_connect_errors'] = 100_000
 node.default['percona']['server']['connect_timeout'] = 28_880
