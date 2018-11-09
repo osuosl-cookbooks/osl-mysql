@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.0.2 (2018-11-09)
+------------------
+- Remove postgresql version lock conflict
+
 2.0.1 (2018-09-26)
 ------------------
 - Bump max-connection to 1000
