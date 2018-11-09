@@ -22,7 +22,7 @@ depends          'percona', '~> 0.16.1'
 depends          'sysctl'
 depends          'yum'
 depends          'yum-epel'
-depends          'postgresql', '< 6.1.2'
+depends          'osl-postgresql'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'
