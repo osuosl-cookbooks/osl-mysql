@@ -33,13 +33,6 @@ describe 'osl-mysql::server' do
       end
 
       it do
-        expect(chef_run).to apply_sysctl_param('vm.swappiness')
-          .with(
-            value: '0'
-          )
-      end
-
-      it do
         expect(chef_run).to create_directory('/var/lib/mysql-files')
           .with(
             owner: 'mysql',
