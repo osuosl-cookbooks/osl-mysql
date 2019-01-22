@@ -46,6 +46,8 @@ mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
   "#{Integer(mem * 0.75)}M"
 
+node.default['base']['sysctl']['vm.swappiness'] = '0'
+
 include_recipe 'base::sysctl'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
@@ -61,10 +63,6 @@ yum_repository 'percona-noarch' do
   gpgcheck node['percona']['yum']['gpgcheck']
   sslverify node['percona']['yum']['sslverify']
   only_if { platform_family?('rhel') }
-end
-
-sysctl_param 'vm.swappiness' do
-  value 0
 end
 
 directory '/var/lib/mysql-files' do
