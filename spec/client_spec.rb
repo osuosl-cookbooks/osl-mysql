@@ -9,6 +9,9 @@ describe 'osl-mysql::client' do
       it do
         expect { chef_run }.to_not raise_error
       end
+      it do
+        expect(chef_run).to include_recipe('osl-mysql')
+      end
       case pltfrm
       when CENTOS_7_OPTS
         it do

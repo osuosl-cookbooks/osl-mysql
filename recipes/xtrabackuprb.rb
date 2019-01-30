@@ -1,5 +1,6 @@
 include_recipe 'git'
 include_recipe 'osl-postfix'
+include_recipe 'osl-mysql'
 include_recipe 'percona::package_repo'
 include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 

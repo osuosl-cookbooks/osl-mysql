@@ -48,6 +48,7 @@ node.default['percona']['server']['innodb_buffer_pool_size'] =
 
 node.default['base']['sysctl']['vm.swappiness'] = '0'
 
+include_recipe 'osl-mysql'
 include_recipe 'base::sysctl'
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'

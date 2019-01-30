@@ -22,8 +22,15 @@ describe 'osl-mysql::xtrabackuprb' do
           expect(chef_run).to_not include_recipe('yum-epel')
         end
       end
-      it do
-        expect(chef_run).to include_recipe('percona::package_repo')
+      %w(
+        git
+        osl-postfix
+        osl-mysql
+        percona::package_repo
+      ).each do |r|
+        it do
+          expect(chef_run).to include_recipe(r)
+        end
       end
       it do
         expect(chef_run).to install_package('percona-xtrabackup')
