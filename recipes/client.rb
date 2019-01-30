@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'osl-mysql'
 
 mysql_client 'default' do
   not_if { platform_family?('rhel') && node['platform_version'].to_i >= 7 }
