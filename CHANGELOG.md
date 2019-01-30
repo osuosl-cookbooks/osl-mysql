@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.0.4 (2019-01-30)
+------------------
+- Include additional GPG key for RPMs for Percona
+
 2.0.3 (2019-01-22)
 ------------------
 - Set vm.swappiness via attribute instead
