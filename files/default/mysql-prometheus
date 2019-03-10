@@ -1,0 +1,37 @@
+#!/bin/bash -eu
+# Output current disk usage for each database in a Prometheus format
+mkdir -p /var/lib/node_exporter/
+MYSQL_FILE=/var/lib/mysql-files/mysql_db_size-$$.txt
+PROM_FILE=/var/lib/node_exporter/mysql_db_size.prom
+
+if [ -e "${MYSQL_FILE}" ] ; then
+  rm -f $MYSQL_FILE
+fi
+
+mysql --defaults-extra-file=/root/.my.cnf -e "SELECT table_schema 'DB Name',
+  sum( data_length + index_length ) 'Data Base Size in Bytes'
+  FROM information_schema.TABLES
+  GROUP BY table_schema
+  INTO OUTFILE '${MYSQL_FILE}'
+  FIELDS TERMINATED BY ' ' ENCLOSED BY '' LINES TERMINATED BY '\n';"
+
+cat << EOF > ${PROM_FILE}.$$
+# HELP mysql_db_start_time Start timestamp
+# TYPE mysql_db_start_time gauge
+mysql_db_size_start_time $(date +%s)
+# HELP mysql_db_size Size in bytes for a MySQL database
+# TYPE mysql_db_size gauge
+EOF
+
+while read -r db size ; do
+  echo "mysql_db_size{name=\"${db}\"} $size" >> ${PROM_FILE}.$$
+done < $MYSQL_FILE
+
+cat << EOF >> ${PROM_FILE}.$$
+# HELP mysql_db_completion_time Stop timestamp
+# TYPE mysql_db_completion_time gauge
+mysql_db_size_completion_time $(date +%s)
+EOF
+
+mv ${PROM_FILE}.$$ ${PROM_FILE}
+rm -f $MYSQL_FILE

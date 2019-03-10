@@ -55,6 +55,26 @@ describe cron do
   it { should have_entry '@daily /usr/local/libexec/mysql-accounting' }
 end
 
+describe cron do
+  it { should have_entry '*/30 * * * * /usr/local/libexec/mysql-prometheus' }
+end
+
 describe command('/usr/local/libexec/mysql-accounting') do
   its(:exit_status) { should eq 0 }
+end
+
+describe command('/usr/local/libexec/mysql-prometheus') do
+  its(:exit_status) { should eq 0 }
+end
+
+describe file('/var/lib/node_exporter/mysql_db_size.prom') do
+  [
+    /^mysql_db_size_start_time [0-9].+$/,
+    /^mysql_db_size\{name="information_schema"\} [0-9].+$/,
+    /^mysql_db_size\{name="mysql"\} [0-9].+$/,
+    /^mysql_db_size\{name="performance_schema"\} [0-9]+$/,
+    /^mysql_db_size_completion_time [0-9].+$/,
+  ].each do |line|
+    its(:content) { should match(line) }
+  end
 end
