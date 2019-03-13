@@ -2,6 +2,7 @@ source 'https://supermarket.chef.io'
 
 solver :ruby, :required
 
+cookbook 'apache2', '< 6.0.0'
 cookbook 'base', git: 'git@github.com:osuosl-cookbooks/base'
 cookbook 'firewall', git: 'git@github.com:osuosl-cookbooks/firewall'
 cookbook 'munin', git: 'git@github.com:osuosl-cookbooks/munin'

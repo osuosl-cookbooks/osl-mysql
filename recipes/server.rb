@@ -76,12 +76,19 @@ directory '/var/lib/accounting/mysql' do
   mode '0700'
 end
 
-cookbook_file '/usr/local/libexec/mysql-accounting' do
-  source 'mysql-accounting'
-  mode '0755'
+%w(mysql-accounting mysql-prometheus).each do |f|
+  cookbook_file "/usr/local/libexec/#{f}" do
+    source f
+    mode '0755'
+  end
 end
 
 cron 'mysql-accounting' do
   command '/usr/local/libexec/mysql-accounting'
   time :daily
+end
+
+cron 'mysql-prometheus' do
+  command '/usr/local/libexec/mysql-prometheus'
+  minute '*/30'
 end

@@ -50,12 +50,14 @@ describe 'osl-mysql::server' do
           )
       end
 
-      it do
-        expect(chef_run).to create_cookbook_file('/usr/local/libexec/mysql-accounting')
-          .with(
-            source: 'mysql-accounting',
-            mode: '0755'
-          )
+      %w(mysql-accounting mysql-prometheus).each do |f|
+        it do
+          expect(chef_run).to create_cookbook_file("/usr/local/libexec/#{f}")
+            .with(
+              source: f,
+              mode: '0755'
+            )
+        end
       end
 
       it do
@@ -63,6 +65,14 @@ describe 'osl-mysql::server' do
           .with(
             command: '/usr/local/libexec/mysql-accounting',
             time: :daily
+          )
+      end
+
+      it do
+        expect(chef_run).to create_cron('mysql-prometheus')
+          .with(
+            command: '/usr/local/libexec/mysql-prometheus',
+            minute: '*/30'
           )
       end
     end
