@@ -4,6 +4,7 @@ set :backend, :exec
 
 %w(
   Percona-Server-server-56
+  Percona-Server-devel-56
   Percona-Server-shared-56
   percona-toolkit
   percona-xtrabackup
