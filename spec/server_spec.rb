@@ -35,6 +35,10 @@ describe 'osl-mysql::server' do
       end
 
       it do
+        expect(chef_run).to install_package('Percona-Server-devel-56')
+      end
+
+      it do
         expect(chef_run).to create_directory('/var/lib/mysql-files')
           .with(
             owner: 'mysql',
