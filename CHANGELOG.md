@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.0.5 (2019-03-13)
+------------------
+- Prometheus database size metrics
+
 2.0.4 (2019-01-30)
 ------------------
 - Include additional GPG key for RPMs for Percona
