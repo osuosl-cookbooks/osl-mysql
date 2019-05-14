@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 %w(
   Percona-Server-server-56
   Percona-Server-devel-56
@@ -36,16 +32,16 @@ end
 
 describe file('/root/.my.cnf') do
   it { should be_file }
-  its(:content) { should match(/jzYY0cQUnPAMcqvIxYaC/) }
+  its('content') { should match(/jzYY0cQUnPAMcqvIxYaC/) }
 end
 
 describe command('sysctl vm.swappiness') do
-  its(:stdout) { should match(/vm.swappiness = 0/) }
-  its(:exit_status) { should eq 0 }
+  its('stdout') { should match(/vm.swappiness = 0/) }
+  its('exit_status') { should eq 0 }
 end
 
 describe file('/etc/sysctl.d/99-chef-vm.swappiness.conf') do
-  its(:content) { should match(/vm.swappiness = 0/) }
+  its('content') { should match(/vm.swappiness = 0/) }
 end
 
 describe yumrepo('percona-noarch') do
@@ -61,7 +57,7 @@ describe cron do
 end
 
 describe command('/usr/local/libexec/mysql-accounting') do
-  its(:exit_status) { should eq 0 }
+  its('exit_status') { should eq 0 }
 end
 
 describe command('/usr/local/libexec/mysql-prometheus') do

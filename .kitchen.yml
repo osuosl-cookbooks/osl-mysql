@@ -1,4 +1,6 @@
 ---
+verifier:
+  name: inspec
 driver:
   flavor_ref: 'm1.medium'
 provisioner:
