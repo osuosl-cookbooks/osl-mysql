@@ -1,6 +1,3 @@
-# require 'chef/provisioning'
-# require 'chef/provisioning/vagrant_driver'
-
 with_driver "vagrant:#{File.dirname(__FILE__)}/../../../vms"
 
 machine_batch do

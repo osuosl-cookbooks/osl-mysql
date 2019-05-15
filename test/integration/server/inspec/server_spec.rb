@@ -22,8 +22,8 @@ end
 end
 
 %w(mysqld_safe mysqld).each do |p|
-  describe process(p) do
-    it { should be_running }
+  describe processes(p) do
+    its('states') { should eq ['R<'] }
   end
 end
 describe port(3306) do
@@ -48,12 +48,26 @@ describe yumrepo('percona-noarch') do
   it { should be_enabled }
 end
 
-describe cron do
-  it { should have_entry '@daily /usr/local/libexec/mysql-accounting' }
+describe crontab do
+  its('minutes') { should include '0' }
+  its('hours') { should include '0' }
+  its('days') { should include '*' }
+  its('months') { should include '*' }
+  its('weekdays') { should include '*' }
+  its('commands') do
+    should include '/usr/local/libexec/mysql-accounting'
+  end
 end
 
-describe cron do
-  it { should have_entry '*/30 * * * * /usr/local/libexec/mysql-prometheus' }
+describe crontab do
+  its('minutes') { should include '*/30' }
+  its('hours') { should include '*' }
+  its('days') { should include '*' }
+  its('months') { should include '*' }
+  its('weekdays') { should include '*' }
+  its('commands') do
+    should include '/usr/local/libexec/mysql-prometheus'
+  end
 end
 
 describe command('/usr/local/libexec/mysql-accounting') do
