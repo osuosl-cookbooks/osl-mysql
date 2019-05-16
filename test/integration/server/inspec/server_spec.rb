@@ -26,13 +26,22 @@ end
     it { should exist }
   end
 end
+
 describe port(3306) do
   it { should be_listening }
 end
 
 describe file('/root/.my.cnf') do
   it { should be_file }
-  its('content') { should match(/jzYY0cQUnPAMcqvIxYaC/) }
+end
+
+describe ini('/root/.my.cnf') do
+  its('client.user') { should eq 'root' }
+  its('client.password') { should eq '\'jzYY0cQUnPAMcqvIxYaC\'' }
+  its('mysqladmin.user') { should eq 'root' }
+  its('mysqladmin.password') { should eq '\'jzYY0cQUnPAMcqvIxYaC\'' }
+  its('mysqldump.user') { should eq 'root' }
+  its('mysqldump.password') { should eq '\'jzYY0cQUnPAMcqvIxYaC\'' }
 end
 
 describe command('sysctl vm.swappiness') do

@@ -1,9 +1,12 @@
 describe file('/etc/nagios/mysql.cnf') do
-  its('content') { should match(/user = monitor/) }
-  its('content') { should match(/password = ToJzwUyqQmyV4GgMVpz0/) }
   its('mode') { should cmp 0600 }
   its('owner') { should eq 'nrpe' }
   its('group') { should eq 'nrpe' }
+end
+
+describe ini('/etc/nagios/mysql.cnf') do
+  its('client.user') { should eq 'monitor' }
+  its('client.password') { should eq 'ToJzwUyqQmyV4GgMVpz0' }
 end
 
 %w(
@@ -29,6 +32,11 @@ describe file('/etc/munin/plugin-conf.d/mysql') do
   its('mode') { should cmp 0600 }
   its('owner') { should eq 'munin' }
   its('group') { should eq 'munin' }
+end
+
+describe ini('/etc/munin/plugin-conf.d/mysql') do
+  its(['mysql*', 'env.mysqluser']) { should eq 'monitor' }
+  its(['mysql*', 'env.mysqlpassword']) { should eq 'ToJzwUyqQmyV4GgMVpz0' }
 end
 
 # bin_relay_log
