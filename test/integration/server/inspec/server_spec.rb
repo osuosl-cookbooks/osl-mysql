@@ -23,7 +23,8 @@ end
 
 %w(mysqld_safe mysqld).each do |p|
   describe processes(p) do
-    its('states') { should eq ['R<'] }
+    # its('states') { should eq ['R<'] }
+    it { should exist }
   end
 end
 describe port(3306) do
@@ -44,7 +45,7 @@ describe file('/etc/sysctl.d/99-chef-vm.swappiness.conf') do
   its('content') { should match(/vm.swappiness = 0/) }
 end
 
-describe yumrepo('percona-noarch') do
+describe yum.repo('percona-noarch') do
   it { should be_enabled }
 end
 
