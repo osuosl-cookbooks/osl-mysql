@@ -44,13 +44,8 @@ describe ini('/root/.my.cnf') do
   its('mysqldump.password') { should eq '\'jzYY0cQUnPAMcqvIxYaC\'' }
 end
 
-describe command('sysctl vm.swappiness') do
-  its('stdout') { should match(/vm.swappiness = 0/) }
-  its('exit_status') { should eq 0 }
-end
-
-describe file('/etc/sysctl.d/99-chef-vm.swappiness.conf') do
-  its('content') { should match(/vm.swappiness = 0/) }
+describe kernel_parameter('vm.swappiness') do
+  its('value') { should eq 0 }
 end
 
 describe yum.repo('percona-noarch') do
