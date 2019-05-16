@@ -23,7 +23,6 @@ end
 
 %w(mysqld_safe mysqld).each do |p|
   describe processes(p) do
-    # its('states') { should eq ['R<'] }
     it { should exist }
   end
 end
