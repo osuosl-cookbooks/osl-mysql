@@ -27,16 +27,11 @@ end
 end
 
 describe file('/etc/munin/plugin-conf.d/mysql') do
-  its('content') { should match(/env.mysqluser monitor/) }
-  its('content') { should match(/env.mysqlpassword ToJzwUyqQmyV4GgMVpz0/) }
   its('mode') { should cmp 0600 }
   its('owner') { should eq 'munin' }
   its('group') { should eq 'munin' }
-end
-
-describe ini('/etc/munin/plugin-conf.d/mysql') do
-  its(['mysql*', 'env.mysqluser']) { should eq 'monitor' }
-  its(['mysql*', 'env.mysqlpassword']) { should eq 'ToJzwUyqQmyV4GgMVpz0' }
+  its('content') { should match(/env.mysqluser monitor/) }
+  its('content') { should match(/env.mysqlpassword ToJzwUyqQmyV4GgMVpz0/) }
 end
 
 # bin_relay_log
