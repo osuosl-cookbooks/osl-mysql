@@ -1,7 +1,3 @@
-require 'serverspec'
-
-set :backend, :exec
-
 describe file('/usr/local/src/xtrabackup-rb') do
   it { should be_directory }
 end
@@ -18,6 +14,6 @@ describe command('/usr/local/sbin/xtrabackup-rb') do
   its(:exit_status) { should eq 0 }
 end
 
-describe package('percona-xtrabackup.x86_64') do
+describe package('percona-xtrabackup') do
   it { should be_installed }
 end
