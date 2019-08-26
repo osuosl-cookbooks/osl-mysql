@@ -1,17 +1,15 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-ChefSpec::Coverage.start! { add_filter 'osl-mysql' }
-
 # rubocop:disable MutableConstant
 CENTOS_7_OPTS = {
   platform: 'centos',
-  version: '7.4.1708',
+  version: '7',
 }
 
 CENTOS_6_OPTS = {
   platform: 'centos',
-  version: '6.9',
+  version: '6',
 }
 # rubocop:enable MutableConstant
 
@@ -21,7 +19,7 @@ ALLPLATFORMS = [
 ].freeze
 
 RSpec.configure do |config|
-  config.log_level = :fatal
+  config.log_level = :warn
 end
 
 shared_context 'common_stubs' do
