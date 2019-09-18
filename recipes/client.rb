@@ -18,12 +18,11 @@
 #
 include_recipe 'osl-mysql'
 
-mysql_client 'default' do
-  not_if { platform_family?('rhel') && node['platform_version'].to_i >= 7 }
-  action :create
-end
-
-package 'mariadb' do
-  only_if { platform_family?('rhel') && node['platform_version'].to_i >= 7 }
-  action :install
+if node['osl-mysql']['enable_percona_client']
+  include_recipe 'percona::client'
+else
+  pkg_name = node['platform_version'].to_i >= 7 ? 'mariadb' : 'mysql'
+  mysql_client 'default' do
+    package_name [pkg_name, "#{pkg_name}-devel"]
+  end
 end

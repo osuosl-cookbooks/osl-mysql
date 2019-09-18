@@ -35,3 +35,9 @@ suites:
   - name: client
     run_list:
       - recipe[osl-mysql::client]
+  - name: client-percona
+    run_list:
+      - recipe[osl-mysql::client]
+    attributes:
+      osl-mysql:
+        enable_percona_client: true
