@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.1.0 (2019-09-18)
+------------------
+- Add support for installing Percona client in osl-mysql::client
+
 2.0.6 (2019-03-13)
 ------------------
 - Ensure we install Percona-Server-devel-56 when using Percona
