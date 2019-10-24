@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.1.1 (2019-10-24)
+------------------
+- Install yum-epel if on CentOS 6 for server
+
 2.1.0 (2019-09-18)
 ------------------
 - Add support for installing Percona client in osl-mysql::client
