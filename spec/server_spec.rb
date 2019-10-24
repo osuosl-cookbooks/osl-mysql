@@ -79,6 +79,16 @@ describe 'osl-mysql::server' do
             minute: '*/30'
           )
       end
+      case pltfrm
+      when CENTOS_6_OPTS
+        it do
+          expect(chef_run).to include_recipe('yum-epel')
+        end
+      when CENTOS_7_OPTS
+        it do
+          expect(chef_run).to_not include_recipe('yum-epel')
+        end
+      end
     end
   end
 end
