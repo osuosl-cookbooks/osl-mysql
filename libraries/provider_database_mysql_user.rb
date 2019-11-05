@@ -197,7 +197,7 @@ class Chef
                 Chef::Log.debug("#{@new_resource}: revoking access with statement [#{revoke_statement}]")
                 repair_client.query(revoke_statement)
                 repair_client.query('FLUSH PRIVILEGES')
-                @new_resource.updated_by_last_action(true)
+                @new_resource.updated_by_last_action(true) # ~FC085
               ensure
                 close_repair_client
               end
