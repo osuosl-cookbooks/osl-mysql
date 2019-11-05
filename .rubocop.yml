@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - 'metadata.rb'
     - '**/vms/*'
+    - 'libraries/provider_database_mysql_user.rb'
 
 Style/NumericLiteralPrefix:
   EnforcedOctalStyle: zero_only
