@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.2.0 (2019-11-05)
+------------------
+- Import mysql resources from deprecated database cookbook
+
 2.1.1 (2019-10-24)
 ------------------
 - Install yum-epel if on CentOS 6 for server
