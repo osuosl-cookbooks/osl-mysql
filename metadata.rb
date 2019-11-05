@@ -10,7 +10,6 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '2.1.1'
 
 depends          'base'
-depends          'database'
 depends          'firewall'
 depends          'git'
 depends          'mysql', '~> 8.5.1'
@@ -22,7 +21,6 @@ depends          'percona', '~> 0.16.1'
 depends          'sysctl'
 depends          'yum'
 depends          'yum-epel'
-depends          'osl-postgresql'
 
 supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'

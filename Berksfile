@@ -10,6 +10,5 @@ cookbook 'osl-nrpe', git: 'git@github.com:osuosl-cookbooks/osl-nrpe'
 cookbook 'osl-munin', git: 'git@github.com:osuosl-cookbooks/osl-munin'
 cookbook 'osl-selinux', git: 'git@github.com:osuosl-cookbooks/osl-selinux'
 cookbook 'osl-postfix', git: 'git@github.com:osuosl-cookbooks/osl-postfix'
-cookbook 'osl-postgresql', git: 'git@github.com:osuosl-cookbooks/osl-postgresql'
 
 metadata
