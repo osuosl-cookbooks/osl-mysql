@@ -44,17 +44,8 @@ mysql_database_user 'mysql_monitor_grant' do
   connection mysql_conn
   username node['osl-mysql']['monitor_user']
   password passwords['monitor']
-  privileges [:super, :process, 'replication client', 'replication slave']
+  privileges [:super, :select, :process, 'replication client', 'replication slave']
   action [:create, :grant]
-end
-
-# select access is required for some munin plugins
-mysql_database_user 'mysql_monitor_database' do
-  connection mysql_conn
-  username node['osl-mysql']['monitor_user']
-  privileges [:select]
-  database_name 'mysql'
-  action [:grant]
 end
 
 # Add defaults file for mysql nagios checks

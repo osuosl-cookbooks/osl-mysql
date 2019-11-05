@@ -40,7 +40,7 @@ describe 'osl-mysql::mon' do
             },
             username: 'monitor',
             password: 'monitor_pw',
-            privileges: [:super, :process, 'replication client', 'replication slave']
+            privileges: [:super, :select, :process, 'replication client', 'replication slave']
           )
       end
       it do
@@ -49,23 +49,11 @@ describe 'osl-mysql::mon' do
             connection: {
               host: 'localhost',
               username: 'root',
-              password: 'root_pw' },
-            username: 'monitor',
-            password: 'monitor_pw',
-            privileges: [:super, :process, 'replication client', 'replication slave']
-          )
-      end
-      it do
-        expect(chef_run).to grant_mysql_database_user('mysql_monitor_database')
-          .with(
-            connection: {
-              host: 'localhost',
-              username: 'root',
               password: 'root_pw',
             },
             username: 'monitor',
-            privileges: [:select],
-            database_name: 'mysql'
+            password: 'monitor_pw',
+            privileges: [:super, :select, :process, 'replication client', 'replication slave']
           )
       end
       it do
