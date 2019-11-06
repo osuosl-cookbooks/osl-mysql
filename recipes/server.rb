@@ -56,6 +56,8 @@ include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
 include_recipe 'firewall::mysql'
 
+delete_resource(:package, 'mysql-libs')
+
 # XXX: temporary add this until its fixed upstream
 yum_repository 'percona-noarch' do
   description 'Percona noarch Packages'
