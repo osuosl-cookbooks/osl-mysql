@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.2.2 (2019-11-06)
+------------------
+- Delete the package[mysql-libs] resource
+
 2.2.1 (2019-11-05)
 ------------------
 - Fix monitor user
