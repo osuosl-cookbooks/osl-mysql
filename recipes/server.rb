@@ -20,6 +20,12 @@ node.default['percona']['server']['debian_username'] = 'root'
 node.default['percona']['skip_passwords'] = false
 node.default['percona']['server']['bind_address'] = '0.0.0.0'
 
+# Loosen restrictions on type of functions users can create
+node.default['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
+
+# utf8mb4 support
+node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true'
+
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'
 node.default['percona']['server']['myisam_recover'] = 'FORCE,BACKUP'
@@ -35,6 +41,7 @@ node.default['percona']['server']['query_cache_size'] = 0
 node.default['percona']['server']['thread_cache_size'] = 50
 node.default['percona']['server']['key_buffer'] = '32M'
 node.default['percona']['server']['table_cache'] = 4_096
+node.default['percona']['server']['innodb_file_format'] = 'barracuda'
 node.default['percona']['server']['innodb_file_per_table'] = true
 node.default['percona']['server']['innodb_flush_method'] = 'O_DIRECT'
 node.default['percona']['server']['innodb_log_files_in_group'] = 2
