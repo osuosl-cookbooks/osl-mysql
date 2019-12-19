@@ -18,7 +18,6 @@ depends          'osl-nrpe'
 depends          'osl-munin'
 depends          'osl-postfix'
 depends          'percona', '~> 0.16.1'
-depends          'sysctl'
 depends          'yum'
 depends          'yum-epel'
 
