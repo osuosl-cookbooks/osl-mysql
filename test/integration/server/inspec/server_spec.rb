@@ -44,6 +44,15 @@ describe ini('/root/.my.cnf') do
   its('mysqldump.password') { should eq '\'jzYY0cQUnPAMcqvIxYaC\'' }
 end
 
+describe mysql_conf('/etc/my.cnf') do
+  its('mysqld.log_bin_trust_function_creators') { should eq '1' }
+  its('mysqld.innodb_large_prefix') { should eq 'true' }
+  # percona cookbook adds a second mysqld section for the above settings
+  # mysql_conf/ini inspec resource seems to only give you the second section
+  its('content') { should match(/^innodb_file_format = barracuda$/) }
+  its('content') { should match(/^innodb_file_per_table$/) }
+end
+
 describe kernel_parameter('vm.swappiness') do
   its('value') { should eq 0 }
 end
