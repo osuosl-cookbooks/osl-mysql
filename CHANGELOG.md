@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.2.4 (2019-12-19)
+------------------
+- Change innodb file format and set log_bin_trust_function_creators
+
 2.2.3 (2019-11-18)
 ------------------
 - Bump xtrabackup version
