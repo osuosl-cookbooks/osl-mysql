@@ -7,7 +7,7 @@ license          'Apache-2.0'
 chef_version     '>= 14.0'
 description      'Installs/Configures osl-mysql'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '2.2.4'
+version          '2.3.0'
 
 depends          'base'
 depends          'firewall'
