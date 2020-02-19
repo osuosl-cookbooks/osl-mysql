@@ -41,3 +41,21 @@ suites:
     attributes:
       osl-mysql:
         enable_percona_client: true
+  - name: multi-node
+    driver:
+      name: terraform
+      command_timeout: 1800
+    provisioner: terraform
+    verifier:
+      name: terraform
+      groups:
+        - name: master
+          controls:
+            - master
+          hostnames: master
+        - name: slave
+          controls:
+            - slave
+          hostnames: slave
+    excludes:
+      - centos-6
