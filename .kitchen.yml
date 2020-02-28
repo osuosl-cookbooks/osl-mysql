@@ -48,13 +48,23 @@ suites:
     provisioner: terraform
     verifier:
       name: terraform
-      groups:
+      systems:
         - name: master
+          backend: ssh
+          hosts_output: master
+          sudo: true
+          user: centos
           controls:
+            - all
             - master
           hostnames: master
         - name: slave
+          backend: ssh
+          hosts_output: slave
+          sudo: true
+          user: centos
           controls:
+            - all
             - slave
           hostnames: slave
     excludes:
