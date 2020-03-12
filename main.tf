@@ -53,7 +53,7 @@ resource "openstack_compute_instance_v2" "master" {
         fixed_ip_v4 = "192.168.60.11"
     }
     provisioner "chef" {
-        run_list        = [ "role[mysql-vip]", "recipe[multi_node_test::network]", "recipe[osl-mysql::master]" ]
+        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::master]"]
         node_name       = "master"
         secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
         server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"
@@ -82,7 +82,7 @@ resource "openstack_compute_instance_v2" "slave" {
         fixed_ip_v4 = "192.168.60.12"
     }
     provisioner "chef" {
-        run_list        = [ "role[mysql-vip]", "recipe[multi_node_test::network]", "recipe[osl-mysql::slave]" ]
+        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::slave]"]
         node_name       = "slave"
         secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
         server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"

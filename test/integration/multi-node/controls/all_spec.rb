@@ -113,4 +113,18 @@ control 'all' do
       its(:content) { should match(line) }
     end
   end
+
+  sql = mysql_session('root')
+  describe sql.query('SHOW databases') do
+    its('stdout') { should match 'testdb' }
+  end
+
+  describe sql.query('SHOW tables IN testdb') do
+    its('stdout') { should match 'example' }
+  end
+
+  describe sql.query('SELECT * FROM testdb.example') do
+    its('stdout') { should match "1\thello" }
+    its('stdout') { should match "2\tworld" }
+  end
 end
