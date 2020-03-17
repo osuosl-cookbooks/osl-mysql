@@ -4,11 +4,6 @@
     "percona": {
       "encrypted_data_bag": "percona",
       "encrypted_data_bag_secret_file": "/etc/chef/encrypted_data_bag_secret"
-    },
-    "osl-mysql": {
-      "replication": {
-        "master_interface": "enp0s8"
-      }
     }
   },
   "json_class": "Chef::Role",
