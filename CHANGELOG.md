@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.3.1 (2020-04-27)
+------------------
+- sysctl adjustments
+
 2.3.0 (2020-01-14)
 ------------------
 - Chef 14 post-migration fixes
