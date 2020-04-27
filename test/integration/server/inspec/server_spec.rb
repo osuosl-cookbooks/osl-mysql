@@ -51,10 +51,15 @@ describe mysql_conf('/etc/my.cnf') do
   # mysql_conf/ini inspec resource seems to only give you the second section
   its('content') { should match(/^innodb_file_format = barracuda$/) }
   its('content') { should match(/^innodb_file_per_table$/) }
+  its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) }
 end
 
 describe kernel_parameter('vm.swappiness') do
   its('value') { should eq 0 }
+end
+
+describe kernel_parameter('vm.min_free_kbytes') do
+  its('value') { should eq 38799 }
 end
 
 describe yum.repo('percona-noarch') do

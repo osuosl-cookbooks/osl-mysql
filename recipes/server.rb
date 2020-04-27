@@ -50,11 +50,23 @@ node.default['percona']['server']['innodb_flush_log_at_trx_commit'] = 2
 # Calculate the InnoDB buffer pool size and instances
 # Ohai reports memory in kB
 mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
-node.default['percona']['server']['innodb_buffer_pool_size'] =
-  "#{Integer(mem * 0.75)}M"
+# Setinnodb_buffer_pool_size to 70% of total RAM of the machine
+node.default['percona']['server']['innodb_buffer_pool_size'] = "#{Integer(mem * 0.70)}M"
+# Set to 1% of total memory
+# https://discuss.aerospike.com/t/how-to-tune-the-linux-kernel-for-memory-performance/4195
+min_free_kbytes = Integer(mem * 1024 * 0.01)
 
 sysctl 'vm.swappiness' do
   value 0
+end
+
+sysctl 'vm.min_free_kbytes' do
+  # Don't set above 2GB
+  if (min_free_kbytes / 1048576) >= 2
+    value '2097152'
+  else
+    value min_free_kbytes
+  end
 end
 
 include_recipe 'osl-mysql'

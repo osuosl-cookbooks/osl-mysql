@@ -40,6 +40,22 @@ describe 'osl-mysql::server' do
       it do
         expect(chef_run).to install_package('Percona-Server-devel-56')
       end
+      it do
+        expect(chef_run).to apply_sysctl('vm.min_free_kbytes').with(value: '10485')
+      end
+      context '256G RAM' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(pltfrm) do |node|
+            node.automatic['memory']['total'] = '268435456kB'
+          end.converge(described_recipe)
+        end
+        it do
+          expect(chef_run).to apply_sysctl('vm.min_free_kbytes').with(value: '2097152')
+        end
+      end
+      it do
+        expect(chef_run).to render_file('/etc/my.cnf').with_content('innodb_buffer_pool_size = 716M')
+      end
 
       it do
         expect(chef_run).to create_directory('/var/lib/mysql-files')
