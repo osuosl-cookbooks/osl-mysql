@@ -14,7 +14,6 @@ describe 'osl-mysql::server' do
 
       %w(
         osl-mysql
-        base::sysctl
         percona::server
         percona::toolkit
         percona::backup
@@ -23,6 +22,10 @@ describe 'osl-mysql::server' do
         it do
           expect(chef_run).to include_recipe(recipe)
         end
+      end
+
+      it do
+        expect(chef_run).to apply_sysctl('vm.swappiness').with(value: '0')
       end
 
       it do

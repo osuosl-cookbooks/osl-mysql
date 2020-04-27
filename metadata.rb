@@ -9,7 +9,6 @@ description      'Installs/Configures osl-mysql'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '2.3.0'
 
-depends          'base'
 depends          'firewall'
 depends          'git'
 depends          'mysql', '~> 8.5.1'

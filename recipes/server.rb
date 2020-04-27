@@ -53,10 +53,11 @@ mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
 node.default['percona']['server']['innodb_buffer_pool_size'] =
   "#{Integer(mem * 0.75)}M"
 
-node.default['base']['sysctl']['vm.swappiness'] = '0'
+sysctl 'vm.swappiness' do
+  value 0
+end
 
 include_recipe 'osl-mysql'
-include_recipe 'base::sysctl'
 include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
