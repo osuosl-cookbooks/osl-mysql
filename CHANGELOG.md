@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.3.2 (2020-05-29)
+------------------
+- version lock mariadb until chef15 migration
+
 2.3.1 (2020-04-27)
 ------------------
 - sysctl adjustments
