@@ -12,7 +12,7 @@ version          '2.3.2'
 depends          'firewall'
 depends          'git'
 # TODO: Remove after chef15 upgrade
-depends          'mariadb', '~> 3.2.0'
+depends          'mariadb', '< 4.0.0'
 depends          'mysql', '~> 8.5.1'
 depends          'mysql2_chef_gem'
 depends          'osl-nrpe'
