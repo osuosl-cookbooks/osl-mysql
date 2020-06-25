@@ -44,7 +44,7 @@ describe 'osl-mysql::xtrabackuprb' do
       it do
         expect(chef_run).to install_chef_gem('xtrabackup-rb')
           .with(
-            source: '/usr/local/src/xtrabackup-rb/xtrabackup-rb-0.0.8.gem'
+            source: '/usr/local/src/xtrabackup-rb/xtrabackup-rb-0.0.9.gem'
           )
       end
       it do
