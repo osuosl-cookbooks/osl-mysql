@@ -1,7 +1,7 @@
 #
 # Author:: Seth Chisamore (<schisamo@chef.io>)
 # Author:: Sean OMeara (<sean@sean.io>)
-# Copyright:: 2011-2016, Chef Software, Inc.
+# Copyright:: 2011-2020, Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,10 @@ require File.join(File.dirname(__FILE__), 'provider_database_mysql')
 class Chef
   class Resource
     class MysqlDatabase < Chef::Resource::Database
+      resource_name :mysql_database
+
       def initialize(name, run_context = nil)
         super
-        @resource_name = :mysql_database
         @provider = Chef::Provider::Database::Mysql
       end
     end

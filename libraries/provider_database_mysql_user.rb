@@ -1,7 +1,7 @@
 #
 # Author:: Seth Chisamore (<schisamo@chef.io>)
 # Author:: Sean OMeara (<sean@sean.io>)
-# Copyright:: 2011-2016, Chef Software, Inc.
+# Copyright:: 2011-2020, Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +23,6 @@ class Chef
   class Provider
     class Database
       class MysqlUser < Chef::Provider::Database::Mysql
-        use_inline_resources
-
-        def whyrun_supported?
-          true
-        end
-
         action :create do
           # test
           user_present = nil
@@ -197,7 +191,7 @@ class Chef
                 Chef::Log.debug("#{@new_resource}: revoking access with statement [#{revoke_statement}]")
                 repair_client.query(revoke_statement)
                 repair_client.query('FLUSH PRIVILEGES')
-                @new_resource.updated_by_last_action(true) # ~FC085
+                @new_resource.updated_by_last_action(true)
               ensure
                 close_repair_client
               end
@@ -338,7 +332,7 @@ class Chef
                           "AND authentication_string=PASSWORD('#{new_resource.password}')"
                         end
           end
-          test_client.query(test_sql).size > 0
+          !test_client.query(test_sql).empty?
         end
 
         def update_user_password
@@ -369,7 +363,7 @@ class Chef
         end
 
         def database_has_password_column(client)
-          client.query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"').size > 0
+          !client.query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"').empty?
         end
 
         def redact_password(query, password)

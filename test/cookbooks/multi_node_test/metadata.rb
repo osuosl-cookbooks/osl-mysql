@@ -3,7 +3,6 @@ maintainer 'Oregon State University'
 maintainer_email 'systems@osuosl.org'
 license 'Apache-2.0'
 description 'Installs/Configures multi_node_test'
-long_description 'Installs/Configures multi_node_test'
 version '0.1.0'
 chef_version '>= 13.0'
 
