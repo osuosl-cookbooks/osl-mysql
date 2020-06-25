@@ -44,23 +44,10 @@ describe 'osl-mysql::mon' do
           )
       end
       it do
-        expect(chef_run).to grant_mysql_database_user('mysql_monitor_grant')
-          .with(
-            connection: {
-              host: 'localhost',
-              username: 'root',
-              password: 'root_pw',
-            },
-            username: 'monitor',
-            password: 'monitor_pw',
-            privileges: [:super, :select, :process, 'replication client', 'replication slave']
-          )
-      end
-      it do
         expect(chef_run).to create_template('/etc/nagios/mysql.cnf')
           .with(
             source: 'nagios/mysql.cnf.erb',
-            mode: '384',
+            mode: '600',
             owner: 'nrpe',
             group: 'nrpe',
             variables: {
