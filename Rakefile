@@ -112,14 +112,11 @@ task snakeoil: snakeoil_file_path
 desc 'Create an Encrypted Databag Secret'
 task secret_file: encrypted_data_bag_secret_path
 
+require 'cookstyle'
+require 'rubocop/rake_task'
 desc 'Run RuboCop (cookstyle) tests'
-task :style do
-  run_command('cookstyle')
-end
-
-desc 'Run FoodCritic (lint) tests'
-task :lint do
-  run_command('foodcritic --epic-fail any .')
+RuboCop::RakeTask.new(:style) do |task|
+  task.options << '--display-cop-names'
 end
 
 desc 'Run RSpec (unit) tests'
@@ -160,6 +157,6 @@ desc 'Blow everything away'
 task clean: [:destroy_all]
 
 desc 'Run all tests'
-task test: [:style, :lint, :unit]
+task test: [:style, :unit]
 
 task default: :test
