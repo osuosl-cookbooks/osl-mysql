@@ -60,7 +60,7 @@ describe 'osl-mysql::mon' do
         expect(chef_run).to create_template('/etc/nagios/mysql.cnf')
           .with(
             source: 'nagios/mysql.cnf.erb',
-            mode: 0600,
+            mode: '384',
             owner: 'nrpe',
             group: 'nrpe',
             variables: {
