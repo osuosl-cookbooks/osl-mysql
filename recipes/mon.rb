@@ -102,7 +102,7 @@ end
   table_locks
   tmp_tables
 ).each do |p|
-  munin_plugin 'mysql_' do
-    plugin "mysql_#{p}"
+  munin_plugin "mysql_#{p}" do
+    plugin 'mysql_'
   end
 end

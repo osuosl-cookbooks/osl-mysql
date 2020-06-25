@@ -6,7 +6,7 @@ describe 'osl-mysql::mon' do
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
+        ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(munin_plugin))).converge(described_recipe)
       end
       before do
         stub_data_bag_item('passwords', 'mysql').and_return(root: 'root_pw', monitor: 'monitor_pw')
