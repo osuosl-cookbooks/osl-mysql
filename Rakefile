@@ -149,7 +149,7 @@ end
 
 desc 'Upload data to chef-zero server'
 task knife_upload: [:berks_vendor, :create_key] do
-  run_command('knife upload . --force -c test/chef-config/knife.rb')
+  run_command('knife upload . --force -c test/chef-config/knife.rb --concurrency 1')
 end
 
 desc 'Blow everything away'
