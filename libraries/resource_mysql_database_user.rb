@@ -29,13 +29,7 @@ class Chef
         @provider = Chef::Provider::Database::MysqlUser
       end
 
-      def password(arg = nil)
-        set_or_return(
-          :password,
-          arg,
-          kind_of: [String, HashedPassword]
-        )
-      end
+      property :password, [String, HashedPassword]
     end
   end
 end

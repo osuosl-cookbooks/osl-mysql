@@ -31,31 +31,6 @@ class Chef
         @allowed_actions.push(:create, :drop, :query)
       end
 
-      def database_name(arg = nil)
-        set_or_return(
-          :database_name,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def connection(arg = nil)
-        set_or_return(
-          :connection,
-          arg,
-          required: true
-        )
-      end
-
-      def sql(arg = nil, &block)
-        arg ||= block
-        set_or_return(
-          :sql,
-          arg,
-          kind_of: [String, Proc]
-        )
-      end
-
       def sql_query
         if sql.is_a?(Proc)
           sql.call
@@ -64,57 +39,15 @@ class Chef
         end
       end
 
-      def template(arg = nil)
-        set_or_return(
-          :template,
-          arg,
-          kind_of: String,
-          default: 'DEFAULT'
-        )
-      end
-
-      def collation(arg = nil)
-        set_or_return(
-          :collation,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def encoding(arg = nil)
-        set_or_return(
-          :encoding,
-          arg,
-          kind_of: String,
-          default: 'DEFAULT'
-        )
-      end
-
-      def tablespace(arg = nil)
-        set_or_return(
-          :tablespace,
-          arg,
-          kind_of: String,
-          default: 'DEFAULT'
-        )
-      end
-
-      def connection_limit(arg = nil)
-        set_or_return(
-          :connection_limit,
-          arg,
-          kind_of: String,
-          default: '-1'
-        )
-      end
-
-      def owner(arg = nil)
-        set_or_return(
-          :owner,
-          arg,
-          kind_of: String
-        )
-      end
+      property :database_name, String
+      property :connection, String, required: true
+      property :sql, [String, Proc]
+      property :template, String, default: 'DEFAULT'
+      property :collation, String
+      property :encoding, String, default: 'DEFAULT'
+      property :tablespace, String, default: 'DEFAULT'
+      property :connection_limit, String, default: '-1'
+      property :owner, String
     end
   end
 end

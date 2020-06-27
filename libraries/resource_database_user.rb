@@ -40,77 +40,15 @@ class Chef
         @allowed_actions.push(:create, :drop, :grant, :revoke)
       end
 
-      def database_name(arg = nil)
-        set_or_return(
-          :database_name,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def username(arg = nil)
-        set_or_return(
-          :username,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def require_ssl(arg = nil)
-        set_or_return(
-          :require_ssl,
-          arg,
-          kind_of: [TrueClass, FalseClass]
-        )
-      end
-
-      def require_x509(arg = nil)
-        set_or_return(
-          :require_x509,
-          arg,
-          kind_of: [TrueClass, FalseClass]
-        )
-      end
-
-      def password(arg = nil)
-        set_or_return(
-          :password,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def table(arg = nil)
-        set_or_return(
-          :table,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def host(arg = nil)
-        set_or_return(
-          :host,
-          arg,
-          kind_of: String
-        )
-      end
-
-      def privileges(arg = nil)
-        set_or_return(
-          :privileges,
-          arg,
-          kind_of: Array
-        )
-      end
-
-      def grant_option(arg = nil)
-        set_or_return(
-          :grant_option,
-          arg,
-          kind_of: [TrueClass, FalseClass], default: false
-        )
-      end
+      property :database_name, String
+      property :username, String
+      property :require_ssl, [true, false]
+      property :require_x509, [true, false]
+      property :password, String
+      property :table, String
+      property :host, String
+      property :priveleges, Array
+      property :grant_option, [true, false], default: false
     end
   end
 end
