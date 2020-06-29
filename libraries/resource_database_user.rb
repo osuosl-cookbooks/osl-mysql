@@ -47,7 +47,7 @@ class Chef
       property :password, String
       property :table, String
       property :host, String
-      property :priveleges, Array
+      property :privileges, Array
       property :grant_option, [true, false], default: false
     end
   end

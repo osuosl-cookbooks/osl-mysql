@@ -40,7 +40,7 @@ class Chef
       end
 
       property :database_name, String
-      property :connection, String, required: true
+      property :connection, Hash, required: true
       property :sql, [String, Proc]
       property :template, String, default: 'DEFAULT'
       property :collation, String
