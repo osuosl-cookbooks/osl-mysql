@@ -61,6 +61,7 @@ resource "openstack_compute_instance_v2" "master" {
         user_name       = "fakeclient"
         user_key        = "${file("test/chef-config/fakeclient.pem")}"
         version         = "${var.chef_version}"
+        client_options  = ["chef_license 'accept'"]
     }
 }
 
@@ -90,5 +91,6 @@ resource "openstack_compute_instance_v2" "slave" {
         user_name       = "fakeclient"
         user_key        = "${file("test/chef-config/fakeclient.pem")}"
         version         = "${var.chef_version}"
+        client_options  = ["chef_license 'accept'"]
     }
 }

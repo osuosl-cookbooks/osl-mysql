@@ -37,8 +37,6 @@ class Chef
         @grant_option = false
         @require_ssl = false
         @require_x509 = false
-
-#        @allowed_actions.push(:create, :drop, :grant, :revoke)
       end
 
       property :database_name, String
