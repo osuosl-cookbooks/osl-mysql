@@ -24,6 +24,7 @@ class Chef
       resource_name :database_user
 
       default_action :create
+      allowed_actions [:create, :drop, :grant, :revoke]
 
       def initialize(name, run_context = nil)
         super
@@ -37,7 +38,7 @@ class Chef
         @require_ssl = false
         @require_x509 = false
 
-        @allowed_actions.push(:create, :drop, :grant, :revoke)
+#        @allowed_actions.push(:create, :drop, :grant, :revoke)
       end
 
       property :database_name, String

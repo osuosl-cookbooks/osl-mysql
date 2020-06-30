@@ -110,7 +110,7 @@ class Chef
             test_sql += " AND Db='#{new_resource.database_name}'" if new_resource.database_name
             test_sql_results = test_client.query test_sql
 
-            incorrect_privs = true if test_sql_results.size == 0 # rubocop:disable Style/ZeroLengthPredicate
+            incorrect_privs = true if test_sql_results.size.zero? # rubocop:disable Style/NumericPredicate
             # These should all be 'Y'
             test_sql_results.each do |r|
               desired_privs.each do |p|
@@ -332,7 +332,7 @@ class Chef
                           "AND authentication_string=PASSWORD('#{new_resource.password}')"
                         end
           end
-          !test_client.query(test_sql).size == 0 # rubocop:disable Style/ZeroLengthPredicate
+          test_client.query(test_sql).size > 0 # rubocop:disable Style/ZeroLengthPredicate
         end
 
         def update_user_password
@@ -363,7 +363,7 @@ class Chef
         end
 
         def database_has_password_column(client)
-          !client.query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"').size == 0 # rubocop:disable Style/ZeroLengthPredicate
+          client.query('SHOW COLUMNS FROM mysql.user WHERE Field="Password"').size > 0 # rubocop:disable Style/ZeroLengthPredicate
         end
 
         def redact_password(query, password)

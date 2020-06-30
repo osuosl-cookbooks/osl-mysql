@@ -6,7 +6,7 @@ describe 'osl-mysql::mon' do
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm.dup.merge(step_into: %w(munin_plugin))).converge(described_recipe)
+        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
       end
       before do
         stub_data_bag_item('passwords', 'mysql').and_return(root: 'root_pw', monitor: 'monitor_pw')
@@ -32,6 +32,19 @@ describe 'osl-mysql::mon' do
       end
       it do
         expect(chef_run).to create_mysql_database_user('mysql_monitor_grant')
+          .with(
+            connection: {
+              host: 'localhost',
+              username: 'root',
+              password: 'root_pw',
+            },
+            username: 'monitor',
+            password: 'monitor_pw',
+            privileges: [:super, :select, :process, 'replication client', 'replication slave']
+          )
+      end
+      it do
+        expect(chef_run).to grant_mysql_database_user('mysql_monitor_grant')
           .with(
             connection: {
               host: 'localhost',
@@ -89,7 +102,7 @@ describe 'osl-mysql::mon' do
         mysql_threads
       ).each do |p|
         it do
-          expect(chef_run.link("/etc/munin/plugins/#{p}")).to link_to("/usr/share/munin/plugins/#{p}")
+          expect(chef_run).to create_munin_plugin(p)
         end
       end
       %w(
@@ -105,7 +118,9 @@ describe 'osl-mysql::mon' do
         tmp_tables
       ).each do |p|
         it do
-          expect(chef_run.link("/etc/munin/plugins/mysql_#{p}")).to link_to('/usr/share/munin/plugins/mysql_')
+          expect(chef_run).to create_munin_plugin("mysql_#{p}").with(
+            plugin: 'mysql_'
+          )
         end
       end
     end
