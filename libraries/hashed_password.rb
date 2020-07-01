@@ -17,8 +17,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require File.join(File.dirname(__FILE__), 'resource_mysql_database_user')
-
 class HashedPassword
   # Initializes an object of the MysqlPassword type
   # @param [String] hashed_password mysql native hashed password
@@ -44,5 +42,3 @@ class HashedPassword
     alias_method :mysql_hashed_password, :hashed_password
   end
 end
-
-::Chef::Resource::MysqlDatabaseUser.include HashedPassword::Helpers
