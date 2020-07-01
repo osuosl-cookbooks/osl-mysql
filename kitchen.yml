@@ -7,6 +7,9 @@ provisioner:
   name: chef_solo
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
+  enforce_idempotency: true
+  multiple_converge: 2
+  deprecations_as_errors: true
   attributes:
     omnibus_updater:
       disabled: true
@@ -21,7 +24,10 @@ suites:
     excludes:
       - centos-6
   - name: mon
-    provisioner: chef_zero
+    provisioner: 
+      name: chef_zero
+      enforce_idempotency: false # mysql2_chef_gem is not idempotent
+      multiple_converge: 1
     run_list:
       - recipe[osl-mysql::mon]
     excludes:

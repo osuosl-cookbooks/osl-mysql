@@ -1,11 +1,6 @@
 AllCops:
-  Include:
-    - '**/Berksfile'
-    - '**/Cheffile'
-  Exclude:
-    - 'metadata.rb'
-    - '**/vms/*'
-    - 'libraries/provider_database_mysql_user.rb'
-
-Style/NumericLiteralPrefix:
-  EnforcedOctalStyle: zero_only
+  TargetChefVersion: 15.latest
+ChefModernize/FoodcriticComments:
+  Enabled: true
+ChefStyle/CopyrightCommentFormat:
+  Enabled: true

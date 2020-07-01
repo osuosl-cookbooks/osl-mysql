@@ -3,7 +3,7 @@
 # Cookbook:: database
 # Library:: hashed_password
 #
-# Copyright:: 2016, Eligible, Inc.
+# Copyright:: 2016-2020, Eligible, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,4 +45,4 @@ class HashedPassword
   end
 end
 
-::Chef::Resource::MysqlDatabaseUser.send(:include, HashedPassword::Helpers)
+::Chef::Resource::MysqlDatabaseUser.include HashedPassword::Helpers

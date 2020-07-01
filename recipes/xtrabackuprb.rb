@@ -13,9 +13,11 @@ git '/usr/local/src/xtrabackup-rb' do
   repository 'https://github.com/mmz-srf/xtrabackup-rb.git'
 end
 
-execute '/opt/chef/embedded/bin/gem build xtrabackup-rb.gemspec' do
+chef_path = node['chef_packages']['chef']['version'].to_i >= 15 ? 'cinc' : 'chef'
+
+execute "/opt/#{chef_path}/embedded/bin/gem build xtrabackup-rb.gemspec" do
   cwd '/usr/local/src/xtrabackup-rb'
-  not_if { ::File.exist?('/opt/chef/embedded/bin/xtrabackup-rb') }
+  not_if { ::File.exist?("/opt/#{chef_path}/embedded/bin/xtrabackup-rb") }
 end
 
 chef_gem 'xtrabackup-rb' do
@@ -24,5 +26,5 @@ chef_gem 'xtrabackup-rb' do
 end
 
 link '/usr/local/sbin/xtrabackup-rb' do
-  to '/opt/chef/embedded/bin/xtrabackup-rb'
+  to "/opt/#{chef_path}/embedded/bin/xtrabackup-rb"
 end

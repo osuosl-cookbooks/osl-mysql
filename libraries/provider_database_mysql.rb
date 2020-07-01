@@ -1,7 +1,7 @@
 #
 # Author:: Seth Chisamore (<schisamo@chef.io>)
 # Author:: Sean OMeara (<sean@sean.io>)
-# Copyright:: 2011-2016, Chef Software, Inc.
+# Copyright:: 2011-2020, Chef Software, Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,6 @@ class Chef
   class Provider
     class Database
       class Mysql < Chef::Provider::LWRPBase
-        use_inline_resources # ~FC113
-
-        def whyrun_supported?
-          true
-        end
-
         action :create do
           # test
           schema_present = nil

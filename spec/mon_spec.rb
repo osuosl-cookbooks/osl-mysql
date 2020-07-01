@@ -60,7 +60,7 @@ describe 'osl-mysql::mon' do
         expect(chef_run).to create_template('/etc/nagios/mysql.cnf')
           .with(
             source: 'nagios/mysql.cnf.erb',
-            mode: 0600,
+            mode: '600',
             owner: 'nrpe',
             group: 'nrpe',
             variables: {
@@ -102,7 +102,7 @@ describe 'osl-mysql::mon' do
         mysql_threads
       ).each do |p|
         it do
-          expect(chef_run.link("/etc/munin/plugins/#{p}")).to link_to("/usr/share/munin/plugins/#{p}")
+          expect(chef_run).to create_munin_plugin(p)
         end
       end
       %w(
@@ -118,7 +118,9 @@ describe 'osl-mysql::mon' do
         tmp_tables
       ).each do |p|
         it do
-          expect(chef_run.link("/etc/munin/plugins/mysql_#{p}")).to link_to('/usr/share/munin/plugins/mysql_')
+          expect(chef_run).to create_munin_plugin("mysql_#{p}").with(
+            plugin: 'mysql_'
+          )
         end
       end
     end

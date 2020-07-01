@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: osl-mysql
+# Cookbook:: osl-mysql
 # Recipe:: mon
 #
-# Copyright (C) 2014, Oregon State University
+# Copyright:: 2014-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ end
 # Add defaults file for mysql nagios checks
 template "#{node['nrpe']['conf_dir']}/mysql.cnf" do
   source 'nagios/mysql.cnf.erb'
-  mode 0600
+  mode '600'
   owner node['nrpe']['user']
   group node['nrpe']['group']
   variables(password: passwords['monitor'])
@@ -75,7 +75,7 @@ template "#{node['munin']['basedir']}/plugin-conf.d/mysql" do
   owner 'munin'
   group 'munin'
   variables(password: passwords['monitor'])
-  mode 0600
+  mode '600'
 end
 
 # Perl dep required for some munin plugins
@@ -102,7 +102,7 @@ end
   table_locks
   tmp_tables
 ).each do |p|
-  munin_plugin 'mysql_' do
-    plugin "mysql_#{p}"
+  munin_plugin "mysql_#{p}" do
+    plugin 'mysql_'
   end
 end
