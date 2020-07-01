@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.4.0 (2020-07-01)
+------------------
+- Chef 15 compatibility fixes
+
 2.3.3 (2020-05-29)
 ------------------
 - Fix depend lock for mariadb
