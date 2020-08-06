@@ -19,6 +19,9 @@ provisioner:
 
 suites:
   - name: server
+    provisioner:
+      multiple_converge: 1
+      enforce_idempotency: false
     run_list:
       - recipe[osl-mysql::server]
     excludes:
