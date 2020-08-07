@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.5.0 (2020-08-07)
+------------------
+- Update Percona
+
 2.4.1 (2020-07-01)
 ------------------
 - Include hashed_password from resource_mysql_database_user
