@@ -18,7 +18,7 @@ depends          'mysql2_chef_gem'
 depends          'osl-nrpe'
 depends          'osl-munin'
 depends          'osl-postfix'
-depends          'percona', '~> 0.16.1'
+depends          'percona', '~> 0.17.2'
 depends          'yum-epel'
 
 supports         'centos', '~> 6.0'
