@@ -17,6 +17,6 @@
 # limitations under the License.
 #
 node.default['percona']['yum']['gpgkey'] =
-  'https://raw.githubusercontent.com/percona/percona-repositories/master/rpm/PERCONA-PACKAGING-KEY ' \
+  'https://raw.githubusercontent.com/percona/percona-repositories/main/rpm/PERCONA-PACKAGING-KEY ' \
   'http://www.percona.com/downloads/RPM-GPG-KEY-percona'
 node.default['percona']['client']['packages'] << "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
