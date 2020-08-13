@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-node.default['percona']['yum']['gpgkey'] =
-  'https://raw.githubusercontent.com/percona/percona-repositories/master/rpm/PERCONA-PACKAGING-KEY ' \
-  'http://www.percona.com/downloads/RPM-GPG-KEY-percona'
-node.default['percona']['client']['packages'] << "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
+%w(percona-server-devel percona-server-client).each do |pkg|
+    node.default['percona']['client']['packages'] << pkg
+end
