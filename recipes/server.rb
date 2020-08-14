@@ -78,8 +78,6 @@ include_recipe 'firewall::mysql'
 
 package "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
 
-delete_resource(:package, 'mysql-libs')
-
 directory '/var/lib/mysql-files' do
   owner 'mysql'
   group 'mysql'
