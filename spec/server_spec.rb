@@ -29,15 +29,6 @@ describe 'osl-mysql::server' do
       end
 
       it do
-        expect(chef_run).to create_yum_repository('percona-noarch')
-          .with(
-            description: 'Percona noarch Packages',
-            baseurl: "http://repo.percona.com/centos/#{pltfrm[:version].to_i}/os/noarch/",
-            gpgkey: 'https://raw.githubusercontent.com/percona/percona-repositories/master/rpm/PERCONA-PACKAGING-KEY http://www.percona.com/downloads/RPM-GPG-KEY-percona'
-          )
-      end
-
-      it do
         expect(chef_run).to install_package('Percona-Server-devel-56')
       end
       it do

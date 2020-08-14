@@ -16,7 +16,6 @@ describe 'osl-mysql::mon' do
       end
       %w(
         osl-mysql::server
-        percona::monitoring
         osl-nrpe
         osl-munin::client
       ).each do |recipe|
@@ -55,6 +54,9 @@ describe 'osl-mysql::mon' do
             password: 'monitor_pw',
             privileges: [:super, :select, :process, 'replication client', 'replication slave']
           )
+      end
+      it do
+        expect(chef_run).to install_package('percona-nagios-plugins')
       end
       it do
         expect(chef_run).to create_template('/etc/nagios/mysql.cnf')

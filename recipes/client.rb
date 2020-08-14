@@ -20,6 +20,7 @@ include_recipe 'osl-mysql'
 
 if node['osl-mysql']['enable_percona_client']
   include_recipe 'percona::client'
+  package "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
 else
   pkg_name = node['platform_version'].to_i >= 7 ? 'mariadb' : 'mysql'
   mysql_client 'default' do
