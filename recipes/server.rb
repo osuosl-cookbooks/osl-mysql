@@ -15,8 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-node.default["percona"]["version"] = "5.6"
+node.default["percona"]["version"] = "5.#{node['platform_version'].to_i == 7 ? '6' : '7'}"
 node.default['percona']['server']['debian_username'] = 'root'
 node.default['percona']['skip_passwords'] = false
 node.default['percona']['server']['bind_address'] = '0.0.0.0'
