@@ -29,7 +29,7 @@ describe 'osl-mysql::server' do
       end
 
       it do
-        expect(chef_run).to install_package('Percona-Server-devel-56')
+        expect(chef_run).to install_package(%w(Percona-Server-client-56 Percona-Server-devel-56))
       end
       it do
         expect(chef_run).to apply_sysctl('vm.min_free_kbytes').with(value: '10485')

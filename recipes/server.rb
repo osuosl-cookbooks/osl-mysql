@@ -76,8 +76,6 @@ include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
 include_recipe 'firewall::mysql'
 
-package "Percona-Server-devel-#{node['percona']['version'].tr('.', '')}"
-
 directory '/var/lib/mysql-files' do
   owner 'mysql'
   group 'mysql'

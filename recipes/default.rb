@@ -17,3 +17,4 @@
 # limitations under the License.
 #
 node.default['percona']['version'] = '5.6'
+node.default['percona']['client']['install_devel_package'] = true
