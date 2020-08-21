@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+2.6.0 (2020-08-21)
+------------------
+- Update percona cookbook to 1.1.0
+
 2.5.0 (2020-08-07)
 ------------------
 - Update Percona
