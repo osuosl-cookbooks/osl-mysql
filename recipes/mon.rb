@@ -16,10 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-node.default['percona']['plugins_version'] = nil
-node.default['percona']['plugins_packages'] = %w(percona-nagios-plugins)
 include_recipe 'osl-mysql::server'
-include_recipe 'percona::monitoring'
 include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
 
@@ -47,6 +44,9 @@ mysql_database_user 'mysql_monitor_grant' do
   privileges [:super, :select, :process, 'replication client', 'replication slave']
   action [:create, :grant]
 end
+
+# Install nagios percona plugins
+package 'percona-nagios-plugins'
 
 # Add defaults file for mysql nagios checks
 template "#{node['nrpe']['conf_dir']}/mysql.cnf" do
