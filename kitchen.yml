@@ -32,6 +32,7 @@ suites:
       - recipe[osl-mysql::mon]
     excludes:
       - centos-6
+      - centos-8
   - name: backup
     run_list:
       - recipe[osl-mysql::backup]
@@ -47,10 +48,12 @@ suites:
     attributes:
       osl-mysql:
         enable_percona_client: true
-  - name: multi-node
+  - name: multi-node-7
     driver:
       name: terraform
       command_timeout: 1800
+      variables: 
+          centos_image: 'CentOS 7.7'
     provisioner: terraform
     verifier:
       name: terraform
@@ -75,3 +78,38 @@ suites:
           hostnames: slave
     excludes:
       - centos-6
+      - centos-8
+  - name: multi-node-8
+    driver:
+      name: terraform
+      command_timeout: 1800
+      variables: 
+          centos_image: 'CentOS 8.2'
+    provisioner: 
+      name: terraform
+      variables: 
+          centos_image: "CentOS 8.2"
+    verifier:
+      name: terraform
+      systems:
+        - name: master
+          backend: ssh
+          hosts_output: master
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - master
+          hostnames: master
+        - name: slave
+          backend: ssh
+          hosts_output: slave
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - slave
+          hostnames: slave
+    excludes:
+      - centos-6
+      - centos-7

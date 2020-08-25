@@ -24,7 +24,7 @@ node.default['percona']['server']['bind_address'] = '0.0.0.0'
 node.default['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
 
 # utf8mb4 support
-node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true'
+node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['platform_version'].to_i < 8
 
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'

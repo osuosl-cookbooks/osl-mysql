@@ -4,7 +4,8 @@ include_recipe 'osl-mysql'
 include_recipe 'percona::package_repo'
 include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 
-package 'percona-xtrabackup'
+package 'percona-xtrabackup' if node['platform_version'].to_i < 8
+package 'percona-xtrabackup-80' if node['platform_version'].to_i >= 8
 
 resources('git_client[default]').run_action(:install)
 version = node['osl-mysql']['xtrabackuprb']['version']

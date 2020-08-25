@@ -28,9 +28,16 @@ describe 'osl-mysql::server' do
         expect(chef_run).to apply_sysctl('vm.swappiness').with(value: '0')
       end
 
-      it do
-        expect(chef_run).to install_package(%w(Percona-Server-client-56 Percona-Server-devel-56))
+      if pltfrm[:version].to_i < 8
+        it do
+          expect(chef_run).to install_package(%w(Percona-Server-client-56 Percona-Server-devel-56))
+        end
+      else
+        it do
+          expect(chef_run).to install_package(%w(percona-server-client percona-server-devel))
+        end
       end
+
       it do
         expect(chef_run).to apply_sysctl('vm.min_free_kbytes').with(value: '10485')
       end

@@ -1,12 +1,27 @@
-%w(
-  Percona-Server-server-56
-  Percona-Server-devel-56
-  Percona-Server-shared-56
-  percona-toolkit
-  percona-xtrabackup
-).each do |p|
-  describe package(p) do
-    it { should be_installed }
+if os.release.to_i >= 8
+  %w(
+    percona-server-server
+    percona-server-devel
+    percona-server-shared
+    percona-toolkit
+    percona-xtrabackup-80
+  ).each do |p|
+    describe package(p) do
+      it { should be_installed }
+    end
+  end
+
+else
+  %w(
+    Percona-Server-server-56
+    Percona-Server-devel-56
+    Percona-Server-shared-56
+    percona-toolkit
+    percona-xtrabackup
+  ).each do |p|
+    describe package(p) do
+      it { should be_installed }
+    end
   end
 end
 
@@ -21,10 +36,14 @@ end
   end
 end
 
-%w(mysqld_safe mysqld).each do |p|
-  describe processes(p) do
+if os.release.to_i < 8
+  describe processes('mysqld_safe') do
     it { should exist }
   end
+end
+
+describe processes('mysqld') do
+  it { should exist }
 end
 
 describe port(3306) do
@@ -46,20 +65,27 @@ end
 
 describe mysql_conf('/etc/my.cnf') do
   its('mysqld.log_bin_trust_function_creators') { should eq '1' }
-  its('mysqld.innodb_large_prefix') { should eq 'true' }
+  its('mysqld.innodb_large_prefix') { should eq 'true' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   # percona cookbook adds a second mysqld section for the above settings
   # mysql_conf/ini inspec resource seems to only give you the second section
-  its('content') { should match(/^innodb_file_format = barracuda$/) }
+  its('content') { should match(/^innodb_file_format = barracuda$/) } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
-  its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) }
+  its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) } if os.release.to_i < 8
+  its('content') { should match(/^innodb_buffer_pool_size = 2644M$/) } if os.release.to_i >= 8
 end
 
 describe kernel_parameter('vm.swappiness') do
   its('value') { should eq 0 }
 end
 
-describe kernel_parameter('vm.min_free_kbytes') do
-  its('value') { should eq 38799 }
+if os.release.to_i >= 8
+  describe kernel_parameter('vm.min_free_kbytes') do
+    its('value') { should eq 38686 }
+  end
+else
+  describe kernel_parameter('vm.min_free_kbytes') do
+    its('value') { should eq 38799 }
+  end
 end
 
 describe yum.repo('percona-noarch') do
@@ -99,7 +125,7 @@ end
 describe file('/var/lib/node_exporter/mysql_db_size.prom') do
   [
     /^mysql_db_size_start_time [0-9].+$/,
-    /^mysql_db_size\{name="information_schema"\} [0-9].+$/,
+    /^mysql_db_size\{name="information_schema"\} [0-9]+$/,
     /^mysql_db_size\{name="mysql"\} [0-9].+$/,
     /^mysql_db_size\{name="performance_schema"\} [0-9]+$/,
     /^mysql_db_size_completion_time [0-9].+$/,

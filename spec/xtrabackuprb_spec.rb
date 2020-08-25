@@ -34,8 +34,14 @@ describe 'osl-mysql::xtrabackuprb' do
           expect(chef_run).to include_recipe(r)
         end
       end
-      it do
-        expect(chef_run).to install_package('percona-xtrabackup')
+      if pltfrm[:version].to_i < 8
+        it do
+          expect(chef_run).to install_package('percona-xtrabackup')
+        end
+      else
+        it do
+          expect(chef_run).to install_package('percona-xtrabackup-80')
+        end
       end
       it do
         expect(chef_run).to sync_git('/usr/local/src/xtrabackup-rb')
