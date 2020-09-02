@@ -25,20 +25,8 @@ passwords = data_bag_item(
   'mysql'
 )
 
-mysql2_chef_gem 'default' do
-  provider Chef::Provider::Mysql2ChefGem::Percona
-  action :install
-end
-
-# Create monitor mysql user
-mysql_conn = {
-  host: 'localhost',
-  username: 'root',
-  password: passwords['root'],
-}
-
-mysql_database_user 'mysql_monitor_grant' do
-  connection mysql_conn
+mariadb_user 'mysql_monitor_grant' do
+  ctrl_password passwords['root']
   username node['osl-mysql']['monitor_user']
   password passwords['monitor']
   privileges [:super, :select, :process, 'replication client', 'replication slave']
