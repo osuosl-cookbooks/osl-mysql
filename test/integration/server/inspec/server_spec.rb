@@ -3,14 +3,12 @@ if os.release.to_i >= 8
     percona-server-server
     percona-server-devel
     percona-server-shared
-    percona-toolkit
     percona-xtrabackup-80
   ).each do |p|
     describe package(p) do
       it { should be_installed }
     end
   end
-
 else
   %w(
     Percona-Server-server-56
