@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'osl-mysql::mon' do
   include_context 'common_stubs'
 
-  ALLPLATFORMS.each do |pltfrm|
+  [CENTOS_6_OPTS, CENTOS_7_OPTS].each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)

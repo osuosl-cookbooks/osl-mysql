@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+return if node['platform_version'].to_i >= 8
+
 include_recipe 'osl-mysql::server'
 include_recipe 'osl-nrpe'
 include_recipe 'osl-munin::client'
