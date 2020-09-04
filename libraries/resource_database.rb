@@ -22,6 +22,8 @@ class Chef
   class Resource
     class Database < Chef::Resource
       resource_name :database
+      provides :database
+      provides :database
 
       default_action :create
 
