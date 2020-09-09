@@ -22,6 +22,7 @@ class Chef
   class Resource
     class DatabaseUser < Chef::Resource::Database
       resource_name :database_user
+      provides :database_user
 
       default_action :create
       allowed_actions [:create, :drop, :grant, :revoke]
