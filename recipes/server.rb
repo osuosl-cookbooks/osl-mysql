@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe 'osl-mysql'
+
 node.default['percona']['server']['debian_username'] = 'root'
 node.default['percona']['skip_passwords'] = false
 node.default['percona']['server']['bind_address'] = '0.0.0.0'
@@ -24,7 +26,7 @@ node.default['percona']['server']['bind_address'] = '0.0.0.0'
 node.default['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
 
 # utf8mb4 support
-node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['platform_version'].to_i < 8
+node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['percona']['version'].to_f < 8.0
 
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'
@@ -69,7 +71,6 @@ sysctl 'vm.min_free_kbytes' do
   end
 end
 
-include_recipe 'osl-mysql'
 include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
