@@ -52,7 +52,7 @@ suites:
     driver:
       name: terraform
       command_timeout: 1800
-      variables: 
+      variables:
           centos_image: 'CentOS 7.8'
     provisioner: terraform
     verifier:
@@ -83,12 +83,9 @@ suites:
     driver:
       name: terraform
       command_timeout: 1800
-      variables: 
+      variables:
           centos_image: 'CentOS 8.2'
-    provisioner: 
-      name: terraform
-      variables: 
-          centos_image: "CentOS 8.2"
+    provisioner: terraform
     verifier:
       name: terraform
       systems:
