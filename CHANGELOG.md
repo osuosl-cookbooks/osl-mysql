@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+3.0.0 (2020-09-16)
+------------------
+- Add CentOS 8 support
+
 2.7.0 (2020-09-09)
 ------------------
 - update to chef 16
