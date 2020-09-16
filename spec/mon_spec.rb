@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'osl-mysql::mon' do
   include_context 'common_stubs'
 
-  ALLPLATFORMS.each do |pltfrm|
+  [CENTOS_6_OPTS, CENTOS_7_OPTS].each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
@@ -24,32 +24,18 @@ describe 'osl-mysql::mon' do
         end
       end
       it do
-        expect(chef_run).to install_mysql2_chef_gem('default')
+        expect(chef_run).to create_mariadb_user('mysql_monitor_grant')
           .with(
-            provider: Chef::Provider::Mysql2ChefGem::Percona
-          )
-      end
-      it do
-        expect(chef_run).to create_mysql_database_user('mysql_monitor_grant')
-          .with(
-            connection: {
-              host: 'localhost',
-              username: 'root',
-              password: 'root_pw',
-            },
+            ctrl_password: 'root_pw',
             username: 'monitor',
             password: 'monitor_pw',
             privileges: [:super, :select, :process, 'replication client', 'replication slave']
           )
       end
       it do
-        expect(chef_run).to grant_mysql_database_user('mysql_monitor_grant')
+        expect(chef_run).to grant_mariadb_user('mysql_monitor_grant')
           .with(
-            connection: {
-              host: 'localhost',
-              username: 'root',
-              password: 'root_pw',
-            },
+            ctrl_password: 'root_pw',
             username: 'monitor',
             password: 'monitor_pw',
             privileges: [:super, :select, :process, 'replication client', 'replication slave']

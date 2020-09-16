@@ -9,15 +9,28 @@ control 'all' do
     it { should_not be_reachable }
   end
 
-  %w(
-    Percona-Server-server-56
-    Percona-Server-devel-56
-    Percona-Server-shared-56
-    percona-toolkit
-    percona-xtrabackup
-  ).each do |p|
-    describe package(p) do
-      it { should be_installed }
+  if os.release.to_i >= 8
+    %w(
+      percona-server-server
+      percona-server-devel
+      percona-server-shared
+      percona-xtrabackup-80
+    ).each do |p|
+      describe package(p) do
+        it { should be_installed }
+      end
+    end
+  else
+    %w(
+      Percona-Server-server-56
+      Percona-Server-devel-56
+      Percona-Server-shared-56
+      percona-toolkit
+      percona-xtrabackup
+    ).each do |p|
+      describe package(p) do
+        it { should be_installed }
+      end
     end
   end
 
@@ -32,10 +45,14 @@ control 'all' do
     end
   end
 
-  %w(mysqld_safe mysqld).each do |p|
-    describe processes(p) do
+  if os.release.to_i < 8
+    describe processes('mysqld_safe') do
       it { should exist }
     end
+  end
+
+  describe processes('mysqld') do
+    it { should exist }
   end
 
   describe port(3306) do
@@ -57,10 +74,10 @@ control 'all' do
 
   describe mysql_conf('/etc/my.cnf') do
     its('mysqld.log_bin_trust_function_creators') { should eq '1' }
-    its('mysqld.innodb_large_prefix') { should eq 'true' }
+    its('mysqld.innodb_large_prefix') { should eq 'true' } if os.release.to_i < 8
     # percona cookbook adds a second mysqld section for the above settings
     # mysql_conf/ini inspec resource seems to only give you the second section
-    its('content') { should match(/^innodb_file_format = barracuda$/) }
+    its('content') { should match(/^innodb_file_format = barracuda$/) } if os.release.to_i < 8
     its('content') { should match(/^innodb_file_per_table$/) }
   end
 
@@ -105,7 +122,7 @@ control 'all' do
   describe file('/var/lib/node_exporter/mysql_db_size.prom') do
     [
       /^mysql_db_size_start_time [0-9].+$/,
-      /^mysql_db_size\{name="information_schema"\} [0-9].+$/,
+      /^mysql_db_size\{name="information_schema"\} [0-9]+$/,
       /^mysql_db_size\{name="mysql"\} [0-9].+$/,
       /^mysql_db_size\{name="performance_schema"\} [0-9]+$/,
       /^mysql_db_size_completion_time [0-9].+$/,
