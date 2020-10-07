@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+3.0.2 (2020-10-07)
+------------------
+- Remove apache2 dep lock
+
 3.0.1 (2020-10-07)
 ------------------
 - Lock mysql version temporarily
