@@ -8,7 +8,6 @@ chef_version     '>= 15.0'
 description      'Installs/Configures osl-mysql'
 version          '3.0.1'
 
-depends          'apache2', '< 8.2'
 depends          'firewall'
 depends          'git'
 depends          'mariadb', '~> 4.1'
