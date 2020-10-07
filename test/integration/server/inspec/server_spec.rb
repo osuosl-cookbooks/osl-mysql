@@ -1,8 +1,8 @@
 if os.release.to_i >= 8
   %w(
-    percona-server-server
-    percona-server-devel
-    percona-server-shared
+    Percona-Server-server-57
+    Percona-Server-devel-57
+    Percona-Server-shared-57
     percona-xtrabackup-80
   ).each do |p|
     describe package(p) do

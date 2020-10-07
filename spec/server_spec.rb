@@ -34,7 +34,7 @@ describe 'osl-mysql::server' do
         end
       else
         it do
-          expect(chef_run).to install_package(%w(percona-server-client percona-server-devel))
+          expect(chef_run).to install_package(%w(Percona-Server-client-57 Percona-Server-devel-57))
         end
       end
 
