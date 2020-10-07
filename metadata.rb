@@ -8,7 +8,6 @@ chef_version     '>= 14.0'
 description      'Installs/Configures osl-mysql'
 version          '2.7.0'
 
-depends          'apache2', '< 8.2'
 depends          'firewall'
 depends          'git'
 # TODO: Remove after chef15 upgrade
