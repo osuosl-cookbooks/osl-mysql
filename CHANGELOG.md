@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+3.0.1 (2020-10-07)
+------------------
+- Lock mysql version temporarily
+
 3.0.0 (2020-09-16)
 ------------------
 - Add CentOS 8 support
