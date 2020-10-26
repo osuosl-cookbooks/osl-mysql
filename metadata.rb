@@ -15,7 +15,7 @@ depends          'mysql', '~> 8.5.1'
 depends          'osl-nrpe'
 depends          'osl-munin'
 depends          'osl-postfix'
-depends          'percona', '~> 1.1.0'
+depends          'percona', '~> 2.0.0'
 depends          'yum-epel'
 
 supports         'centos', '~> 6.0'
