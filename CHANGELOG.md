@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+3.1.0 (2020-10-27)
+------------------
+- Move back to percona resources
+
 3.0.2 (2020-10-07)
 ------------------
 - Remove apache2 dep lock
