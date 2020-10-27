@@ -27,7 +27,7 @@ passwords = data_bag_item(
   'mysql'
 )
 
-mariadb_user 'mysql_monitor_grant' do
+percona_mysql_user 'mysql_monitor_grant' do
   ctrl_password passwords['root']
   username node['osl-mysql']['monitor_user']
   password passwords['monitor']

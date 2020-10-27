@@ -24,7 +24,7 @@ describe 'osl-mysql::mon' do
         end
       end
       it do
-        expect(chef_run).to create_mariadb_user('mysql_monitor_grant')
+        expect(chef_run).to create_percona_mysql_user('mysql_monitor_grant')
           .with(
             ctrl_password: 'root_pw',
             username: 'monitor',
@@ -33,7 +33,7 @@ describe 'osl-mysql::mon' do
           )
       end
       it do
-        expect(chef_run).to grant_mariadb_user('mysql_monitor_grant')
+        expect(chef_run).to grant_percona_mysql_user('mysql_monitor_grant')
           .with(
             ctrl_password: 'root_pw',
             username: 'monitor',
