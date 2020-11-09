@@ -6,7 +6,7 @@ maintainer_email 'systems@osuosl.org'
 license          'Apache-2.0'
 chef_version     '>= 14.0'
 description      'Installs/Configures osl-mysql'
-version          '2.7.0'
+version          '2.7.1'
 
 depends          'firewall'
 depends          'git'
