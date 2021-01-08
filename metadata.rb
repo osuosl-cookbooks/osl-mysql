@@ -18,6 +18,5 @@ depends          'osl-postfix'
 depends          'percona', '~> 2.0.0'
 depends          'yum-epel'
 
-supports         'centos', '~> 6.0'
 supports         'centos', '~> 7.0'
 supports         'centos', '~> 8.0'

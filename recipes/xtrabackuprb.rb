@@ -1,7 +1,6 @@
 include_recipe 'git'
 include_recipe 'osl-postfix'
 include_recipe 'osl-mysql'
-include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 
 node.default['percona']['skip_passwords'] = true
 include_recipe 'percona::backup'

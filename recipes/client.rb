@@ -21,8 +21,7 @@ include_recipe 'osl-mysql'
 if node['osl-mysql']['enable_percona_client']
   include_recipe 'percona::client'
 else
-  pkg_name = node['platform_version'].to_i >= 7 ? 'mariadb' : 'mysql'
   mysql_client 'default' do
-    package_name [pkg_name, "#{pkg_name}-devel"]
+    package_name %w(mariadb mariadb-devel)
   end
 end

@@ -71,7 +71,6 @@ sysctl 'vm.min_free_kbytes' do
   end
 end
 
-include_recipe 'yum-epel' if node['platform_version'].to_i == 6
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
