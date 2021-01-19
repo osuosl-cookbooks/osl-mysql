@@ -4,7 +4,7 @@ verifier:
 driver:
   flavor_ref: 'm1.medium'
 provisioner:
-  name: chef_solo
+  name: chef_zero
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
   enforce_idempotency: true
@@ -24,8 +24,7 @@ suites:
     excludes:
       - centos-6
   - name: mon
-    provisioner: 
-      name: chef_zero
+    provisioner:
       enforce_idempotency: false # mysql2_chef_gem is not idempotent
       multiple_converge: 1
     run_list:
