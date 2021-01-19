@@ -12,14 +12,9 @@ CENTOS_7_OPTS = {
   version: '7',
 }
 
-CENTOS_6_OPTS = {
-  platform: 'centos',
-  version: '6',
-}
 # rubocop:enable Style/MutableConstant
 
 ALLPLATFORMS = [
-  CENTOS_6_OPTS,
   CENTOS_7_OPTS,
   CENTOS_8_OPTS,
 ].freeze

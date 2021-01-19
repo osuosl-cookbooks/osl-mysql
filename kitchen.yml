@@ -21,8 +21,6 @@ suites:
   - name: server
     run_list:
       - recipe[osl-mysql::server]
-    excludes:
-      - centos-6
   - name: mon
     provisioner:
       enforce_idempotency: false # mysql2_chef_gem is not idempotent
@@ -30,7 +28,6 @@ suites:
     run_list:
       - recipe[osl-mysql::mon]
     excludes:
-      - centos-6
       - centos-8
   - name: backup
     run_list:
@@ -76,7 +73,6 @@ suites:
             - slave
           hostnames: slave
     excludes:
-      - centos-6
       - centos-8
   - name: multi-node-8
     driver:
@@ -107,5 +103,4 @@ suites:
             - slave
           hostnames: slave
     excludes:
-      - centos-6
       - centos-7

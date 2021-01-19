@@ -69,7 +69,7 @@ describe mysql_conf('/etc/my.cnf') do
   its('content') { should match(/^innodb_file_format = barracuda$/) } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
   its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) } if os.release.to_i < 8
-  its('content') { should match(/^innodb_buffer_pool_size = 2644M$/) } if os.release.to_i >= 8
+  its('content') { should match(/^innodb_buffer_pool_size = 2615M$/) } if os.release.to_i >= 8
 end
 
 describe kernel_parameter('vm.swappiness') do
@@ -78,7 +78,7 @@ end
 
 if os.release.to_i >= 8
   describe kernel_parameter('vm.min_free_kbytes') do
-    its('value') { should eq 38686 }
+    its('value') { should eq 38256 }
   end
 else
   describe kernel_parameter('vm.min_free_kbytes') do
