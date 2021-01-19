@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+4.0.1 (2021-01-19)
+------------------
+- Update upstream percona to 2.1.0
+
 4.0.0 (2021-01-19)
 ------------------
 - Remove Centos 6 support
