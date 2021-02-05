@@ -74,7 +74,8 @@ end
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
-include_recipe 'firewall::mysql'
+
+osl_firewall_port 'mysql'
 
 directory '/var/lib/mysql-files' do
   owner 'mysql'
