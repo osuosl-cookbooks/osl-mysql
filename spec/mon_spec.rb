@@ -17,7 +17,6 @@ describe 'osl-mysql::mon' do
       %w(
         osl-mysql::server
         osl-nrpe
-        osl-munin::client
       ).each do |recipe|
         it do
           expect(chef_run).to include_recipe(recipe)
@@ -68,47 +67,6 @@ describe 'osl-mysql::mon' do
             .with(
               command: "/usr/lib64/nagios/plugins/pmp-check-mysql-#{c}"
             )
-        end
-      end
-      it do
-        expect(chef_run).to create_template('/etc/munin/plugin-conf.d/mysql')
-          .with(
-            source: 'munin/mysql.erb',
-            owner: 'munin',
-            group: 'munin',
-            variables: {
-              password: 'monitor_pw',
-            }
-          )
-      end
-      it do
-        expect(chef_run).to install_package('perl-Cache-Cache')
-      end
-      %w(
-        mysql_queries
-        mysql_slowqueries
-        mysql_threads
-      ).each do |p|
-        it do
-          expect(chef_run).to create_munin_plugin(p)
-        end
-      end
-      %w(
-        commands
-        connections
-        innodb_bpool
-        innodb_bpool_act
-        innodb_semaphores
-        qcache
-        qcache_mem
-        slow
-        table_locks
-        tmp_tables
-      ).each do |p|
-        it do
-          expect(chef_run).to create_munin_plugin("mysql_#{p}").with(
-            plugin: 'mysql_'
-          )
         end
       end
     end

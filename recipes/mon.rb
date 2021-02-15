@@ -20,7 +20,6 @@ return if node['platform_version'].to_i >= 8
 
 include_recipe 'osl-mysql::server'
 include_recipe 'osl-nrpe'
-include_recipe 'osl-munin::client'
 
 passwords = data_bag_item(
   node['percona']['encrypted_data_bag'],
@@ -57,42 +56,5 @@ end
   nrpe_check "pmp-check-mysql-#{c}" do
     command "#{node['nrpe']['plugin_dir']}/pmp-check-mysql-#{c}"
     action :add
-  end
-end
-
-template "#{node['munin']['basedir']}/plugin-conf.d/mysql" do
-  source 'munin/mysql.erb'
-  owner 'munin'
-  group 'munin'
-  variables(password: passwords['monitor'])
-  mode '600'
-end
-
-# Perl dep required for some munin plugins
-package 'perl-Cache-Cache'
-
-%w(
-  mysql_queries
-  mysql_slowqueries
-  mysql_threads
-).each do |p|
-  munin_plugin p
-end
-
-%w(
-  bin_relay_log
-  commands
-  connections
-  innodb_bpool
-  innodb_bpool_act
-  innodb_semaphores
-  qcache
-  qcache_mem
-  slow
-  table_locks
-  tmp_tables
-).each do |p|
-  munin_plugin "mysql_#{p}" do
-    plugin 'mysql_'
   end
 end
