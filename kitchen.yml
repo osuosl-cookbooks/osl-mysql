@@ -22,9 +22,6 @@ suites:
     run_list:
       - recipe[osl-mysql::server]
   - name: mon
-    provisioner:
-      enforce_idempotency: false # mysql2_chef_gem is not idempotent
-      multiple_converge: 1
     run_list:
       - recipe[osl-mysql::mon]
     excludes:
