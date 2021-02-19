@@ -13,7 +13,6 @@ depends          'git'
 depends          'mariadb', '~> 4.1'
 depends          'mysql', '~> 8.5.1'
 depends          'osl-nrpe'
-depends          'osl-munin'
 depends          'osl-postfix'
 depends          'percona', '~> 2.1.0'
 
