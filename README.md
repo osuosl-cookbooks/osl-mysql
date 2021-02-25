@@ -25,7 +25,7 @@ various parts of this cookbook in multiple nodes, similar to that in production.
 
 ## Prereqs
 
-- ChefDK 2.5.3 or later
+- Chef Workstation
 - Terraform
 - kitchen-terraform
 - OpenStack cluster
