@@ -4,7 +4,7 @@ source_url       'https://github.com/osuosl-cookbooks/osl-mysql'
 maintainer       'Oregon State University'
 maintainer_email 'systems@osuosl.org'
 license          'Apache-2.0'
-chef_version     '>= 15.0'
+chef_version     '>= 16.0'
 description      'Installs/Configures osl-mysql'
 version          '4.1.0'
 
