@@ -7,7 +7,7 @@ mysql_password = 'jzYY0cQUnPAMcqvIxYaC'
 
 percona_mysql_database 'testdb' do
   password mysql_password
-  sql 'CREATE DATABASE testdb;'
+  sql 'CREATE DATABASE IF NOT EXISTS testdb;'
   action :query
 end
 

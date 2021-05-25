@@ -17,12 +17,13 @@ describe 'osl-mysql::server' do
         percona::server
         percona::toolkit
         percona::backup
-        firewall::mysql
       ).each do |recipe|
         it do
           expect(chef_run).to include_recipe(recipe)
         end
       end
+
+      it { expect(chef_run).to accept_osl_firewall_port('mysql') }
 
       it do
         expect(chef_run).to apply_sysctl('vm.swappiness').with(value: '0')

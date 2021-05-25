@@ -12,3 +12,10 @@ ohai 'reload_network' do
   plugin 'network'
   action :nothing
 end
+
+# osl_firewall mysql defaults to only allow osl subnets
+# the terraform local subnet for the multi-node suite is not in that list
+# thus, edit the resource in ::server to allow any ips
+edit_resource(:osl_firewall_port, 'mysql') do
+  osl_only false
+end
