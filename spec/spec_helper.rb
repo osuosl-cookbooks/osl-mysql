@@ -1,18 +1,15 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-# rubocop:disable Style/MutableConstant
 CENTOS_8_OPTS = {
   platform: 'centos',
   version: '8',
-}
+}.freeze
 
 CENTOS_7_OPTS = {
   platform: 'centos',
   version: '7',
-}
-
-# rubocop:enable Style/MutableConstant
+}.freeze
 
 ALLPLATFORMS = [
   CENTOS_7_OPTS,

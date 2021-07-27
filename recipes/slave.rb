@@ -18,19 +18,14 @@
 #
 replication = node['osl-mysql']['replication']
 
-master_node = []
-if Chef::Config[:solo]
-  Chef::Log.warn('This recipe uses search which Chef Solo does not support')
-else
-  master_node = search(:node, "roles:#{replication['role']}").select do |n|
-    n if n['percona']['server']['role'].include?('master')
-  end
+master_node = search(:node, "roles:#{replication['role']}").select do |n|
+  n.dig('percona', 'server', 'role').include?('master')
 end
 
 raise 'You should have one master node' unless master_node.length == 1
 
-ip = Percona::ConfigHelper.bind_to(master_node.first,
-                                   replication['master_interface'])
+ip = Percona::ConfigHelper.bind_to(master_node.first, replication['master_interface'])
+
 node.default['percona']['server']['role'] = 'slave'
 node.default['percona']['server']['server_id'] = 2
 node.default['percona']['server']['replication']['read_only'] = true
