@@ -130,7 +130,7 @@ control 'all' do
     end
   end
 
-  sql = mysql_session('root')
+  sql = mysql_session('root', 'jzYY0cQUnPAMcqvIxYaC')
   describe sql.query('SHOW databases') do
     its('stdout') { should match 'testdb' }
   end
