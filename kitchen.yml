@@ -43,63 +43,63 @@ suites:
     attributes:
       osl-mysql:
         enable_percona_client: true
-#  - name: multi-node-7
-#    driver:
-#      name: terraform
-#      command_timeout: 1800
-#      variables:
-#          centos_image: 'CentOS 7.9'
-#    provisioner: terraform
-#    verifier:
-#      name: terraform
-#      systems:
-#        - name: master
-#          backend: ssh
-#          hosts_output: master
-#          sudo: true
-#          user: centos
-#          controls:
-#            - all
-#            - master
-#          hostnames: master
-#        - name: slave
-#          backend: ssh
-#          hosts_output: slave
-#          sudo: true
-#          user: centos
-#          controls:
-#            - all
-#            - slave
-#          hostnames: slave
-#    excludes:
-#      - centos-8
-#  - name: multi-node-8
-#    driver:
-#      name: terraform
-#      command_timeout: 1800
-#      variables:
-#          centos_image: 'CentOS 8.3'
-#    provisioner: terraform
-#    verifier:
-#      name: terraform
-#      systems:
-#        - name: master
-#          backend: ssh
-#          hosts_output: master
-#          sudo: true
-#          user: centos
-#          controls:
-#            - all
-#            - master
-#          hostnames: master
-#        - name: slave
-#          backend: ssh
-#          hosts_output: slave
-#          sudo: true
-#          user: centos
-#          controls:
-#            - all
-#            - slave
-#          hostnames: slave
-#    excludes:
-#      - centos-7
+  - name: multi-node-7
+    driver:
+      name: terraform
+      command_timeout: 1800
+      variables:
+          centos_image: 'CentOS 7.9'
+    provisioner: terraform
+    verifier:
+      name: terraform
+      systems:
+        - name: master
+          backend: ssh
+          hosts_output: master
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - master
+          hostnames: master
+        - name: slave
+          backend: ssh
+          hosts_output: slave
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - slave
+          hostnames: slave
+    excludes:
+      - centos-8
+  - name: multi-node-8
+    driver:
+      name: terraform
+      command_timeout: 1800
+      variables:
+          centos_image: 'CentOS 8.3'
+    provisioner: terraform
+    verifier:
+      name: terraform
+      systems:
+        - name: master
+          backend: ssh
+          hosts_output: master
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - master
+          hostnames: master
+        - name: slave
+          backend: ssh
+          hosts_output: slave
+          sudo: true
+          user: centos
+          controls:
+            - all
+            - slave
+          hostnames: slave
+    excludes:
+      - centos-7
