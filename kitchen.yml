@@ -16,6 +16,8 @@ provisioner:
     percona:
       encrypted_data_bag: percona
       encrypted_data_bag_secret_file: "/etc/chef/encrypted_data_bag_secret"
+    osl-selinux:
+      enforcing: true
 
 suites:
   - name: server

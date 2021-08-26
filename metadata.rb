@@ -14,6 +14,7 @@ depends          'mysql', '~> 8.5.1'
 depends          'osl-firewall'
 depends          'osl-nrpe'
 depends          'osl-postfix'
+depends          'osl-selinux'
 depends          'percona', '~> 2.1.0'
 
 supports         'centos', '~> 7.0'
