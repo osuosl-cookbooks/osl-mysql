@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+5.1.0 (2021-08-26)
+------------------
+- Enable Selinux Enforcing
+
 5.0.1 (2021-08-04)
 ------------------
 - Use search() stubbing in ChefSpec
