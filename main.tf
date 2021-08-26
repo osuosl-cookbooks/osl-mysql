@@ -36,8 +36,8 @@ resource "openstack_compute_instance_v2" "chef_zero" {
     }
 }
 
-resource "openstack_compute_instance_v2" "master" {
-    name            = "master"
+resource "openstack_compute_instance_v2" "source" {
+    name            = "source"
     image_name      = "${var.centos_image}"
     flavor_name     = "m1.medium"
     key_pair        = "${var.ssh_key_name}"
@@ -53,8 +53,8 @@ resource "openstack_compute_instance_v2" "master" {
         fixed_ip_v4 = "192.168.60.11"
     }
     provisioner "chef" {
-        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::master]"]
-        node_name       = "master"
+        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::source]"]
+        node_name       = "source"
         secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
         server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"
         recreate_client = true
@@ -65,13 +65,13 @@ resource "openstack_compute_instance_v2" "master" {
     }
 }
 
-resource "openstack_compute_instance_v2" "slave" {
-    name            = "slave"
+resource "openstack_compute_instance_v2" "replica" {
+    name            = "replica"
     image_name      = "${var.centos_image}"
     flavor_name     = "m1.medium"
     key_pair        = "${var.ssh_key_name}"
     security_groups = ["default"]
-    depends_on      = ["openstack_compute_instance_v2.master"]
+    depends_on      = ["openstack_compute_instance_v2.source"]
     connection {
         user = "centos"
     }
@@ -83,8 +83,8 @@ resource "openstack_compute_instance_v2" "slave" {
         fixed_ip_v4 = "192.168.60.12"
     }
     provisioner "chef" {
-        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::slave]"]
-        node_name       = "slave"
+        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::replica]"]
+        node_name       = "replica"
         secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
         server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"
         recreate_client = true

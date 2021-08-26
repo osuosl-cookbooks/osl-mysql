@@ -1,6 +1,6 @@
 #
 # Cookbook:: osl-mysql
-# Recipe:: master
+# Recipe:: replica
 #
 # Copyright:: 2013-2021, Oregon State University
 #
@@ -16,6 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-node.default['percona']['server']['role'] = 'master'
+replication = node['osl-mysql']['replication']
+
+source_node = search(:node, "roles:#{replication['role']}").select do |n|
+  n.dig('percona', 'server', 'role').include?('source')
+end
+
+raise 'You should have one source node' unless source_node.length == 1
+
+ip = Percona::ConfigHelper.bind_to(source_node.first, replication['source_interface'])
+
+node.default['percona']['server']['role'] = 'replica'
+node.default['percona']['server']['server_id'] = 2
+node.default['percona']['server']['replication']['read_only'] = true
+node.default['percona']['server']['replication']['host'] = ip
 node.default['percona']['server']['replication']['username'] = 'replication'
 include_recipe 'osl-mysql::server'

@@ -53,24 +53,24 @@ suites:
     verifier:
       name: terraform
       systems:
-        - name: master
+        - name: source
           backend: ssh
-          hosts_output: master
+          hosts_output: source
           sudo: true
           user: centos
           controls:
             - all
-            - master
-          hostnames: master
-        - name: slave
+            - source
+          hostnames: source
+        - name: replica
           backend: ssh
-          hosts_output: slave
+          hosts_output: replica
           sudo: true
           user: centos
           controls:
             - all
-            - slave
-          hostnames: slave
+            - replica
+          hostnames: replica
     excludes:
       - centos-8
   - name: multi-node-8
@@ -83,23 +83,23 @@ suites:
     verifier:
       name: terraform
       systems:
-        - name: master
+        - name: source
           backend: ssh
-          hosts_output: master
+          hosts_output: source
           sudo: true
           user: centos
           controls:
             - all
-            - master
-          hostnames: master
-        - name: slave
+            - source
+          hostnames: source
+        - name: replica
           backend: ssh
-          hosts_output: slave
+          hosts_output: replica
           sudo: true
           user: centos
           controls:
             - all
-            - slave
-          hostnames: slave
+            - replica
+          hostnames: replica
     excludes:
       - centos-7

@@ -4,7 +4,7 @@ require 'chef/provisioning/vagrant_driver'
 with_driver "vagrant:#{File.dirname(__FILE__)}/../../../vms"
 
 machine_batch do
-  [%w(master 11), %w(slave 12)].each do |name, ip_suff|
+  [%w(source 11), %w(replica 12)].each do |name, ip_suff|
     machine name do
       machine_options vagrant_options: {
         'vm.box' => 'bento/centos-7.5',
