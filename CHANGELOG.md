@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.0.0 (2021-09-08)
+------------------
+- Terminology update
+
 5.1.0 (2021-08-26)
 ------------------
 - Enable Selinux Enforcing
