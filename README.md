@@ -39,8 +39,8 @@ export TF_VAR_ssh_key_name="$OS_SSH_KEYPAIR"
 ## Supported Deployments
 
 - Chef-zero node acting as a Chef Server
-- Master node
-- Slave node
+- Source node
+- Replica node
 
 ## Testing
 
@@ -61,8 +61,8 @@ manually. To see what their IP addresses are, just run ``terraform output`` whic
 
 ``` bash
 # You can run the following commands to login to each node
-$ ssh centos@$(terraform output master)
-$ ssh centos@$(terraform output slave)
+$ ssh centos@$(terraform output source)
+$ ssh centos@$(terraform output replica)
 
 # Or you can look at the IPs for all for all of the nodes at once
 $ terraform output
@@ -75,8 +75,8 @@ chef-zero server by doing the following:
 
 ``` bash
 $ CHEF_SERVER="$(terraform output chef_zero)" knife node list -c test/chef-config/knife.rb
-master
-slave
+source
+replica
 $ CHEF_SERVER="$(terraform output chef_zero)" knife node edit -c test/chef-config/knife.rb
 ```
 

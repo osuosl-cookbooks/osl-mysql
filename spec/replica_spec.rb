@@ -1,18 +1,18 @@
 require 'spec_helper'
 
-describe 'osl-mysql::slave' do
+describe 'osl-mysql::replica' do
   include_context 'common_stubs'
 
   ALLPLATFORMS.each do |p|
     context "on #{p[:platform]} #{p[:version]}" do
-      context 'with master node' do
+      context 'with source node' do
         platform p[:platform], p[:version]
 
         before do
           stub_search(:node, 'roles:mysql-vip').and_return(
             [
               {
-                name: 'master.example.org',
+                name: 'source.example.org',
                 network: {
                   interfaces: {
                     eth1: {
@@ -26,7 +26,7 @@ describe 'osl-mysql::slave' do
                 },
                 percona: {
                   server: {
-                    role: 'master',
+                    role: 'source',
                   },
                 },
               },
@@ -39,7 +39,7 @@ describe 'osl-mysql::slave' do
         end
       end
 
-      context 'without master node' do
+      context 'without source node' do
         platform p[:platform], p[:version]
 
         before do
@@ -47,7 +47,7 @@ describe 'osl-mysql::slave' do
         end
 
         it do
-          expect { chef_run }.to raise_error.with_message('You should have one master node')
+          expect { chef_run }.to raise_error.with_message('You should have one source node')
         end
       end
     end

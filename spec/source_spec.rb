@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'osl-mysql::master' do
+describe 'osl-mysql::source' do
   include_context 'common_stubs'
 
   ALLPLATFORMS.each do |pltfrm|
