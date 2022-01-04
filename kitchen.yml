@@ -27,7 +27,7 @@ suites:
     run_list:
       - recipe[osl-mysql::mon]
     excludes:
-      - centos-8
+      - centos_stream-8
   - name: backup
     run_list:
       - recipe[osl-mysql::backup]
@@ -72,13 +72,13 @@ suites:
             - replica
           hostnames: replica
     excludes:
-      - centos-8
+      - centos_stream-8
   - name: multi-node-8
     driver:
       name: terraform
       command_timeout: 1800
       variables:
-          centos_image: 'CentOS 8.3'
+          centos_image: 'CentOS Stream 8'
     provisioner: terraform
     verifier:
       name: terraform

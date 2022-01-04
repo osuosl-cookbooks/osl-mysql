@@ -18,4 +18,4 @@ depends          'osl-selinux'
 depends          'percona', '~> 2.1.0'
 
 supports         'centos', '~> 7.0'
-supports         'centos', '~> 8.0'
+supports         'centos_stream', '~> 8.0'
