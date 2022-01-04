@@ -1,3 +1,7 @@
+provider "openstack" {
+    version = "~> 1.43.0"
+}
+
 resource "openstack_networking_network_v2" "mysql_network" {
     name            = "mysql_network"
     admin_state_up  = "true"
