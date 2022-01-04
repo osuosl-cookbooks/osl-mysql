@@ -9,7 +9,7 @@ description      'Installs/Configures osl-mysql'
 version          '6.0.0'
 
 depends          'git'
-depends          'mariadb', '~> 4.1'
+depends          'mariadb', '~> 5.2.1'
 depends          'mysql', '~> 8.5.1'
 depends          'osl-firewall'
 depends          'osl-nrpe'
