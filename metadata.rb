@@ -10,7 +10,7 @@ version          '6.1.0'
 
 depends          'git'
 depends          'mariadb', '~> 5.2.1'
-depends          'mysql', '~> 8.5.1'
+depends          'mysql', '~> 11.0.0'
 depends          'osl-firewall'
 depends          'osl-nrpe'
 depends          'osl-postfix'
