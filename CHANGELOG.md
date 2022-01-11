@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.2.0 (2022-01-11)
+------------------
+- Update mysql to Chef 17-compliant version
+
 6.1.0 (2022-01-04)
 ------------------
 - Bump mariadb to Chef 17-compliant version
