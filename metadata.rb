@@ -15,7 +15,7 @@ depends          'osl-firewall'
 depends          'osl-nrpe'
 depends          'osl-postfix'
 depends          'osl-selinux'
-depends          'percona', '~> 2.1.0'
+depends          'percona', '~> 3.1.1'
 
 supports         'centos', '~> 7.0'
 supports         'centos_stream', '~> 8.0'
