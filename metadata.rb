@@ -6,7 +6,7 @@ maintainer_email 'systems@osuosl.org'
 license          'Apache-2.0'
 chef_version     '>= 16.0'
 description      'Installs/Configures osl-mysql'
-version          '6.2.0'
+version          '6.3.0'
 
 depends          'git'
 depends          'mariadb', '~> 5.2.1'
