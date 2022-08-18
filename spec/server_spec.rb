@@ -12,6 +12,8 @@ describe 'osl-mysql::server' do
         expect { chef_run }.to_not raise_error
       end
 
+      it { expect(chef_run).to manage_selinux_fcontext('/var/log/mysql(/.*)?').with(secontext: 'mysqld_log_t') }
+
       %w(
         osl-mysql
         percona::server
@@ -29,14 +31,8 @@ describe 'osl-mysql::server' do
         expect(chef_run).to apply_sysctl('vm.swappiness').with(value: '0')
       end
 
-      if pltfrm[:version].to_i < 8
-        it do
-          expect(chef_run).to install_package(%w(Percona-Server-client-56 Percona-Server-devel-56))
-        end
-      else
-        it do
-          expect(chef_run).to install_package(%w(Percona-Server-client-57 Percona-Server-devel-57))
-        end
+      it do
+        expect(chef_run).to install_package(%w(Percona-Server-client-57 Percona-Server-devel-57))
       end
 
       it do
