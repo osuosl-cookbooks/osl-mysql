@@ -18,5 +18,5 @@
 #
 include_recipe 'osl-selinux'
 
-node.default['percona']['version'] = node['platform_version'].to_i >= 8 ? '5.7' : '5.6'
+node.default['percona']['version'] = '5.7'
 node.default['percona']['client']['install_devel_package'] = true

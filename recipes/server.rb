@@ -71,6 +71,10 @@ sysctl 'vm.min_free_kbytes' do
   end
 end
 
+selinux_fcontext '/var/log/mysql(/.*)?' do
+  secontext 'mysqld_log_t'
+end
+
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
