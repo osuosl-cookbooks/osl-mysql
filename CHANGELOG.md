@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.5.0 (2022-08-23)
+------------------
+- Replace base with osl-resources
+
 6.4.0 (2022-08-18)
 ------------------
 - Migrate to default to using 5.7 and other updates
