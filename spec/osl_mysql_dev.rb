@@ -25,7 +25,7 @@ describe 'osl_mysql_dev' do
 
     it {
       is_expected.to install_mariadb_server_install('default').with(
-      encoding: 'utf8mb4'
+      encoding: 'utf8mb4',
       collation: 'utf8mb4_unicode_ci'
     )
     }

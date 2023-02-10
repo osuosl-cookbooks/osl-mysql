@@ -10,7 +10,6 @@ property :password, String, required: true
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
-
   # Install the package, and set up the service
   mariadb_server_install 'MariaDB' do
     password 'iloveinsecurepasswords'
@@ -30,4 +29,3 @@ action :create do
     action [:create, :grant]
   end
 end
-
