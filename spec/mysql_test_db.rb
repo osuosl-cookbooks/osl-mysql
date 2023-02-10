@@ -1,20 +1,18 @@
 require 'spec_helper'
 
-describe 'mysql_test_db' do
+describe 'osl_mysql_dev' do
   # Test the initalization of the sql service with a database
   # then add another database as well.
 
   recipe do
-    mysql_test_db 'tracklist' do
-      username 'randy'
-      password 'dont-you-know'
-      root_password 'play-with-fire'
+    osl_mysql_dev 'db-one' do
+      username 'foo'
+      password 'bar'
     end
 
-    mysql_test_db 'second-tracklist' do
-      username 'randy'
-      password 'dont-you-know'
-      action :db_only
+    osl_mysql_dev 'db-two' do
+      username 'foo'
+      password 'bar'
     end
   end
 
@@ -23,29 +21,28 @@ describe 'mysql_test_db' do
     cached(:subject) { chef_run }
     step_into :mysql_test_db
 
-    # mysql_test_db create action.
+    # mysql_temp create action.
 
-    it { is_expected.to install_package('mysql') }
     it {
-      is_expected.to create_mysql_service('default').with(
-      initial_root_password: 'play-with-fire',
-      charset: 'utf8mb4_unicode_ci'
+      is_expected.to install_mariadb_server_install('default').with(
+      encoding: 'utf8mb4'
+      collation: 'utf8mb4_unicode_ci'
     )
     }
-    it { is_expected.to create_mysql_user('randy').with(password: 'dont-you-know') }
+    it { is_expected.to create_mariadb_user('foo').with(password: 'bar') }
     it {
-      is_expected.to create_mysql_database('tracklist').with(
-      user: 'randy',
-      password: 'dont-you-know'
+      is_expected.to create_mariadb_database('db-two').with(
+      user: 'foo',
+      password: 'bar'
     )
     }
 
     # mysql_test_db db_only action.
 
     it {
-      is_expected.to mysql_database('second-tracklist').with(
-      user: 'randy',
-      password: 'dont-you-know'
+      is_expected.to create_mariadb_database('db-two').with(
+      user: 'foo',
+      password: 'bar'
     )
     }
   end

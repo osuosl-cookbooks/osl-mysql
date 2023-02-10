@@ -1,5 +1,5 @@
-provides :mysql_test_db
-resource_name :mysql_test_db
+provides :osl_mysql_dev
+resource_name :osl_mysql_dev
 unified_mode true
 
 default_action :create
@@ -10,23 +10,12 @@ property :password, String, required: true
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
+
   # Install the package, and set up the service
   mariadb_server_install 'MariaDB' do
     password 'iloveinsecurepasswords'
     action [:install, :create]
   end
-  # Self-reference, creates the database and user
-  mysql_test_db new_resource.database do
-    retries 3
-    retry_delay 10
-    username new_resource.username
-    password new_resource.password
-    action :db_only
-  end
-end
-
-# Create additional databases, owned by the given user.
-action :db_only do
   # Create new database
   mariadb_database new_resource.database do
     password 'iloveinsecurepasswords'
@@ -41,3 +30,4 @@ action :db_only do
     action [:create, :grant]
   end
 end
+
