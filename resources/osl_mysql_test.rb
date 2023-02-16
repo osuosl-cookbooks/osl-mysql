@@ -7,15 +7,15 @@ default_action :create
 property :database, String, name_property: true
 property :username, String, required: true
 property :password, String, required: true
-property :server_password, String, default: lazy { 'osl_mysql_test' }
-property :encoding, String, default: lazy { 'utf8mb4' }
-property :collation, String, default: lazy { 'utf8mb4_unicode_ci' }
+property :server_password, String, default: 'osl_mysql_test'
+property :encoding, String, default: 'utf8mb4'
+property :collation, String, default: 'utf8mb4_unicode_ci'
 property :database_parameters, Hash, default: {}
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
   # Install the package, and set up the service
-  mariadb_server_install 'MariaDB' do
+  mariadb_server_install 'osl-mysql-test' do
     password new_resource.server_password
     action [:install, :create]
   end

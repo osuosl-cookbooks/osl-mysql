@@ -13,6 +13,5 @@ cookbook 'multi_node_test', path: 'test/cookbooks/multi_node_test'
 cookbook 'resources_test', path: 'test/cookbooks/resources_test'
 cookbook 'osl-resources', git: 'git@github.com:osuosl-cookbooks/osl-resources', branch: 'main'
 cookbook 'osl-repos', git: 'git@github.com:osuosl-cookbooks/osl-repos'
-cookbook 'mariadb'
 
 metadata
