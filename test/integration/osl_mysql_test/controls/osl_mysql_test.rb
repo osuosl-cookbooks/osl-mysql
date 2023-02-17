@@ -24,5 +24,5 @@ end
 
 # Check to ensure that the failed resource did not go through
 describe mysql_session('root', 'osl_mysql_test').query('SHOW DATABASES LIKE \'failing_db\'') do
-  its('output') { should eq ''}
+  its('output') { should eq '' }
 end
