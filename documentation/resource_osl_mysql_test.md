@@ -27,13 +27,21 @@ We are tasked to set up two different databases, each owned by a unique user.
 ```ruby
 # Create a database, will also initalize the service
 osl_mysql_test 'db_one' do
-    username 'db_owner'
-    password 'db_password'
+  username 'db_owner'
+  password 'db_password'
 end
 
 # Create another database, owned by a different user
 osl_mysql_test 'db_two' do
-    username 'other_owner'
-    password 'other_password'
+  username 'other_owner'
+  password 'other_password'
+end
+
+# Use the default MariaDB encoding
+osl_mysql_test 'db_three' do
+  username 'db_owner'
+  password 'db_password'
+  encoding 'latin1'
+  collation 'latin1_swedish_ci'
 end
 ```

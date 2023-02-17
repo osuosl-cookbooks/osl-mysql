@@ -23,27 +23,27 @@ describe 'osl_mysql_dev' do
 
     # mysql_temp create action.
 
-    it {
+    it do
       is_expected.to install_mariadb_server_install('default').with(
-      encoding: 'utf8mb4',
-      collation: 'utf8mb4_unicode_ci'
+        encoding: 'utf8mb4',
+        collation: 'utf8mb4_unicode_ci'
     )
-    }
+    end
     it { is_expected.to create_mariadb_user('foo').with(password: 'bar') }
-    it {
+    it do
       is_expected.to create_mariadb_database('db-two').with(
-      user: 'foo',
-      password: 'bar'
+        user: 'foo',
+        password: 'bar'
     )
-    }
+    end
 
     # mysql_test_db db_only action.
 
-    it {
+    it do
       is_expected.to create_mariadb_database('db-two').with(
-      user: 'foo',
-      password: 'bar'
+        user: 'foo',
+        password: 'bar'
     )
-    }
+    end
   end
 end
