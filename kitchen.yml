@@ -103,3 +103,6 @@ suites:
           hostnames: replica
     excludes:
       - centos-7
+  - name: osl_mysql_test
+    run_list:
+      - recipe[resources_test::osl_mysql_test]
