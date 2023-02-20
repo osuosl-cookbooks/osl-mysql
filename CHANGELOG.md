@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.6.0 (2023-02-20)
+------------------
+- Lightweight MySQL (MariaDB) test environment
+
 6.5.0 (2022-08-23)
 ------------------
 - Replace base with osl-resources
