@@ -1,30 +1,53 @@
-provider "openstack" {
-    version = "~> 1.43.0"
-}
-
 resource "openstack_networking_network_v2" "mysql_network" {
     name            = "mysql_network"
     admin_state_up  = "true"
 }
 
 resource "openstack_networking_subnet_v2" "mysql_subnet" {
-    network_id      = "${openstack_networking_network_v2.mysql_network.id}"
+    network_id      = openstack_networking_network_v2.mysql_network.id
     cidr            = "192.168.60.0/24"
     enable_dhcp     = "false"
     no_gateway      = "true"
 }
 
+resource "openstack_networking_port_v2" "source_port" {
+    network_id            = openstack_networking_network_v2.mysql_network.id
+    admin_state_up        = "true"
+    port_security_enabled = "false"
+    fixed_ip {
+        subnet_id  = openstack_networking_subnet_v2.mysql_subnet.id
+        ip_address = "192.168.60.11"
+    }
+}
+
+resource "openstack_networking_port_v2" "replica_port" {
+    network_id            = openstack_networking_network_v2.mysql_network.id
+    admin_state_up        = "true"
+    port_security_enabled = "false"
+    fixed_ip {
+        subnet_id  = openstack_networking_subnet_v2.mysql_subnet.id
+        ip_address = "192.168.60.12"
+    }
+}
+
+resource "openstack_networking_port_v2" "chef_zero" {
+    name            = "chef_zero"
+    admin_state_up  = true
+    network_id      = data.openstack_networking_network_v2.public.id
+}
+
 resource "openstack_compute_instance_v2" "chef_zero" {
     name            = "chef-zero"
-    image_name      = "${var.centos_atomic_image}"
+    image_name      = var.centos_atomic_image
     flavor_name     = "m1.small"
-    key_pair        = "${var.ssh_key_name}"
+    key_pair        = var.ssh_key_name
     security_groups = ["default"]
     connection {
         user = "centos"
+        host = openstack_networking_port_v2.chef_zero.all_fixed_ips.0
     }
     network {
-        uuid = "${data.openstack_networking_network_v2.network.id}"
+        port = openstack_networking_port_v2.chef_zero.id
     }
     provisioner "remote-exec" {
         inline = [
@@ -40,61 +63,79 @@ resource "openstack_compute_instance_v2" "chef_zero" {
     }
 }
 
+resource "openstack_networking_port_v2" "source_server" {
+    name            = "source_server"
+    admin_state_up  = true
+    network_id      = data.openstack_networking_network_v2.public.id
+}
+
 resource "openstack_compute_instance_v2" "source" {
     name            = "source"
-    image_name      = "${var.centos_image}"
+    image_name      = var.centos_image
     flavor_name     = "m1.medium"
-    key_pair        = "${var.ssh_key_name}"
+    key_pair        = var.ssh_key_name
     security_groups = ["default"]
     connection {
         user = "centos"
+	host = openstack_networking_port_v2.source_server.all_fixed_ips.0
     }
     network {
-        uuid = "${data.openstack_networking_network_v2.network.id}"
+        port = openstack_networking_port_v2.source_server.id
     }
     network {
-        uuid        = "${openstack_networking_network_v2.mysql_network.id}"
-        fixed_ip_v4 = "192.168.60.11"
+        port = openstack_networking_port_v2.source_port.id
     }
-    provisioner "chef" {
-        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::source]"]
-        node_name       = "source"
-        secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
-        server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"
-        recreate_client = true
-        user_name       = "fakeclient"
-        user_key        = "${file("test/chef-config/fakeclient.pem")}"
-        version         = "${var.chef_version}"
-        client_options  = ["chef_license 'accept'"]
+    provisioner "remote-exec" {
+        inline = ["echo online"]
     }
+    provisioner "local-exec" {
+        command = <<EOF
+            knife bootstrap -c test/chef-config/knife.rb \
+	    centos@${openstack_compute_instance_v2.source.network.0.fixed_ip_v4} \
+	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo \
+	    -r 'recipe[multi_node_test::source],role[mysql-vip]'
+            EOF
+        environment = {
+            CHEF_SERVER = "${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}"
+        }
+    }
+}
+
+resource "openstack_networking_port_v2" "replica_server" {
+    name            = "replica_server"
+    admin_state_up  = true
+    network_id      = data.openstack_networking_network_v2.public.id
 }
 
 resource "openstack_compute_instance_v2" "replica" {
     name            = "replica"
-    image_name      = "${var.centos_image}"
+    image_name      = var.centos_image
     flavor_name     = "m1.medium"
-    key_pair        = "${var.ssh_key_name}"
+    key_pair        = var.ssh_key_name
     security_groups = ["default"]
-    depends_on      = ["openstack_compute_instance_v2.source"]
+    depends_on      = [openstack_compute_instance_v2.source]
     connection {
         user = "centos"
+        host = openstack_networking_port_v2.replica_server.all_fixed_ips.0
     }
     network {
-        uuid = "${data.openstack_networking_network_v2.network.id}"
+        port = openstack_networking_port_v2.replica_server.id
     }
     network {
-        uuid        = "${openstack_networking_network_v2.mysql_network.id}"
-        fixed_ip_v4 = "192.168.60.12"
+        port = openstack_networking_port_v2.replica_port.id
     }
-    provisioner "chef" {
-        run_list        = ["role[mysql-vip]", "recipe[multi_node_test::replica]"]
-        node_name       = "replica"
-        secret_key      = "${file("test/integration/encrypted_data_bag_secret")}"
-        server_url      = "http://${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}:8889"
-        recreate_client = true
-        user_name       = "fakeclient"
-        user_key        = "${file("test/chef-config/fakeclient.pem")}"
-        version         = "${var.chef_version}"
-        client_options  = ["chef_license 'accept'"]
+    provisioner "remote-exec" {
+        inline = ["echo online"]
+    }
+    provisioner "local-exec" {
+        command = <<EOF
+            knife bootstrap -c test/chef-config/knife.rb \
+	    centos@${openstack_compute_instance_v2.replica.network.0.fixed_ip_v4} \
+	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo \
+	    -r 'recipe[multi_node_test::replica],role[mysql-vip]'
+            EOF
+        environment = {
+            CHEF_SERVER = "${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}"
+        }
     }
 }

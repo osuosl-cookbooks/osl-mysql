@@ -1,3 +1,3 @@
-data "openstack_networking_network_v2" "network" {
+data "openstack_networking_network_v2" "public" {
     name = "${var.network}"
 }
