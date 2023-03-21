@@ -2,9 +2,18 @@
   Percona-Server-server-57
   Percona-Server-devel-57
   Percona-Server-shared-57
-  percona-xtrabackup
 ).each do |p|
   describe package(p) do
+    it { should be_installed }
+  end
+end
+
+if os.release.to_i >= 8
+  describe package('percona-xtrabackup-80') do
+    it { should be_installed }
+  end
+else
+  describe package('percona-xtrabackup') do
     it { should be_installed }
   end
 end
@@ -49,21 +58,18 @@ describe mysql_conf('/etc/my.cnf') do
   its('content') { should match(/^innodb_file_format = barracuda$/) } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
   its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) } if os.release.to_i < 8
-  its('content') { should match(/^innodb_buffer_pool_size = 2615M$/) } if os.release.to_i >= 8
+  its('content') { should match(/^innodb_buffer_pool_size = 2566M$/) } if os.release.to_i >= 8 && os.name == 'centos'
+  its('content') { should match(/^innodb_buffer_pool_size = 2746M$/) } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe kernel_parameter('vm.swappiness') do
   its('value') { should eq 0 }
 end
 
-if os.release.to_i >= 8
-  describe kernel_parameter('vm.min_free_kbytes') do
-    its('value') { should eq 38256 }
-  end
-else
-  describe kernel_parameter('vm.min_free_kbytes') do
-    its('value') { should eq 38799 }
-  end
+describe kernel_parameter('vm.min_free_kbytes') do
+  its('value') { should eq 38799 } if os.release.to_i < 8
+  its('value') { should eq 37550 } if os.release.to_i >= 8 && os.name == 'centos'
+  its('value') { should eq 40171 } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe yum.repo('percona-noarch') do

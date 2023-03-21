@@ -27,6 +27,7 @@ suites:
     run_list:
       - recipe[osl-mysql::mon]
     excludes:
+      - almalinux-8
       - centos_stream-8
   - name: backup
     run_list:
@@ -72,6 +73,7 @@ suites:
             - replica
           hostnames: replica
     excludes:
+      - almalinux-8
       - centos_stream-8
   - name: multi-node-8
     driver:
@@ -102,6 +104,7 @@ suites:
             - replica
           hostnames: replica
     excludes:
+      - almalinux-8
       - centos-7
   - name: osl_mysql_test
     run_list:
