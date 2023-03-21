@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.7.0 (2023-03-21)
+------------------
+- Add initial AlmaLinux 8 support
+
 6.6.0 (2023-02-20)
 ------------------
 - Lightweight MySQL (MariaDB) test environment
