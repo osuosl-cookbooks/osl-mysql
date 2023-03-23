@@ -30,12 +30,6 @@ control 'all' do
     end
   end
 
-  if os.release.to_i < 8
-    describe processes('mysqld_safe') do
-      it { should exist }
-    end
-  end
-
   describe processes('mysqld') do
     it { should exist }
   end
