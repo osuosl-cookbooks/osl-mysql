@@ -1,7 +1,9 @@
-# get the first interface that isn't localhost and doesn't have an ipv4 address attached
+# get the first interface that isn't localhost and isn't on the 10.1.100.* network
 interfaces = node['network']['interfaces']
-mysql_interface = interfaces.keys.find { |iface| interfaces[iface]['addresses'].keys.none? { |addr| interfaces[iface]['addresses'][addr]['family'] == 'inet' } && iface != 'lo' }
+mysql_interface = interfaces.keys.find { |iface| interfaces[iface]['addresses'].keys.none? { |addr| addr.include? '10.1.100' } && iface != 'lo' }
 
+# a hack, but assume that interfaces are the same across the two nodes
+node.default['osl-mysql']['replication']['source_interface'] = mysql_interface
 
 osl_ifconfig "192.168.60.#{node['multi_node_test']['ip']}" do
   onboot 'yes'
@@ -9,7 +11,7 @@ osl_ifconfig "192.168.60.#{node['multi_node_test']['ip']}" do
   network '192.168.60.0'
   ipv6init 'yes'
   ipv6addr "fc00::#{node['multi_node_test']['ip']}"
-  device mysql_interface#'eth1'
+  device mysql_interface
   notifies :reload, 'ohai[reload_network]'
 end
 
