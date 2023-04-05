@@ -1,8 +1,4 @@
-# get the first interface that isn't localhost and isn't on the 10.1.100.* network
-interfaces = node['network']['interfaces']
-mysql_interface = interfaces.keys.find { |iface| interfaces[iface]['addresses'].keys.none? { |addr| addr.include? '10.1.100' } && iface != 'lo' }
-
-# a hack, but assume that interfaces are the same across the two nodes
+# assume that interfaces are the same across the two nodes and use that one
 node.default['osl-mysql']['replication']['source_interface'] = mysql_interface
 
 osl_ifconfig "192.168.60.#{node['multi_node_test']['ip']}" do
