@@ -11,35 +11,33 @@ verifier:
   systems:
     - name: source
       backend: ssh
-      hosts_output: source_server
+      hosts_output: source
       sudo: true
       user: centos
       profile_locations:
-        - test/integration/inspec
         - test/integration/multi-node
       controls:
         - all
-        - bind
-        - primary
-        - selinux
+        - source
       hostnames: source
 
     - name: replica
       backend: ssh
-      hosts_output: replica_server
+      hosts_output: replica
       sudo: true
       user: centos
       profile_locations:
-        - test/integration/inspec
         - test/integration/multi-node
       controls:
         - all
-        - bind
-        - selinux
+        - replica
       hostnames: replica
 
 platforms:
   - name: centos-7
+    driver:
+      variables:
+        centos_image: "CentOS 7.9"
   - name: centos-stream-8
     driver:
       variables:
