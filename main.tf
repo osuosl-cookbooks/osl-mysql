@@ -92,7 +92,7 @@ resource "openstack_compute_instance_v2" "source" {
         command = <<EOF
             knife bootstrap -c test/chef-config/knife.rb \
 	    centos@${openstack_compute_instance_v2.source.network.0.fixed_ip_v4} \
-	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo \
+	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo --bootstrap-version 17 \
 	    -r 'recipe[multi_node_test::source],role[mysql-vip]'
             EOF
         environment = {
@@ -131,7 +131,7 @@ resource "openstack_compute_instance_v2" "replica" {
         command = <<EOF
             knife bootstrap -c test/chef-config/knife.rb \
 	    centos@${openstack_compute_instance_v2.replica.network.0.fixed_ip_v4} \
-	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo \
+	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo --bootstrap-version 17 \
 	    -r 'recipe[multi_node_test::replica],role[mysql-vip]'
             EOF
         environment = {
