@@ -17,6 +17,7 @@ action :create do
   # Install the package, and set up the service
   mariadb_server_install 'osl-mysql-test' do
     password new_resource.server_password
+    setup_repo false
     action [:install, :create]
   end
   # Create new database
