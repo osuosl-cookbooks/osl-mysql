@@ -1,6 +1,6 @@
 # Ensure that the port is bound, and the service is running.
 
-describe service('mysql.service') do
+describe service('mariadb.service') do
   it { should be_enabled }
   it { should be_running }
 end
