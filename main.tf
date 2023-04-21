@@ -76,7 +76,7 @@ resource "openstack_compute_instance_v2" "source" {
     key_pair        = var.ssh_key_name
     security_groups = ["default"]
     connection {
-        user = "centos"
+        user = var.ssh_user_name
 	host = openstack_networking_port_v2.source_server.all_fixed_ips.0
     }
     network {
@@ -91,7 +91,7 @@ resource "openstack_compute_instance_v2" "source" {
     provisioner "local-exec" {
         command = <<EOF
             knife bootstrap -c test/chef-config/knife.rb \
-	    centos@${openstack_compute_instance_v2.source.network.0.fixed_ip_v4} \
+	    ${var.ssh_user_name}@${openstack_compute_instance_v2.source.network.0.fixed_ip_v4} \
 	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo --bootstrap-version 17 \
 	    -r 'recipe[multi_node_test::source],role[mysql-vip]'
             EOF
@@ -115,7 +115,7 @@ resource "openstack_compute_instance_v2" "replica" {
     security_groups = ["default"]
     depends_on      = [openstack_compute_instance_v2.source]
     connection {
-        user = "centos"
+        user = var.ssh_user_name
         host = openstack_networking_port_v2.replica_server.all_fixed_ips.0
     }
     network {
@@ -130,7 +130,7 @@ resource "openstack_compute_instance_v2" "replica" {
     provisioner "local-exec" {
         command = <<EOF
             knife bootstrap -c test/chef-config/knife.rb \
-	    centos@${openstack_compute_instance_v2.replica.network.0.fixed_ip_v4} \
+	    ${var.ssh_user_name}@${openstack_compute_instance_v2.replica.network.0.fixed_ip_v4} \
 	    -y -N primary --secret-file test/integration/encrypted_data_bag_secret --sudo --bootstrap-version 17 \
 	    -r 'recipe[multi_node_test::replica],role[mysql-vip]'
             EOF
