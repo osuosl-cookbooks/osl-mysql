@@ -1,0 +1,47 @@
+---
+provisioner:
+  name: terraform
+
+driver:
+  name: terraform
+  command_timeout: 3600
+
+verifier:
+  name: terraform
+  systems:
+    - name: source
+      backend: ssh
+      hosts_output: source
+      sudo: true
+      user: centos
+      profile_locations:
+        - test/integration/multi-node
+      controls:
+        - all
+        - source
+      hostnames: source
+
+    - name: replica
+      backend: ssh
+      hosts_output: replica
+      sudo: true
+      user: centos
+      profile_locations:
+        - test/integration/multi-node
+      controls:
+        - all
+        - replica
+      hostnames: replica
+
+platforms:
+  - name: centos-7
+    driver:
+      variables:
+        centos_image: "CentOS 7.9"
+  - name: centos-stream-8
+    driver:
+      variables:
+        centos_image: "CentOS Stream 8"
+
+suites:
+  - name: multi-node

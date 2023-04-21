@@ -28,3 +28,4 @@ vms/*
 # kitchen-terraform
 .terraform/
 terraform.*
+.terraform.lock.hcl
