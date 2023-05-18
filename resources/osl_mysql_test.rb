@@ -36,4 +36,9 @@ action :create do
     database_name new_resource.database
     action [:create, :grant]
   end
+  # Ensure that large prefix size is enabled on centos 7
+  mariadb_database 'Increase prefix size' do
+    query 'SET GLOBAL innodb_large_prefix = 1;'
+    only_if { platform?('centos') && node['platform_version'] == "7.9.2009" }
+  end
 end
