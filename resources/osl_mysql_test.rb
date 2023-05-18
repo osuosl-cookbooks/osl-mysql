@@ -38,7 +38,9 @@ action :create do
   end
   # Ensure that large prefix size is enabled on centos 7
   mariadb_database 'Increase prefix size' do
-    query 'SET GLOBAL innodb_large_prefix = 1;'
+    sql 'SET GLOBAL innodb_large_prefix = 1;'
+    password new_resource.server_password
+    action [:query]
     only_if { platform?('centos') && node['platform_version'] == "7.9.2009" }
   end
 end
