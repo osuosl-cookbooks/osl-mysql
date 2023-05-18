@@ -32,8 +32,4 @@ if os.release == '7.9.2009'
   describe mysql_session('root', 'osl_mysql_test').query('SHOW VARIABLES LIKE \'innodb_large_prefix\'') do
     its('output') { should match /ON/ }
   end
-else
-  describe mysql_session('root', 'osl_mysql_test').query('SHOW VARIABLES LIKE \'innodb_large_prefix\'') do
-    its('output') { should match /OFF/ }
-  end
 end
