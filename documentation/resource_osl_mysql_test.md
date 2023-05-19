@@ -4,6 +4,10 @@ Installs and initializes a MariaDB service, alongside setting up a user and data
 
 All databases created are encoded as `utf8mb4_unicode_ci` by default.
 
+### CentOS 7 Warning
+
+Due to the age of the version of MariaDB provided in the stock CentOS 7 repo, it is advised to use the `version` property to choose a newer release. By default, this resource will install version `10.11` if its on a CentOS 7 system.
+
 ## Actions
 
 - create - (default) to install MariaDB, create a user, and create a database
@@ -12,12 +16,13 @@ All databases created are encoded as `utf8mb4_unicode_ci` by default.
 
 Name                 | Types    | Description                          | Default              | Required?
 ---------            | -------- | ----------------------------------   | ------------         | ---------
-`Database`           | String   | The name of the database to create   |                      | yes
-`Username`           | String   | The owner of the database created    |                      | yes
-`Password`           | String   | The password to give the user        |                      | yes
+`database`           | String   | The name of the database to create   |                      | yes
+`username`           | String   | The owner of the database created    |                      | yes
+`password`           | String   | The password to give the user        |                      | yes
 `server_password`    | String   | The root password                    | osl\_mysql\_test     | no
 `encoding`           | String   | The string encoding for the database | utf8mb4              | no
 `collation`          | String   | The collation for the database       | utf8mb4\_unicode\_ci | no
+`version`            | String   | Enables the MariaDB repo and installs the requested version of the database | null | no
 `database_parameters`| Hash     | Extra database arguments to pass through, see [mariadb\_database](https://github.com/sous-chefs/mariadb/blob/main/documentation/resource_mariadb_database.md) |  | no
 
 ### Examples
@@ -43,5 +48,13 @@ osl_mysql_test 'db_three' do
   password 'db_password'
   encoding 'latin1'
   collation 'latin1_swedish_ci'
+end
+
+# Use a newer version of MariaDB, and change the root password
+osl_mysql_test 'db_four' do
+  username 'db_owner'
+  password 'db_password'
+  server_password 'foo on the bar with baz'
+  version '10.11'
 end
 ```

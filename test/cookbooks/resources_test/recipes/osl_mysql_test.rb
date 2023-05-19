@@ -38,4 +38,3 @@ begin
 rescue
   # Nothing
 end
-
