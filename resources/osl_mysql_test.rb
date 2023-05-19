@@ -10,16 +10,35 @@ property :password, String, required: true
 property :server_password, String, default: 'osl_mysql_test'
 property :encoding, String, default: 'utf8mb4'
 property :collation, String, default: 'utf8mb4_unicode_ci'
+property :version, [String, nil]
 property :database_parameters, Hash, default: {}
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
-  # Install the package, and set up the service
-  mariadb_server_install 'osl-mysql-test' do
-    password new_resource.server_password
-    setup_repo false
-    action [:install, :create]
+  # Check to see if we are running on CentOS, we will be forcing a version if none was given.
+  if platform?('centos') && Gem::Version.create(node['platform_version']) < Gem::Version.create(8) && !new_resource.version
+    new_resource.version = '10.11'
   end
+  # Decide if we should install from the MariaDB respository in the event the stock distro has an outdated version
+  if new_resource.version || node['osl-mysql']['test_mariadb_repo']
+    # Sometimes there is a package requirement not available in the stock repo.
+    include_recipe 'osl-repos::epel'
+    # Install the MariaDB package, and set up the service
+    mariadb_server_install 'osl-mysql-test' do
+      password new_resource.server_password
+      version new_resource.version
+      action [:install, :create]
+    end
+    node.force_override['osl-mysql']['test_mariadb_repo'] = true
+  else
+    # Install the stock package, and set up the service
+    mariadb_server_install 'osl-mysql-test' do
+      password new_resource.server_password
+      setup_repo false
+      action [:install, :create]
+    end
+  end
+
   # Create new database
   mariadb_database new_resource.database do
     password new_resource.server_password
@@ -35,12 +54,5 @@ action :create do
     password new_resource.password
     database_name new_resource.database
     action [:create, :grant]
-  end
-  # Ensure that large prefix size is enabled on centos 7
-  mariadb_database 'Increase prefix size' do
-    sql 'SET GLOBAL innodb_large_prefix = 1; SET GLOBAL innodb_default_for_format = dynamic;'
-    password new_resource.server_password
-    action [:query]
-    only_if { platform?('centos') && node['platform_version'] == "7.9.2009" }
   end
 end
