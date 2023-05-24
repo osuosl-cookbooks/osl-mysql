@@ -50,6 +50,22 @@ describe 'osl-mysql::replica' do
           expect { chef_run }.to raise_error.with_message('You should have one source node')
         end
       end
+
+      context 'with source attribute' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p) do |node|
+            node.automatic['osl-mysql']['replication']['source_ip'] = '192.0.2.100'
+          end.converge(described_recipe)
+        end
+
+        it do
+          expect { chef_run }.to_not raise_error
+        end
+
+        it do
+          expect(chef_run).to include_recipe('osl-mysql::server')
+        end
+      end
     end
   end
 end

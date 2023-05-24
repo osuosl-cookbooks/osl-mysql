@@ -18,13 +18,17 @@
 #
 replication = node['osl-mysql']['replication']
 
-source_node = search(:node, "roles:#{replication['role']}").select do |n|
-  n.dig('percona', 'server', 'role').include?('source')
+ip = replication['source_ip']
+
+unless ip
+  source_node = search(:node, "roles:#{replication['role']}").select do |n|
+    n.dig('percona', 'server', 'role').include?('source')
+  end
+
+  raise 'You should have one source node' unless source_node.length == 1
+
+  ip = Percona::ConfigHelper.bind_to(source_node.first, replication['source_interface'])
 end
-
-raise 'You should have one source node' unless source_node.length == 1
-
-ip = Percona::ConfigHelper.bind_to(source_node.first, replication['source_interface'])
 
 node.default['percona']['server']['role'] = 'replica'
 node.default['percona']['server']['server_id'] = 2
