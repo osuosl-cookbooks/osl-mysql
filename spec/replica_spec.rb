@@ -58,7 +58,7 @@ describe 'osl-mysql::replica' do
       context 'with source attribute' do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(p) do |node|
-            node.automatic['osl-mysql']['replication']['source_ip'] = '192.0.2.100'
+            node.automatic['osl-mysql']['replication']['source_ip'] = '192.0.3.100'
           end.converge(described_recipe)
         end
 
@@ -71,7 +71,7 @@ describe 'osl-mysql::replica' do
         end
 
         it do
-          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("MASTER_HOST='192.0.2.100'")
+          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("MASTER_HOST='192.0.3.100'")
         end
       end
     end
