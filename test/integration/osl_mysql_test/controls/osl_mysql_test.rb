@@ -7,7 +7,7 @@ end
 
 describe port(3306) do
   it { should be_listening }
-  its('processes') { should cmp 'mysqld' }
+  its('processes') { should be_in %w(mysqld mariadbd) }
 end
 
 # Check to see if the datbases foobar and barfoo exist.

@@ -19,24 +19,27 @@ action :create do
   if platform?('centos') && Gem::Version.create(node['platform_version']) < Gem::Version.create(8) && !new_resource.version
     new_resource.version = '10.11'
   end
-  # Decide if we should install from the MariaDB respository in the event the stock distro has an outdated version
-  if new_resource.version || node['osl-mysql']['test_mariadb_repo']
-    # Sometimes there is a package requirement not available in the stock repo.
-    include_recipe 'osl-repos::epel'
-    # Install the MariaDB package, and set up the service
-    mariadb_server_install 'osl-mysql-test' do
-      password new_resource.server_password
-      version new_resource.version
-      action [:install, :create]
+  # Check to see if we already installed MariaDB
+  unless node['osl-mysql']['test_mariadb_setup']
+    # Decide if we should install from the MariaDB respository in the event the stock distro has an outdated version
+    if new_resource.version
+      # Sometimes there is a package requirement not available in the stock repo.
+      include_recipe 'osl-repos::epel'
+      # Install the MariaDB package, and set up the service
+      mariadb_server_install 'osl-mysql-test' do
+        password new_resource.server_password
+        version new_resource.version
+        action [:install, :create]
+      end
+    else
+      # Install the stock package, and set up the service
+      mariadb_server_install 'osl-mysql-test' do
+        password new_resource.server_password
+        setup_repo false
+        action [:install, :create]
+      end
     end
-    node.force_override['osl-mysql']['test_mariadb_repo'] = true
-  else
-    # Install the stock package, and set up the service
-    mariadb_server_install 'osl-mysql-test' do
-      password new_resource.server_password
-      setup_repo false
-      action [:install, :create]
-    end
+    node.force_override['osl-mysql']['test_mariadb_setup'] = true
   end
 
   # Create new database
