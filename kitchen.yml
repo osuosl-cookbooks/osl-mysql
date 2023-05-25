@@ -26,9 +26,6 @@ suites:
   - name: mon
     run_list:
       - recipe[osl-mysql::mon]
-    excludes:
-      - almalinux-8
-      - centos_stream-8
   - name: backup
     run_list:
       - recipe[osl-mysql::backup]

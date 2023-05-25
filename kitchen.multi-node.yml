@@ -38,10 +38,6 @@ platforms:
     driver:
       variables:
         centos_image: "CentOS 7.9"
-  - name: centos-stream-8
-    driver:
-      variables:
-        centos_image: "CentOS Stream 8"
   - name: almalinux-8
     driver:
       variables:

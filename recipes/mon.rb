@@ -16,8 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-return if node['platform_version'].to_i >= 8
-
 include_recipe 'osl-mysql::server'
 include_recipe 'osl-nrpe'
 
@@ -33,6 +31,9 @@ percona_mysql_user 'mysql_monitor_grant' do
   privileges [:super, :select, :process, 'replication client', 'replication slave']
   action [:create, :grant]
 end
+
+# percona-nagios-plugins isn't in percona repo for anything after EL7
+include_recipe 'yum-osuosl' if node['platform_version'].to_i >= 8
 
 # Install nagios percona plugins
 package 'percona-nagios-plugins'
