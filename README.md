@@ -10,7 +10,6 @@ Cookbooks:: yum, nagios, sysctl, mysql
 
 - AlmaLinux 8
 - CentOS 7
-- CentOS Stream 8
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
