@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.8.2 (2023-05-25)
+------------------
+- Add Alma 8 support to mon recipe
+
 6.8.1 (2023-05-24)
 ------------------
 - Allow setting replication source via attribute
