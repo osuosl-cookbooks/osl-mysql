@@ -1,16 +1,8 @@
-if platform?('centos') && Gem::Version.create(node['platform_version']) < Gem::Version.create(8)
-  # Initialize the database service, and create a database
-  osl_mysql_test 'foobar' do
-    version '10.11'
-    username 'foo'
-    password 'foofoo'
-  end
-else
-  # Initialize the database service, and create a database
-  osl_mysql_test 'foobar' do
-    username 'foo'
-    password 'foofoo'
-  end
+# Initialize the database service, and create a database
+osl_mysql_test 'foobar' do
+  version '10.11' if node['platform_version'].to_i < 8
+  username 'foo'
+  password 'foofoo'
 end
 
 # Add in an extra database to the same user

@@ -6,7 +6,7 @@ All databases created are encoded as `utf8mb4_unicode_ci` by default.
 
 ### CentOS 7 Warning
 
-Due to the age of the version of MariaDB provided in the stock CentOS 7 repo, it is advised to use the `version` property to choose a newer release. By default, this resource will install version `10.11` if its on a CentOS 7 system.
+Due to the age of the version of MariaDB provided in the CentOS 7 distro repo, it is advised to use the `version` property to choose a newer release. We recommend to install version `10.11` if it's on a CentOS 7 system.
 
 ## Actions
 
