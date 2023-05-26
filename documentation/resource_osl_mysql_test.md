@@ -4,9 +4,9 @@ Installs and initializes a MariaDB service, alongside setting up a user and data
 
 All databases created are encoded as `utf8mb4_unicode_ci` by default.
 
-### CentOS 7 Warning
+### Fix for SQL-related converge errors
 
-Due to the age of the version of MariaDB provided in the CentOS 7 distro repo, it is advised to use the `version` property to choose a newer release. We recommend to install version `10.11` if it's on a CentOS 7 system.
+Due to the age of the version of MariaDB provided by some distro repositories, you may come across an issue like: **Specified key was too long; max key length is ... bytes** while converging. To fix issues like this, add in the `version` property to the resource to install a newer version of MariaDB. It is recommended to install version `10.11`. To look at other versions that are available, check out [MariaDB's mirror website](http://mirror.mariadb.org/yum/)
 
 ## Actions
 

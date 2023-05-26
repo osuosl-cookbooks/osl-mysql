@@ -10,12 +10,12 @@ property :password, String, required: true
 property :server_password, String, default: 'osl_mysql_test'
 property :encoding, String, default: 'utf8mb4'
 property :collation, String, default: 'utf8mb4_unicode_ci'
-property :version, [String, nil]
+property :version, String
 property :database_parameters, Hash, default: {}
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
-  # Setup the epel repo if we are installing from MariaDB
+  # Setup the epel repo if we are installing from MariaDB as the MariaDB version depends on a package found in epel.
   include_recipe 'osl-repos::epel' if new_resource.version
 
   # Install the database packages, dependent on if the version property is set
