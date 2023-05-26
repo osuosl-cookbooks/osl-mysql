@@ -10,6 +10,14 @@ describe port(3306) do
   its('processes') { should be_in %w(mysqld mariadbd) }
 end
 
+if os.release.to_i < 8
+  # Check to make sure that CentOS 7's version is exactly 10.11
+  describe bash('mysql --version') do
+    its('exit_status') { should eq 0 }
+    its('stdout') { should match '10.11.3' }
+  end
+end
+
 # Check to see if the datbases foobar and barfoo exist.
 # Using the user foo, to also verify that user exists.
 describe mysql_session('foo', 'foofoo').query('USE foobar; USE barfoo') do
