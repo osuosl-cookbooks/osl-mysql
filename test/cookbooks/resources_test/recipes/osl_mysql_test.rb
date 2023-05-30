@@ -1,5 +1,6 @@
 # Initialize the database service, and create a database
 osl_mysql_test 'foobar' do
+  version '10.11' if node['platform_version'].to_i < 8
   username 'foo'
   password 'foofoo'
 end
