@@ -28,6 +28,9 @@ node.default['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '
 # utf8mb4 support
 node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['percona']['version'].to_f < 8.0
 
+# enable user monitoring by default
+node.default['percona']['conf']['mysqld']['userstat'] = true
+
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'
 node.default['percona']['server']['myisam_recover'] = 'FORCE,BACKUP'
