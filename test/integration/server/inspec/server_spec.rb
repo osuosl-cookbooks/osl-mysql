@@ -57,7 +57,7 @@ describe mysql_conf('/etc/my.cnf') do
   its('mysqld.innodb_file_format') { should eq 'barracuda' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
   its('mysqld.innodb_buffer_pool_size') { should eq '2652M' } if os.release.to_i < 8
-  its('mysqld.innodb_buffer_pool_size') { should eq '2746M' } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('mysqld.innodb_buffer_pool_size') { should eq '2611M' } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe kernel_parameter('vm.swappiness') do
@@ -66,7 +66,7 @@ end
 
 describe kernel_parameter('vm.min_free_kbytes') do
   its('value') { should eq 38799 } if os.release.to_i < 8
-  its('value') { should eq 40171 } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('value') { should eq 38205 } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe yum.repo('percona-noarch') do
