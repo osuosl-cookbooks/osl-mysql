@@ -13,7 +13,7 @@ end
 # Firewall rules should allow mysql
 describe iptables do
   it { should have_rule('-A INPUT -j mysql') }
-  it { should have_rule('-A mysql -p tcp -m tcp --dport 3306') }
+  it { should have_rule('-A mysql -p tcp -m tcp --dport 3306 -j ACCEPT') }
 end
 
 if os.release.to_i < 8
