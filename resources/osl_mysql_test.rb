@@ -15,6 +15,10 @@ property :database_parameters, Hash, default: {}
 
 # Install the mariadb package, set up the service, set up the user, then set up the given database
 action :create do
+  # Setup the port for mysql
+  osl_firewall_port 'mysql' do
+    osl_only false
+  end
   # Setup the epel repo if we are installing from MariaDB as the MariaDB version depends on a package found in epel.
   include_recipe 'osl-repos::epel' if new_resource.version
 

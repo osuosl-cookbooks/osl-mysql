@@ -10,11 +10,17 @@ describe port(3306) do
   its('processes') { should be_in %w(mysqld mariadbd) }
 end
 
+# Firewall rules should allow mysql
+describe iptables do
+  it { should have_rule('-A INPUT -j mysql') }
+  it { should have_rule('-A mysql -p tcp -m tcp --dport 3306 -j ACCEPT') }
+end
+
 if os.release.to_i < 8
   # Check to make sure that CentOS 7's version is exactly 10.11
   describe bash('mysql --version') do
     its('exit_status') { should eq 0 }
-    its('stdout') { should match '10.11.3' }
+    its('stdout') { should match 'Distrib 10.11' }
   end
 end
 
