@@ -53,12 +53,11 @@ end
 describe mysql_conf('/etc/my.cnf') do
   its('mysqld.log_bin_trust_function_creators') { should eq '1' }
   its('mysqld.innodb_large_prefix') { should eq 'true' } if os.release.to_i < 8 # Deprecated in mysql 5.7
-  # percona cookbook adds a second mysqld section for the above settings
-  # mysql_conf/ini inspec resource seems to only give you the second section
-  its('content') { should match(/^innodb_file_format = barracuda$/) } if os.release.to_i < 8 # Deprecated in mysql 5.7
+  its('mysqld.userstat') { should eq 'true' }
+  its('mysqld.innodb_file_format') { should eq 'barracuda' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
-  its('content') { should match(/^innodb_buffer_pool_size = 2652M$/) } if os.release.to_i < 8
-  its('content') { should match(/^innodb_buffer_pool_size = 2746M$/) } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('mysqld.innodb_buffer_pool_size') { should eq '2652M' } if os.release.to_i < 8
+  its('mysqld.innodb_buffer_pool_size') { should eq '2611M' } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe kernel_parameter('vm.swappiness') do
@@ -67,7 +66,7 @@ end
 
 describe kernel_parameter('vm.min_free_kbytes') do
   its('value') { should eq 38799 } if os.release.to_i < 8
-  its('value') { should eq 40171 } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('value') { should eq 38205 } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
 describe yum.repo('percona-noarch') do
