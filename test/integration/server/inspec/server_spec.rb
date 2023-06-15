@@ -60,6 +60,12 @@ describe mysql_conf('/etc/my.cnf') do
   its('mysqld.innodb_buffer_pool_size') { should eq '2611M' } if os.release.to_i >= 8 && os.name == 'almalinux'
 end
 
+describe command "mysqladmin --user='root' --password='jzYY0cQUnPAMcqvIxYaC' variables" do
+  its('stdout') { should match /max_connections\s+\| 1000/ }
+  its('stdout') { should match /open_files_limit\s+\| 65535/ }
+  its('exit_status') { should eq 0 }
+end
+
 describe kernel_parameter('vm.swappiness') do
   its('value') { should eq 0 }
 end
