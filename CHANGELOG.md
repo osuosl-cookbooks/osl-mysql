@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.9.1 (2023-06-15)
+------------------
+- Fix open files configuration
+
 6.9.0 (2023-06-14)
 ------------------
 - Tweak mysqld config

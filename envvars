@@ -1,0 +1,4 @@
+cookbook=osl-mysql
+version=6.9.0
+envs=production,phpbb
+pr_link=https://github.com/osuosl-cookbooks/osl-mysql/pull/80
