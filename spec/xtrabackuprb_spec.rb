@@ -37,7 +37,8 @@ describe 'osl-mysql::xtrabackuprb' do
       it do
         expect(chef_run).to sync_git('/usr/local/src/xtrabackup-rb')
           .with(
-            repository: 'https://github.com/mmz-srf/xtrabackup-rb.git'
+            repository: 'https://github.com/mmz-srf/xtrabackup-rb.git',
+            ignore_failure: true
           )
       end
       it do

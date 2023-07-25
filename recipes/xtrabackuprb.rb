@@ -10,6 +10,7 @@ version = node['osl-mysql']['xtrabackuprb']['version']
 
 git '/usr/local/src/xtrabackup-rb' do
   repository 'https://github.com/mmz-srf/xtrabackup-rb.git'
+  ignore_failure true
 end
 
 chef_path = node['chef_packages']['chef']['version'].to_i >= 15 ? 'cinc' : 'chef'
