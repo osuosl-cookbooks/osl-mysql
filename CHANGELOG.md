@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.9.2 (2023-08-25)
+------------------
+- Add ignore_failure true to git resources
+
 6.9.1 (2023-06-15)
 ------------------
 - Fix open files configuration
