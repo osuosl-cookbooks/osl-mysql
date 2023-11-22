@@ -5,6 +5,13 @@ describe service('mariadb.service') do
   it { should be_running }
 end
 
+describe file '/root/.my.cnf' do
+  its('owner') { should eq 'root' }
+  its('group') { should eq'root' }
+  its('mode') { should cmp '0640' }
+  its('content') { should match /^password='osl_mysql_test'$/ }
+end
+
 describe port(3306) do
   it { should be_listening }
   its('processes') { should be_in %w(mysqld mariadbd) }
