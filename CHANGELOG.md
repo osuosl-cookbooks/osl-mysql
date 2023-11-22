@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.9.3 (2023-11-22)
+------------------
+- Add /root/.my.cnf when using osl_mysql_test
+
 6.9.2 (2023-08-25)
 ------------------
 - Add ignore_failure true to git resources
