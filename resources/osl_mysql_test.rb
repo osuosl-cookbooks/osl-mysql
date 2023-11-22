@@ -46,4 +46,12 @@ action :create do
     database_name new_resource.database
     action [:create, :grant]
   end
+
+  template '/root/.my.cnf' do
+    cookbook 'osl-mysql'
+    source 'my.cnf.erb'
+    mode '0640'
+    sensitive true
+    variables(password: new_resource.server_password)
+  end
 end
