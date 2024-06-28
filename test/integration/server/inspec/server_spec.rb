@@ -51,7 +51,7 @@ describe mysql_conf('/etc/my.cnf') do
   its('mysqld.log_bin_trust_function_creators') { should eq '1' }
   its('mysqld.userstat') { should eq 'true' }
   its('content') { should match(/^innodb_file_per_table$/) }
-  its('mysqld.innodb_buffer_pool_size') { should eq '2557M' } unless vagrant or docker
+  its('mysqld.innodb_buffer_pool_size') { should eq '2557M' } unless vagrant || docker
 end
 
 describe command "mysqladmin --user='root' --password='jzYY0cQUnPAMcqvIxYaC' variables" do
@@ -65,7 +65,7 @@ describe kernel_parameter('vm.swappiness') do
 end
 
 describe kernel_parameter('vm.min_free_kbytes') do
-  its('value') { should eq 37406 } unless vagrant or docker
+  its('value') { should eq 37406 } unless vagrant || docker
 end
 
 describe yum.repo('percona-noarch') do
