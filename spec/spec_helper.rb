@@ -6,6 +6,11 @@ ALMA_8_OPTS = {
   version: '8',
 }.freeze
 
+ALMA_9_OPTS = {
+  platform: 'almalinux',
+  version: '9',
+}.freeze
+
 CENTOS_7_OPTS = {
   platform: 'centos',
   version: '7',
@@ -13,6 +18,7 @@ CENTOS_7_OPTS = {
 
 ALLPLATFORMS = [
   ALMA_8_OPTS,
+  ALMA_9_OPTS,
   CENTOS_7_OPTS,
 ].freeze
 
