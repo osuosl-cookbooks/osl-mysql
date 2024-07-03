@@ -9,7 +9,7 @@ transport:
   name: rsync
 
 provisioner:
-  name: chef_zero
+  name: chef_infra
   product_name: cinc
   product_version: '17'
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
