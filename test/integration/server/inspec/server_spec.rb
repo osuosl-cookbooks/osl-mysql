@@ -49,7 +49,9 @@ end
 
 describe mysql_conf('/etc/my.cnf') do
   its('mysqld.log_bin_trust_function_creators') { should eq '1' }
+  its('mysqld.innodb_large_prefix') { should eq 'true' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('mysqld.userstat') { should eq 'true' }
+  its('mysqld.innodb_file_format') { should eq 'barracuda' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
   its('mysqld.innodb_buffer_pool_size') { should eq '2557M' } unless vagrant || docker
 end
