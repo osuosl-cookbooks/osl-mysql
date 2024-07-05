@@ -2,7 +2,7 @@
 # Cookbook:: osl-mysql
 # Recipe:: mon
 #
-# Copyright:: 2014-2023, Oregon State University
+# Copyright:: 2014-2024, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,8 +32,7 @@ percona_mysql_user 'mysql_monitor_grant' do
   action [:create, :grant]
 end
 
-# percona-nagios-plugins isn't in percona repo for anything after EL7
-include_recipe 'yum-osuosl' if node['platform_version'].to_i >= 8
+include_recipe 'yum-osuosl'
 
 # Install nagios percona plugins
 package 'percona-nagios-plugins'

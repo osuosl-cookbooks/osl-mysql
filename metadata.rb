@@ -19,4 +19,3 @@ depends          'percona', '~> 3.4.1'
 depends          'yum-osuosl'
 
 supports         'almalinux', '~> 8.0'
-supports         'centos', '~> 7.0'

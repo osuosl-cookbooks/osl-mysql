@@ -13,7 +13,7 @@ verifier:
       backend: ssh
       hosts_output: source
       sudo: true
-      user: centos
+      user: almalinux
       profile_locations:
         - test/integration/multi-node
       controls:
@@ -25,7 +25,7 @@ verifier:
       backend: ssh
       hosts_output: replica
       sudo: true
-      user: centos
+      user: almalinux
       profile_locations:
         - test/integration/multi-node
       controls:
@@ -34,39 +34,11 @@ verifier:
       hostnames: replica
 
 platforms:
-  - name: centos-7
-    driver:
-      variables:
-        centos_image: "CentOS 7.9"
   - name: almalinux-8
     driver:
       variables:
-        centos_image: "Almalinux 8"
+        os_image: "Almalinux 8"
         ssh_user_name: "almalinux"
-    verifier:
-      systems:
-        - name: source
-          backend: ssh
-          hosts_output: source
-          sudo: true
-          user: almalinux
-          profile_locations:
-            - test/integration/multi-node
-          controls:
-            - all
-            - source
-          hostnames: source
-        - name: replica
-          backend: ssh
-          hosts_output: replica
-          sudo: true
-          user: almalinux
-          profile_locations:
-            - test/integration/multi-node
-          controls:
-            - all
-            - replica
-          hostnames: replica
 
 suites:
   - name: multi-node
