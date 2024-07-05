@@ -8,14 +8,8 @@
   end
 end
 
-if os.release.to_i >= 8
-  describe package('percona-xtrabackup-80') do
-    it { should be_installed }
-  end
-else
-  describe package('percona-xtrabackup') do
-    it { should be_installed }
-  end
+describe package('percona-xtrabackup-80') do
+  it { should be_installed }
 end
 
 # Mysql packages should not be installed
@@ -52,12 +46,9 @@ end
 
 describe mysql_conf('/etc/my.cnf') do
   its('mysqld.log_bin_trust_function_creators') { should eq '1' }
-  its('mysqld.innodb_large_prefix') { should eq 'true' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('mysqld.userstat') { should eq 'true' }
-  its('mysqld.innodb_file_format') { should eq 'barracuda' } if os.release.to_i < 8 # Deprecated in mysql 5.7
   its('content') { should match(/^innodb_file_per_table$/) }
-  its('mysqld.innodb_buffer_pool_size') { should eq '2652M' } if os.release.to_i < 8
-  its('mysqld.innodb_buffer_pool_size') { should eq '2611M' } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('mysqld.innodb_buffer_pool_size') { should eq '2565M' }
 end
 
 describe command "mysqladmin --user='root' --password='jzYY0cQUnPAMcqvIxYaC' variables" do
@@ -71,8 +62,7 @@ describe kernel_parameter('vm.swappiness') do
 end
 
 describe kernel_parameter('vm.min_free_kbytes') do
-  its('value') { should eq 38799 } if os.release.to_i < 8
-  its('value') { should eq 38205 } if os.release.to_i >= 8 && os.name == 'almalinux'
+  its('value') { should eq 37529 }
 end
 
 describe yum.repo('percona-noarch') do

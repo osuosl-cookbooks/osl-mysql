@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'osl-mysql::mon' do
   include_context 'common_stubs'
 
-  [CENTOS_7_OPTS, ALMA_8_OPTS].each do |pltfrm|
+  ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
@@ -42,7 +42,7 @@ describe 'osl-mysql::mon' do
       end
       it do
         expect(chef_run).to include_recipe('yum-osuosl')
-      end if pltfrm == ALMA_8_OPTS
+      end
       it do
         expect(chef_run).to install_package('percona-nagios-plugins')
       end

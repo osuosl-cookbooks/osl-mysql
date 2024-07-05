@@ -71,7 +71,7 @@ resource "openstack_networking_port_v2" "source_server" {
 
 resource "openstack_compute_instance_v2" "source" {
     name            = "source"
-    image_name      = var.centos_image
+    image_name      = var.os_image
     flavor_name     = "m1.medium"
     key_pair        = var.ssh_key_name
     security_groups = ["default"]
@@ -109,7 +109,7 @@ resource "openstack_networking_port_v2" "replica_server" {
 
 resource "openstack_compute_instance_v2" "replica" {
     name            = "replica"
-    image_name      = var.centos_image
+    image_name      = var.os_image
     flavor_name     = "m1.medium"
     key_pair        = var.ssh_key_name
     security_groups = ["default"]

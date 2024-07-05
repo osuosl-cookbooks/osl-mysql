@@ -1,19 +1,13 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-ALMA_8_OPTS = {
+ALMA_8 = {
   platform: 'almalinux',
   version: '8',
 }.freeze
 
-CENTOS_7_OPTS = {
-  platform: 'centos',
-  version: '7',
-}.freeze
-
 ALLPLATFORMS = [
-  ALMA_8_OPTS,
-  CENTOS_7_OPTS,
+  ALMA_8,
 ].freeze
 
 RSpec.configure do |config|

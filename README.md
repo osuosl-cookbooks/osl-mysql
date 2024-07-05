@@ -9,7 +9,6 @@ Cookbooks:: yum, nagios, sysctl, mysql
 ## Supports
 
 - AlmaLinux 8
-- CentOS 7
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
@@ -64,8 +63,8 @@ manually. To see what their IP addresses are, just run ``terraform output`` whic
 
 ``` bash
 # You can run the following commands to login to each node
-$ ssh centos@$(terraform output source)
-$ ssh centos@$(terraform output replica)
+$ ssh almalinux@$(terraform output source)
+$ ssh almalinux@$(terraform output replica)
 
 # Or you can look at the IPs for all for all of the nodes at once
 $ terraform output

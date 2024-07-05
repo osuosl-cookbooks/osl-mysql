@@ -23,14 +23,6 @@ describe iptables do
   it { should have_rule('-A mysql -p tcp -m tcp --dport 3306 -j ACCEPT') }
 end
 
-if os.release.to_i < 8
-  # Check to make sure that CentOS 7's version is exactly 10.11
-  describe bash('mysql --version') do
-    its('exit_status') { should eq 0 }
-    its('stdout') { should match 'Distrib 10.11' }
-  end
-end
-
 # Check to see if the datbases foobar and barfoo exist.
 # Using the user foo, to also verify that user exists.
 describe mysql_session('foo', 'foofoo').query('USE foobar; USE barfoo') do

@@ -16,12 +16,6 @@ describe command('/usr/local/sbin/xtrabackup-rb') do
   its(:exit_status) { should eq 0 }
 end
 
-if os.release.to_i < 8
-  describe package('percona-xtrabackup') do
-    it { should be_installed }
-  end
-else
-  describe package('percona-xtrabackup-80') do
-    it { should be_installed }
-  end
+describe package('percona-xtrabackup-80') do
+  it { should be_installed }
 end
