@@ -1,10 +1,17 @@
 ---
+driver:
+  name: vagrant
+
 verifier:
   name: inspec
-driver:
-  flavor_ref: 'm1.medium'
+
+transport:
+  name: rsync
+
 provisioner:
-  name: chef_zero
+  name: chef_infra
+  product_name: cinc
+  product_version: '17'
   encrypted_data_bag_secret_key_path: test/integration/encrypted_data_bag_secret
   data_bags_path: test/integration/data_bags
   enforce_idempotency: true
@@ -18,6 +25,9 @@ provisioner:
       encrypted_data_bag_secret_file: "/etc/chef/encrypted_data_bag_secret"
     osl-selinux:
       enforcing: true
+
+platforms:
+  - name: almalinux-8
 
 suites:
   - name: server

@@ -1,3 +1,5 @@
+docker = inspec.command('test -e /.dockerenv')
+
 # Ensure that the port is bound, and the service is running.
 
 describe service('mariadb.service') do
@@ -21,7 +23,7 @@ end
 describe iptables do
   it { should have_rule('-A INPUT -j mysql') }
   it { should have_rule('-A mysql -p tcp -m tcp --dport 3306 -j ACCEPT') }
-end
+end unless docker
 
 # Check to see if the datbases foobar and barfoo exist.
 # Using the user foo, to also verify that user exists.
