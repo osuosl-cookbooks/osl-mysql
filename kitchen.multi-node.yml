@@ -5,7 +5,6 @@ provisioner:
 driver:
   name: terraform
   command_timeout: 3600
-  flavor_ref: m1.medium
 
 verifier:
   name: terraform
