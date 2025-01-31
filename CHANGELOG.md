@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.10.2 (2025-01-31)
+-------------------
+- Ignore common errors with secondary syncing
+
 6.10.1 (2024-09-04)
 -------------------
 - Add AlmaLinux 9 support
