@@ -2,7 +2,7 @@
 # Cookbook:: osl-mysql
 # Recipe:: server
 #
-# Copyright:: 2013-2024, Oregon State University
+# Copyright:: 2013-2025, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,6 +30,11 @@ node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if nod
 
 # enable user monitoring by default
 node.default['percona']['conf']['mysqld']['userstat'] = true
+
+# Skip common errors with secondary syncing
+# 1062: HA_ERR_FOUND_DUPP_KEY
+# 1032: HA_ERR_KEY_NOT_FOUND
+node.default['percona']['conf']['mysqld']['slave-skip-errors'] = '1062,1032'
 
 # Tunables
 node.default['percona']['server']['binlog_format'] = 'mixed'
