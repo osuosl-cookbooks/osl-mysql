@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.11.0 (2025-05-09)
+-------------------
+- Unify server settings based on mysql1/2 cluster
+
 6.10.2 (2025-01-31)
 -------------------
 - Ignore common errors with secondary syncing
