@@ -18,65 +18,14 @@
 #
 include_recipe 'osl-mysql'
 
-node.default['percona']['server']['debian_username'] = 'root'
-node.default['percona']['skip_passwords'] = false
-node.default['percona']['server']['bind_address'] = '0.0.0.0'
-
-# Loosen restrictions on type of functions users can create
-node.default['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
-
-# utf8mb4 support
-node.default['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['percona']['version'].to_f < 8.0
-
-# enable user monitoring by default
-node.default['percona']['conf']['mysqld']['userstat'] = true
-
-# Skip common errors with secondary syncing
-# 1062: HA_ERR_FOUND_DUPP_KEY
-# 1032: HA_ERR_KEY_NOT_FOUND
-node.default['percona']['conf']['mysqld']['slave-skip-errors'] = '1062,1032'
-
-# Tunables
-node.default['percona']['server']['binlog_format'] = 'mixed'
-node.default['percona']['server']['myisam_recover'] = 'FORCE,BACKUP'
-node.default['percona']['server']['max_connections'] = 1_000
-node.default['percona']['server']['max_allowed_packet'] = '128M'
-node.default['percona']['server']['max_connect_errors'] = 100_000
-node.default['percona']['server']['connect_timeout'] = 28_880
-node.default['percona']['server']['open_files_limit'] = 65_535
-node.default['percona']['server']['log_bin'] = '/var/lib/mysql/mysql-bin'
-node.default['percona']['server']['expire_logs_days'] = '10'
-node.default['percona']['server']['sync_binlog'] = 0
-node.default['percona']['server']['query_cache_size'] = 0
-node.default['percona']['server']['thread_cache_size'] = 50
-node.default['percona']['server']['key_buffer'] = '32M'
-node.default['percona']['server']['table_cache'] = 4_096
-node.default['percona']['server']['innodb_file_format'] = 'barracuda'
-node.default['percona']['server']['innodb_file_per_table'] = true
-node.default['percona']['server']['innodb_flush_method'] = 'O_DIRECT'
-node.default['percona']['server']['innodb_log_files_in_group'] = 2
-node.default['percona']['server']['innodb_flush_log_at_trx_commit'] = 2
-
-# Calculate the InnoDB buffer pool size and instances
-# Ohai reports memory in kB
-mem = (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
-# Setinnodb_buffer_pool_size to 70% of total RAM of the machine
-node.default['percona']['server']['innodb_buffer_pool_size'] = "#{Integer(mem * 0.70)}M"
-# Set to 1% of total memory
-# https://discuss.aerospike.com/t/how-to-tune-the-linux-kernel-for-memory-performance/4195
-min_free_kbytes = Integer(mem * 1024 * 0.01)
+osl_mysql_conf
 
 sysctl 'vm.swappiness' do
   value 0
 end
 
 sysctl 'vm.min_free_kbytes' do
-  # Don't set above 2GB
-  if (min_free_kbytes / 1048576) >= 2
-    value '2097152'
-  else
-    value min_free_kbytes
-  end
+  value osl_min_free_kbytes
 end
 
 selinux_fcontext '/var/log/mysql(/.*)?' do
