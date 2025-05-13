@@ -39,6 +39,7 @@ module OslMysql
           node.override['percona']['server']['innodb_log_file_size'] = innodb_redo_log_settings[:log_file_size]
           node.override['percona']['server']['innodb_log_files_in_group'] =
             innodb_redo_log_settings[:log_files_in_group]
+          node.override['percona']['server']['log_warnings'] = true
         elsif osl_percona_version == '8.0'
           node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
             innodb_redo_log_settings[:redo_log_capacity]
@@ -49,7 +50,6 @@ module OslMysql
         node.override['percona']['server']['join_buffer_size'] = '8M'
         node.override['percona']['server']['key_buffer_size'] = '32M'
         node.override['percona']['server']['log_bin_basename'] = '/var/lib/mysql/mysql-bin'
-        node.override['percona']['server']['log_warnings'] = true
         node.override['percona']['server']['long_query_time'] = '3'
         node.override['percona']['server']['max_allowed_packet'] = '128M'
         node.override['percona']['server']['max_connect_errors'] = '1000000'
