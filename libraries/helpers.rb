@@ -26,7 +26,9 @@ module OslMysql
         node.override['percona']['server']['character_set'] = osl_char_settings[:character_set_server]
         node.override['percona']['server']['collation'] = osl_char_settings[:collation_server]
         node.override['percona']['server']['debian_username'] = 'root'
+        node.override['percona']['server']['enforce_gtid_consistency'] = 'ON'
         node.override['percona']['server']['expire_logs_days'] = '14'
+        node.override['percona']['server']['gtid_mode'] = 'ON'
         node.override['percona']['server']['innodb_buffer_pool_instances'] = innodb_buffer_pool_instances
         node.override['percona']['server']['innodb_buffer_pool_size'] = innodb_buffer_pool_size
         node.override['percona']['server']['innodb_file_format'] = 'barracuda'
@@ -50,6 +52,7 @@ module OslMysql
         node.override['percona']['server']['join_buffer_size'] = '8M'
         node.override['percona']['server']['key_buffer_size'] = '32M'
         node.override['percona']['server']['log_bin_basename'] = '/var/lib/mysql/mysql-bin'
+        node.override['percona']['server']['log_slave_updates'] = true
         node.override['percona']['server']['long_query_time'] = '3'
         node.override['percona']['server']['max_allowed_packet'] = '128M'
         node.override['percona']['server']['max_connect_errors'] = '1000000'
