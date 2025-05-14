@@ -1,6 +1,6 @@
-node.default['percona']['server']['gtid_mode'] = 'ON'
-node.default['percona']['server']['enforce_gtid_consistency'] = 'ON'
-node.default['percona']['server']['log_slave_updates'] = true
+# node.default['percona']['server']['gtid_mode'] = 'ON'
+# node.default['percona']['server']['enforce_gtid_consistency'] = 'ON'
+# node.default['percona']['server']['log_slave_updates'] = true
 
 include_recipe 'multi_node_test::network'
 include_recipe 'osl-mysql::source'
