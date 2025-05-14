@@ -8,4 +8,5 @@ chef_version '>= 13.0'
 
 depends 'osl-resources'
 depends 'osl-mysql'
+depends 'osl-nfs'
 depends 'line'
