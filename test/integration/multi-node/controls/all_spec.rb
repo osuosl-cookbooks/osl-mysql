@@ -1,11 +1,11 @@
 control 'all' do
   %w(11 12).each do |suff|
-    describe host("192.168.60.#{suff}") do
+    describe host("10.1.0.#{suff}") do
       it { should be_reachable }
     end
   end
 
-  describe host('192.168.60.13') do
+  describe host('10.1.0.13') do
     it { should_not be_reachable }
   end
 
@@ -119,6 +119,6 @@ control 'all' do
 
   describe sql.query('SELECT * FROM testdb.example') do
     its('stdout') { should match "1\thello" }
-    its('stdout') { should match "2\tworld" }
+    its('stdout') { should match "4\tworld" }
   end
 end

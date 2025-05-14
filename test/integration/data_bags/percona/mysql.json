@@ -1,27 +1,31 @@
 {
   "backup": {
-    "encrypted_data": "+coWackHY2uDoRTU2JC8RjCrmjyal8Zivu0FBkKYQ9wZVLby1EKdt1zLzIPI\np/Qc\n",
-    "iv": "+Iu9uZSpb4TVcOp+fMEItg==\n",
-    "version": 1,
+    "encrypted_data": "JV1tFQ2mVqZLMR4pJDnocgRgUMqzkOqGgzHGYJFm2q2VAZcgvT92IZR6ioDZ\nZ+cC\n",
+    "hmac": "7IcHlha1LF/jO1h0PRpD1mbn/qJ/JTpXCpXcQKbHMqU=\n",
+    "iv": "WAgrm+ewh45aDUcgMCeDZw==\n",
+    "version": 2,
     "cipher": "aes-256-cbc"
   },
   "id": "mysql",
   "replication": {
-    "encrypted_data": "IbESACCHrfOWfaSaZ/f5LnRaOLSXtrpEfZN6b2CDlT1RKXjzMhRUbsF5bUhI\n+ne2\n",
-    "iv": "dVQBohrwVWvLJgsBwdpItA==\n",
-    "version": 1,
+    "encrypted_data": "Uq9BDPc6j9+kelvbZ5XIRG4tChyIv9H/CVJHEMfUdtQ3OJ/+QwkOu+O8IJ8q\nw7Tf\n",
+    "hmac": "aG2IiVdRkU/detLy02dNFUMT0qZZq+M3Pz7tDG+2BX4=\n",
+    "iv": "b7PaBMY7XBZwdwfINYS8QA==\n",
+    "version": 2,
     "cipher": "aes-256-cbc"
   },
   "root": {
-    "encrypted_data": "uhqDHhkWyIJUpPeCcB4CdFBmQV0dtWcPDmdYBEAzGYMY2txOjcVC8d2r4lOA\n9Lm9\n",
-    "iv": "nTct9h/eCghUe8x+tjML6g==\n",
-    "version": 1,
+    "encrypted_data": "Uk/CvvAaOTRc45MBiLDnZl18jhaX0G14hSYb68fm9GqR2PcPG0j8HHvGoqUg\nQ3rD\n",
+    "hmac": "5A9Aix/qv8r7XNtWv7WHKVzNqSV5u5OvADgkwPZ5M+I=\n",
+    "iv": "ARrZtoyMImFDSsJhyMbwEg==\n",
+    "version": 2,
     "cipher": "aes-256-cbc"
   },
   "monitor": {
-    "encrypted_data": "BTlnqFfDnsxGY8qAv4KkzvJlb+urS+oCv6GC4vMS4AczJn9c8LxqGHSTDgdF\nyvun\n",
-    "iv": "ZTrIerCnUvnOohD90iWKeQ==\n",
-    "version": 1,
+    "encrypted_data": "ctiUtowzfX07qpZbzOsfSIAXn+4t3/tFg5TH4lpkQ+uzAf53i6ym+C6pL3cK\nDDCn\n",
+    "hmac": "Nv1r6m+OdIx9t9oJif+p2A1DuKJsykjdr2zebbK2X3s=\n",
+    "iv": "4R7N0iYuXiPKAWrH4jClEg==\n",
+    "version": 2,
     "cipher": "aes-256-cbc"
   }
 }
