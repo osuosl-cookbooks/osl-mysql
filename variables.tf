@@ -6,7 +6,7 @@ variable "os_image" {
 }
 variable "disk_size" {
     type = number
-    default = 130
+    default = 50
 }
 variable "ssh_key_name" {
     default = "bootstrap"
