@@ -49,14 +49,16 @@ describe ini('/root/.my.cnf') do
 end
 
 describe mysql_conf('/etc/my.cnf') do
-  its('content') { should match(/^innodb_file_per_table$/) }
   its('content') { should match(/^log_warnings$/) }
+  its('content') { should match(/^log_slave_updates$/) }
   its('mysqld.auto_increment_increment') { should eq '3' }
   its('mysqld.bind-address') { should eq '0.0.0.0' }
   its('mysqld.binlog_format') { should eq 'ROW' }
   its('mysqld.character_set_server') { should eq 'utf8mb4' }
   its('mysqld.collation_server') { should eq 'utf8mb4_general_ci' }
   its('mysqld.connect_timeout') { should eq '28880' }
+  its('mysqld.enforce_gtid_consistency') { should eq 'ON' }
+  its('mysqld.gtid_mode') { should eq 'ON' }
   its('mysqld.innodb_buffer_pool_instances') { should eq '2' } unless vagrant || docker
   case rel
   when 9
