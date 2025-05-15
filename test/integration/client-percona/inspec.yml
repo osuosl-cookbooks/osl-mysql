@@ -1,0 +1,4 @@
+name: client-percona
+inputs:
+  - name: version
+    value: '5.7'

@@ -6,8 +6,6 @@ module OslMysql
         node.override['percona']['conf']['mysqld']['auto_increment_increment'] = '3'
         node.override['percona']['conf']['mysqld']['innodb_default_row_format'] = 'DYNAMIC'
         node.override['percona']['conf']['mysqld']['innodb_file_per_table'] = 'ON'
-        # utf8mb4 support
-        node.override['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true' if node['percona']['version'].to_f < 8.0
         # Loosen restrictions on type of functions users can create
         node.override['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
         node.override['percona']['conf']['mysqld']['net_write_timeout'] = '600'
@@ -31,17 +29,20 @@ module OslMysql
         node.override['percona']['server']['gtid_mode'] = 'ON'
         node.override['percona']['server']['innodb_buffer_pool_instances'] = innodb_buffer_pool_instances
         node.override['percona']['server']['innodb_buffer_pool_size'] = innodb_buffer_pool_size
-        node.override['percona']['server']['innodb_file_format'] = 'barracuda'
         node.override['percona']['server']['innodb_file_per_table'] = true
         node.override['percona']['server']['innodb_flush_log_at_trx_commit'] = 2
         node.override['percona']['server']['innodb_flush_method'] = 'O_DIRECT'
         node.override['percona']['server']['innodb_log_buffer_size'] = '64M'
         node.override['percona']['server']['innodb_log_files_in_group'] = 2
         if osl_percona_version == '5.7'
+          # utf8mb4 support
+          node.override['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true'
+          node.override['percona']['server']['query_cache_type'] = '0'
           node.override['percona']['server']['innodb_log_file_size'] = innodb_redo_log_settings[:log_file_size]
+          node.override['percona']['server']['log_warnings'] = true
+          node.override['percona']['server']['innodb_file_format'] = 'barracuda'
           node.override['percona']['server']['innodb_log_files_in_group'] =
             innodb_redo_log_settings[:log_files_in_group]
-          node.override['percona']['server']['log_warnings'] = true
         elsif osl_percona_version == '8.0'
           node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
             innodb_redo_log_settings[:redo_log_capacity]
@@ -63,7 +64,6 @@ module OslMysql
         node.override['percona']['server']['open_files_limit'] = '65536'
         node.override['percona']['server']['performance_schema'] = true
         node.override['percona']['server']['pidfile'] = '/var/lib/mysql/mysql.pid'
-        node.override['percona']['server']['query_cache_type'] = '0'
         node.override['percona']['server']['relay_log'] = '' # use the default value
         node.override['percona']['server']['slave_net_timeout'] = '60'
         node.override['percona']['server']['slow_query_log_file'] = '/var/lib/mysql/mysql-slow.log'
