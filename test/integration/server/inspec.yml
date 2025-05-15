@@ -1,0 +1,9 @@
+name: server
+depends:
+  - name: selinux
+    git: https://github.com/osuosl/osuosl-baseline
+    branch: main
+    relative_path: controls/selinux.rb
+inputs:
+  - name: version
+    value: '5.7'
