@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.12.0 (2025-05-15)
+-------------------
+- Enable GTID mode by default
+
 6.11.1 (2025-05-14)
 -------------------
 - Update and fix multi-node testing
