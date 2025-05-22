@@ -5,7 +5,9 @@ describe 'osl-mysql::server' do
   ALLPLATFORMS.each do |pltfrm|
     context "on #{pltfrm[:platform]} #{pltfrm[:version]}" do
       cached(:chef_run) do
-        ChefSpec::SoloRunner.new(pltfrm).converge(described_recipe)
+        ChefSpec::SoloRunner.new(pltfrm) do |node|
+          node.normal['percona']['version'] = '5.7'
+        end.converge(described_recipe)
       end
 
       it do

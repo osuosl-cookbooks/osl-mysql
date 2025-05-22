@@ -35,15 +35,15 @@ suites:
   - name: server-57
     run_list:
       - recipe[osl-mysql::server]
+    attributes:
+      percona:
+        version: '5.7'
     verifier:
       inspec_tests:
         - test/integration/server
   - name: server-80
     run_list:
       - recipe[osl-mysql::server]
-    attributes:
-      percona:
-        version: '8.0'
     verifier:
       inspec_tests:
         - test/integration/server
@@ -52,15 +52,15 @@ suites:
   - name: mon-57
     run_list:
       - recipe[osl-mysql::mon]
+    attributes:
+      percona:
+        version: '5.7'
     verifier:
       inspec_tests:
         - test/integration/mon
   - name: mon-80
     run_list:
       - recipe[osl-mysql::mon]
-    attributes:
-      percona:
-        version: '8.0'
     verifier:
       inspec_tests:
         - test/integration/mon
@@ -79,6 +79,8 @@ suites:
     attributes:
       osl-mysql:
         enable_percona_client: true
+      percona:
+        version: '5.7'
     verifier:
       inspec_tests:
         - test/integration/client-percona
@@ -88,13 +90,9 @@ suites:
     attributes:
       osl-mysql:
         enable_percona_client: true
-      percona:
-        version: '8.0'
     verifier:
       inspec_tests:
         - test/integration/client-percona
-      inputs:
-        version: '8.0'
   - name: osl_mysql_test
     run_list:
       - recipe[resources_test::osl_mysql_test]
