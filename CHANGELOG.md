@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.13.1 (2025-05-22)
+-------------------
+- Default to using Percona Server 8.0
+
 6.13.0 (2025-05-15)
 -------------------
 - Add Percona Server 8.0 support
