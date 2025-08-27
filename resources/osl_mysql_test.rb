@@ -44,6 +44,7 @@ action :create do
     ctrl_password new_resource.server_password
     password new_resource.password
     database_name new_resource.database
+    host '%'
     action [:create, :grant]
   end
 
