@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+6.13.2 (2025-08-27)
+-------------------
+- Allow from all hosts using mysql_test resource
+
 6.13.1 (2025-05-22)
 -------------------
 - Default to using Percona Server 8.0
