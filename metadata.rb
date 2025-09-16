@@ -15,7 +15,7 @@ depends          'osl-firewall'
 depends          'osl-nrpe'
 depends          'osl-postfix'
 depends          'osl-selinux'
-depends          'percona', '~> 3.4.1'
+depends          'percona', '~> 4.0.0'
 depends          'yum-osuosl'
 
 supports         'almalinux', '~> 8.0'

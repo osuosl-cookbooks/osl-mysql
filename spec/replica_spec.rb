@@ -6,7 +6,9 @@ describe 'osl-mysql::replica' do
   ALLPLATFORMS.each do |p|
     context "on #{p[:platform]} #{p[:version]}" do
       context 'with source node' do
-        platform p[:platform], p[:version]
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p).converge(described_recipe)
+        end
 
         before do
           stub_search(:node, 'roles:mysql-vip').and_return(
@@ -39,12 +41,14 @@ describe 'osl-mysql::replica' do
         end
 
         it do
-          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("MASTER_HOST='192.0.2.100'")
+          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("SOURCE_HOST='192.0.2.100'")
         end
       end
 
       context 'without source node' do
-        platform p[:platform], p[:version]
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p).converge(described_recipe)
+        end
 
         before do
           stub_search(:node, 'roles:mysql-vip').and_return([])
@@ -71,7 +75,7 @@ describe 'osl-mysql::replica' do
         end
 
         it do
-          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("MASTER_HOST='192.0.3.100'")
+          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("SOURCE_HOST='192.0.3.100'")
         end
       end
     end

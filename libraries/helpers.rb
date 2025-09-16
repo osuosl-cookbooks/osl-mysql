@@ -34,16 +34,7 @@ module OslMysql
         node.override['percona']['server']['innodb_flush_method'] = 'O_DIRECT'
         node.override['percona']['server']['innodb_log_buffer_size'] = '64M'
         node.override['percona']['server']['innodb_log_files_in_group'] = 2
-        if osl_percona_version == '5.7'
-          # utf8mb4 support
-          node.override['percona']['conf']['mysqld']['innodb_large_prefix'] = 'true'
-          node.override['percona']['server']['query_cache_type'] = '0'
-          node.override['percona']['server']['innodb_log_file_size'] = innodb_redo_log_settings[:log_file_size]
-          node.override['percona']['server']['log_warnings'] = true
-          node.override['percona']['server']['innodb_file_format'] = 'barracuda'
-          node.override['percona']['server']['innodb_log_files_in_group'] =
-            innodb_redo_log_settings[:log_files_in_group]
-        elsif osl_percona_version == '8.0'
+        if osl_percona_version == '8.0'
           node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
             innodb_redo_log_settings[:redo_log_capacity]
         end
@@ -175,31 +166,7 @@ module OslMysql
             8192
           end
 
-        if osl_percona_version == '5.7'
-          # For 5.7, we need individual file size. Assume 2 files.
-          log_files_in_group = 2 # node['percona']['innodb_log_files_in_group'] || 2
-          single_log_file_mb = (rounded_capacity_mb / log_files_in_group.to_f).ceil
-          # Ensure single_log_file_mb is also rounded nicely if desired, or convert to string with 'M'
-          # Using the same rounding logic for individual file:
-          single_log_file_val =
-              if single_log_file_mb <= 128
-                '128M'
-              elsif single_log_file_mb <= 256
-                '256M'
-              elsif single_log_file_mb <= 512
-                '512M'
-              elsif single_log_file_mb <= 1024
-                '1G'
-              elsif single_log_file_mb <= 2048
-                '2G'
-              else
-                '4G'
-              end
-          {
-            log_file_size: single_log_file_val,
-            log_files_in_group: log_files_in_group,
-          }
-        else # 8.0
+        if osl_percona_version == '8.0'
           # Ensure capacity is at least 4MB * innodb_page_size / 512 (around 128MB for 16k pages)
           # Max total size is limited (around 512GB).
           # The rounding above should be fine.
@@ -227,7 +194,7 @@ module OslMysql
       def innodb_purge_threads
         cores = osl_total_cpu_cores
         major_version = osl_percona_version
-        default_purge_threads = (major_version == '5.7' || major_version == '8.0') ? 4 : 1
+        default_purge_threads = major_version == '8.0' ? 4 : 1
 
         if cores <= 4
           default_purge_threads
@@ -246,8 +213,6 @@ module OslMysql
           # ERROR_FOR_DIVISION_BY_ZERO, NO_ENGINE_SUBSTITUTION
           # NO_AUTO_CREATE_USER is removed in 8.0.
           %w(ONLY_FULL_GROUP_BY STRICT_TRANS_TABLES NO_ZERO_IN_DATE NO_ZERO_DATE ERROR_FOR_DIVISION_BY_ZERO NO_ENGINE_SUBSTITUTION)
-        else # 5.7
-          %w(STRICT_TRANS_TABLES NO_ZERO_IN_DATE NO_ZERO_DATE ERROR_FOR_DIVISION_BY_ZERO NO_AUTO_CREATE_USER NO_ENGINE_SUBSTITUTION)
         end
       end
 
@@ -258,11 +223,6 @@ module OslMysql
           {
               character_set_server: 'utf8mb4',
               collation_server: 'utf8mb4_0900_ai_ci',
-          }
-        else # 5.7
-          {
-              character_set_server: 'utf8mb4',
-              collation_server: 'utf8mb4_general_ci', # Common for 5.7
           }
         end
       end
