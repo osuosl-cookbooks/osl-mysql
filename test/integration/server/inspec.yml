@@ -6,4 +6,4 @@ depends:
     relative_path: controls/selinux.rb
 inputs:
   - name: version
-    value: '5.7'
+    value: '8.0'

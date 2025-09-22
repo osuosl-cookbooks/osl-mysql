@@ -8,12 +8,6 @@ include_controls 'selinux'
 control 'server' do
   pkgs =
     case version
-    when '5.7'
-      %w(
-        Percona-Server-server-57
-        Percona-Server-devel-57
-        Percona-Server-shared-57
-      )
     when '8.0'
       %w(
         percona-server-server
@@ -81,15 +75,6 @@ control 'server' do
       its('mysqld.query_cache_type') { should_not eq '0' }
       its('mysqld.sql-mode') { should eq 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' }
       its('content') { should_not match(/^log_warnings$/) }
-    when '5.7'
-      its('mysqld.collation_server') { should eq 'utf8mb4_general_ci' }
-      its('mysqld.innodb_file_format') { should eq 'barracuda' }
-      its('mysqld.innodb_large_prefix') { should eq 'true' }
-      its('mysqld.innodb_log_file_size') { should eq '256M' } unless vagrant || docker
-      its('mysqld.innodb_log_files_in_group') { should eq '2' }
-      its('mysqld.query_cache_type') { should eq '0' }
-      its('mysqld.sql-mode') { should eq 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' }
-      its('content') { should match(/^log_warnings$/) }
     end
     its('content') { should match(/^log_slave_updates$/) }
     its('mysqld.auto_increment_increment') { should eq '3' }
@@ -158,7 +143,7 @@ control 'server' do
     its('value') { should eq 37406 } unless vagrant || docker
   end
 
-  describe yum.repo('percona-noarch') do
+  describe yum.repo("percona-ps-#{version.tr('.', '')}") do
     it { should be_enabled }
   end
 

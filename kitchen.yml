@@ -32,15 +32,6 @@ platforms:
   - name: almalinux-9
 
 suites:
-  - name: server-57
-    run_list:
-      - recipe[osl-mysql::server]
-    attributes:
-      percona:
-        version: '5.7'
-    verifier:
-      inspec_tests:
-        - test/integration/server
   - name: server-80
     run_list:
       - recipe[osl-mysql::server]
@@ -49,15 +40,6 @@ suites:
         - test/integration/server
       inputs:
         version: '8.0'
-  - name: mon-57
-    run_list:
-      - recipe[osl-mysql::mon]
-    attributes:
-      percona:
-        version: '5.7'
-    verifier:
-      inspec_tests:
-        - test/integration/mon
   - name: mon-80
     run_list:
       - recipe[osl-mysql::mon]
@@ -73,17 +55,6 @@ suites:
   - name: client
     run_list:
       - recipe[osl-mysql::client]
-  - name: client-percona-57
-    run_list:
-      - recipe[osl-mysql::client]
-    attributes:
-      osl-mysql:
-        enable_percona_client: true
-      percona:
-        version: '5.7'
-    verifier:
-      inspec_tests:
-        - test/integration/client-percona
   - name: client-percona-80
     run_list:
       - recipe[osl-mysql::client]
