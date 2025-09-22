@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.0.0 (2025-09-22)
+------------------
+- Remove support for 5.7
+
 6.13.2 (2025-08-27)
 -------------------
 - Allow from all hosts using mysql_test resource
