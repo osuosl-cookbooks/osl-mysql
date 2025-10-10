@@ -35,6 +35,7 @@ describe 'osl-mysql::server' do
 
       it { expect(chef_run).to install_package(%w(percona-server-client percona-server-devel)) }
       it { expect(chef_run).to install_package 'percona-server-server' }
+      it { expect(chef_run).to install_package 'mytop' }
 
       it do
         expect(chef_run).to apply_sysctl('vm.min_free_kbytes').with(value: '10485')
@@ -43,7 +44,6 @@ describe 'osl-mysql::server' do
       [
         'auto_increment_increment = 3',
         'bind-address = 0.0.0.0',
-        /binlog_format\s+= ROW/,
         /character_set_server\s+= utf8mb4/,
         /collation_server\s+= utf8mb4_0900_ai_ci/,
         /connect_timeout\s+= 28880/,
@@ -71,14 +71,20 @@ describe 'osl-mysql::server' do
         'max_connect_errors = 1000000',
         'max_connections = 10000',
         'max_heap_table_size = 128M',
+        'max_user_connections = 100',
         'myisam-recover-options = FORCE,BACKUP',
         'net_read_timeout = 300',
         'net_write_timeout = 600',
         'open-files-limit = 65536',
         'performance_schema=ON',
+        'performance_schema_consumer_events_stages_history_long = ON',
+        'performance_schema_consumer_events_statements_history_long = ON',
+        'performance_schema_consumer_events_statements_history = ON',
+        'performance_schema_consumer_events_transactions_history_long = ON',
+        'performance_schema_consumer_events_waits_history_long = ON',
+        'performance_schema_consumer_statements_digest = ON',
         %r{pid-file\s+= /var/lib/mysql/mysql.pid},
         'slave_net_timeout = 60',
-        'slave-skip-errors = 1062,1032',
         %r{slow_query_log_file\s+= /var/lib/mysql/mysql-slow.log},
         'sort_buffer_size = 4M',
         'sql-mode = ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION',
@@ -138,6 +144,27 @@ describe 'osl-mysql::server' do
       %w(mysql-accounting mysql-prometheus).each do |f|
         it do
           expect(chef_run).to create_cookbook_file("/usr/local/libexec/#{f}")
+            .with(
+              source: f,
+              mode: '0755'
+            )
+        end
+      end
+
+      %w(
+        mysql-current-users-connections
+        mysql-top-users-queries
+        mysql-top-users-rows-sent
+        mysql-top-users-exec-time
+        mysql-top-databases-queries-exec-time
+        mysql-top-databases-queries-exec-time-recent
+        mysql-top-databases-rows-sent-examined
+        mysql-top-databases-io-wait
+        mysql-top-users-writes
+        mysql-top-users-by-total-connections
+      ).each do |f|
+        it do
+          expect(chef_run).to create_cookbook_file("/usr/local/sbin/#{f}")
             .with(
               source: f,
               mode: '0755'

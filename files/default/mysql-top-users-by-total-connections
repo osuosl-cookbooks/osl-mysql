@@ -1,0 +1,95 @@
+#!/bin/bash -eu
+# Top users by total cumulative connections (overall)
+#
+# Usage: mysql-top-users-by-total-connections [OPTIONS]
+#
+# Options:
+#   -n, --limit N         Number of users to show (default: 10)
+#   -h, --help            Show this help message
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+Options:
+  -n, --limit N         Number of users to show (default: 10)
+  -h, --help            Show this help message
+
+Examples:
+  $0                # top 10 users by total connections
+  $0 --limit 5      # top 5 users
+EOF
+}
+
+LIMIT=10
+
+# Translate long options to short options so we can use the builtin getopts
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --limit)
+            ARGS+=('-n')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --help)
+            ARGS+=('-h')
+            shift
+            ;;
+        -n|-h)
+            ARGS+=("$1")
+            shift
+            ;;
+        --)
+            ARGS+=("--")
+            shift
+            break
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${ARGS[@]}"
+
+while getopts ':n:h' opt; do
+    case "$opt" in
+        n)
+            LIMIT="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            exit 2
+            ;;
+        ?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+# Validate limit
+if ! [[ "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -le 0 ]]; then
+    echo "--limit must be a positive integer" >&2
+    exit 2
+fi
+
+# Run query via here-doc; allow ${LIMIT} expansion and avoid backticks
+mysql <<EOF
+SELECT
+    user AS user,
+    total_connections
+FROM
+    sys.user_summary
+ORDER BY
+    total_connections DESC
+LIMIT ${LIMIT};
+EOF

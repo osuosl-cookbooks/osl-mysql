@@ -9,17 +9,12 @@ module OslMysql
         # Loosen restrictions on type of functions users can create
         node.override['percona']['conf']['mysqld']['log_bin_trust_function_creators'] = '1'
         node.override['percona']['conf']['mysqld']['net_write_timeout'] = '600'
-        # Skip common errors with secondary syncing
-        # 1062: HA_ERR_FOUND_DUPP_KEY
-        # 1032: HA_ERR_KEY_NOT_FOUND
-        node.override['percona']['conf']['mysqld']['slave-skip-errors'] = '1062,1032'
         node.override['percona']['conf']['mysqld']['ssl_ca'] = 'ca.pem'
         node.override['percona']['conf']['mysqld']['ssl_cert'] = 'server-cert.pem'
         node.override['percona']['conf']['mysqld']['ssl_key'] = 'server-key.pem'
         # enable user monitoring by default
         node.override['percona']['conf']['mysqld']['userstat'] = true
         node.override['percona']['server']['bind_address'] = '0.0.0.0'
-        node.override['percona']['server']['binlog_format'] = 'ROW'
         node.override['percona']['server']['connect_timeout'] = '28880'
         node.override['percona']['server']['character_set'] = osl_char_settings[:character_set_server]
         node.override['percona']['server']['collation'] = osl_char_settings[:collation_server]
@@ -50,10 +45,17 @@ module OslMysql
         node.override['percona']['server']['max_connect_errors'] = '1000000'
         node.override['percona']['server']['max_connections'] = 10000
         node.override['percona']['server']['max_heap_table_size'] = '128M'
+        node.override['percona']['conf']['mysqld']['max_user_connections'] = '100'
         node.override['percona']['server']['myisam_recover_options'] = 'FORCE,BACKUP'
         node.override['percona']['server']['net_read_timeout'] = '300'
         node.override['percona']['server']['open_files_limit'] = '65536'
         node.override['percona']['server']['performance_schema'] = true
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_events_stages_history_long'] = 'ON'
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_events_statements_history_long'] = 'ON'
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_events_statements_history'] = 'ON'
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_events_transactions_history_long'] = 'ON'
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_events_waits_history_long'] = 'ON'
+        node.override['percona']['conf']['mysqld']['performance_schema_consumer_statements_digest'] = 'ON'
         node.override['percona']['server']['pidfile'] = '/var/lib/mysql/mysql.pid'
         node.override['percona']['server']['relay_log'] = '' # use the default value
         node.override['percona']['server']['slave_net_timeout'] = '60'

@@ -1,0 +1,99 @@
+#!/bin/bash -eu
+# Current simultaneous connections by user — canonical name
+#
+# Usage: mysql-current-users-connections [OPTIONS]
+#
+# Options:
+#   -n, --limit N         Number of users to show (default: 10)
+#   -h, --help            Show this help message
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+Options:
+  -n, --limit N         Number of users to show (default: 10)
+  -h, --help            Show this help message
+
+Examples:
+  $0                # top 10 users by current active connections
+  $0 --limit 5      # top 5 users
+EOF
+}
+
+LIMIT=10
+
+# Translate long options to short options so we can use getopts
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --limit)
+            ARGS+=('-n')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --help)
+            ARGS+=('-h')
+            shift
+            ;;
+        -n|-h)
+            ARGS+=("$1")
+            shift
+            ;;
+        --)
+            ARGS+=("--")
+            shift
+            break
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${ARGS[@]}"
+
+while getopts ':n:h' opt; do
+    case "$opt" in
+        n)
+            LIMIT="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            exit 2
+            ;;
+        ?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+# Validate limit
+if ! [[ "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -le 0 ]]; then
+    echo "--limit must be a positive integer" >&2
+    exit 2
+fi
+
+# Run query; expand ${LIMIT}
+mysql <<EOF
+SELECT
+    user AS process_user,
+    COUNT(*) AS current_active_connections
+FROM
+    information_schema.processlist
+WHERE
+    user IS NOT NULL
+GROUP BY
+    user
+ORDER BY
+    current_active_connections DESC
+LIMIT ${LIMIT};
+EOF

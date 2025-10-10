@@ -1,0 +1,100 @@
+#!/bin/bash -eu
+# Top databases by rows sent & rows examined (overall) — canonical name
+#
+# Usage: mysql-top-databases-rows-sent-examined [OPTIONS]
+#
+# Options:
+#   -n, --limit N         Number of databases to show (default: 10)
+#   -h, --help            Show this help message
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+Options:
+  -n, --limit N         Number of databases to show (default: 10)
+  -h, --help            Show this help message
+
+Examples:
+  $0                # top 10 databases overall
+  $0 --limit 5      # top 5 databases overall
+EOF
+}
+
+LIMIT=10
+
+# Translate long options to short options so we can use the builtin getopts
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --limit)
+            ARGS+=('-n')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --help)
+            ARGS+=('-h')
+            shift
+            ;;
+        -n|-h)
+            ARGS+=("$1")
+            shift
+            ;;
+        --)
+            ARGS+=("--")
+            shift
+            break
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${ARGS[@]}"
+
+while getopts ':n:h' opt; do
+    case "$opt" in
+        n)
+            LIMIT="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            exit 2
+            ;;
+        ?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+# Validate limit
+if ! [[ "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -le 0 ]]; then
+    echo "--limit must be a positive integer" >&2
+    exit 2
+fi
+
+# Run query via here-doc; allow ${LIMIT} expansion
+mysql <<EOF
+SELECT
+    db AS database_name,
+    SUM(rows_sent) AS total_rows_sent,
+    SUM(rows_examined) AS total_rows_examined
+FROM
+    sys.statement_analysis
+WHERE
+    db IS NOT NULL
+GROUP BY
+    db
+ORDER BY
+    SUM(rows_examined) DESC
+LIMIT ${LIMIT};
+EOF

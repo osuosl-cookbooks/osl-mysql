@@ -1,0 +1,184 @@
+#!/bin/bash -eu
+# Print top MySQL users by total execution time (seconds) in a recent time window.
+#
+# Usage: mysql-top-users-exec-time [OPTIONS]
+#
+# Options:
+#   -n, --limit N         Number of users to show (default: 10)
+#   -H, --hours FLOAT     Lookback window in hours (mutually exclusive with --seconds)
+#   -m, --minutes FLOAT   Lookback window in minutes (mutually exclusive with --hours/--seconds)
+#   -s, --seconds N       Lookback window in seconds (mutually exclusive with --hours)
+#   -h, --help            Show this help message
+#
+# The script queries performance_schema to sum TIMER_WAIT (picoseconds) per PROCESSLIST_USER
+# within the specified recent time window and converts the total to seconds.
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+Options:
+  -n, --limit N         Number of users to show (default: 10)
+  -H, --hours FLOAT     Lookback window in hours (mutually exclusive with --seconds)
+  -m, --minutes FLOAT   Lookback window in minutes (mutually exclusive with --hours/--seconds)
+  -s, --seconds N       Lookback window in seconds (mutually exclusive with --hours)
+  -h, --help            Show this help message
+
+Examples:
+  $0                       # top 10 users by execution time in the last 1 hour
+  $0 -n 5 -H 2             # top 5 users by execution time in the last 2 hours
+  $0 --limit 20 --minutes 30  # top 20 users in the last 30 minutes
+EOF
+}
+
+LIMIT=10
+SECONDS_WINDOW=3600
+HOURS_WINDOW=""
+MINUTES_WINDOW=""
+
+# Flags to detect which window option was explicitly provided
+HOURS_SET=0
+MINUTES_SET=0
+SECONDS_SET=0
+
+# Translate long options to short options so we can use the builtin getopts
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --limit)
+            ARGS+=('-n')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --hours)
+            ARGS+=('-H')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --minutes)
+            ARGS+=('-m')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --seconds)
+            ARGS+=('-s')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --help)
+            ARGS+=('-h')
+            shift
+            ;;
+        --)
+            ARGS+=("--")
+            shift
+            break
+            ;;
+        -*)
+            # short option, forward as-is
+            ARGS+=("$1")
+            shift
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Restore positional parameters from translated args
+set -- "${ARGS[@]}"
+
+# Parse options with the builtin getopts
+while getopts ':n:H:m:s:h' opt; do
+    case "$opt" in
+        n)
+            LIMIT="$OPTARG"
+            ;;
+        H)
+            HOURS_WINDOW="$OPTARG"
+            HOURS_SET=1
+            ;;
+        m)
+            MINUTES_WINDOW="$OPTARG"
+            MINUTES_SET=1
+            ;;
+        s)
+            SECONDS_WINDOW="$OPTARG"
+            SECONDS_SET=1
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            exit 2
+            ;;
+        ?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+# Shift off the parsed options
+shift $((OPTIND - 1))
+
+# Ensure only one of hours/minutes/seconds was provided
+TOTAL_SET=$((HOURS_SET + MINUTES_SET + SECONDS_SET))
+if [[ $TOTAL_SET -gt 1 ]]; then
+    echo "Specify only one of --hours, --minutes, or --seconds." >&2
+    usage
+    exit 2
+fi
+
+if [[ $HOURS_SET -eq 1 ]]; then
+    # allow fractional hours
+    SECONDS_WINDOW=$(awk -v h="$HOURS_WINDOW" 'BEGIN { printf "%.0f", h * 3600 }')
+fi
+
+if [[ $MINUTES_SET -eq 1 ]]; then
+    # allow fractional minutes
+    SECONDS_WINDOW=$(awk -v m="$MINUTES_WINDOW" 'BEGIN { printf "%.0f", m * 60 }')
+fi
+
+# Validate numeric inputs (simple integer checks where appropriate)
+if ! [[ "$LIMIT" =~ ^[0-9]+$ ]] || [[ "$LIMIT" -le 0 ]]; then
+    echo "--limit must be a positive integer" >&2
+    exit 2
+fi
+
+if ! [[ "$SECONDS_WINDOW" =~ ^[0-9]+$ ]] || [[ "$SECONDS_WINDOW" -le 0 ]]; then
+    echo "Window in seconds must be a positive integer" >&2
+    exit 2
+fi
+
+# Convert seconds to picoseconds (performance_schema TIMER_START uses picoseconds)
+# Use awk to avoid integer overflow in bash arithmetic.
+PICOSECONDS=$(awk -v s="$SECONDS_WINDOW" 'BEGIN { printf "%.0f", s * 1000000000000 }')
+
+# Run the query. Use a here-doc to preserve SQL formatting and ensure proper spacing.
+mysql <<EOF
+SELECT
+    t.PROCESSLIST_USER,
+    -- Convert total wait time from picoseconds to seconds
+    SUM(e.TIMER_WAIT) / 1000000000000 AS total_execution_time_seconds
+FROM
+    performance_schema.events_statements_history AS e
+JOIN
+    performance_schema.threads AS t ON e.THREAD_ID = t.THREAD_ID
+WHERE
+    e.TIMER_START > (
+        SELECT TIMER_START FROM performance_schema.events_statements_current WHERE THREAD_ID = PS_CURRENT_THREAD_ID()
+    ) - (${PICOSECONDS})
+    AND t.PROCESSLIST_USER IS NOT NULL
+GROUP BY
+    t.PROCESSLIST_USER
+ORDER BY
+    total_execution_time_seconds DESC
+LIMIT ${LIMIT};
+EOF
+
