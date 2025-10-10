@@ -36,6 +36,8 @@ include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 include_recipe 'percona::backup'
 
+package 'mytop'
+
 osl_firewall_port 'mysql'
 
 directory '/var/lib/mysql-files' do
@@ -50,6 +52,24 @@ end
 
 %w(mysql-accounting mysql-prometheus).each do |f|
   cookbook_file "/usr/local/libexec/#{f}" do
+    source f
+    mode '0755'
+  end
+end
+
+%w(
+  mysql-current-users-connections
+  mysql-top-users-queries
+  mysql-top-users-rows-sent
+  mysql-top-users-exec-time
+  mysql-top-databases-queries-exec-time
+  mysql-top-databases-queries-exec-time-recent
+  mysql-top-databases-rows-sent-examined
+  mysql-top-databases-io-wait
+  mysql-top-users-writes
+  mysql-top-users-by-total-connections
+).each do |f|
+  cookbook_file "/usr/local/sbin/#{f}" do
     source f
     mode '0755'
   end

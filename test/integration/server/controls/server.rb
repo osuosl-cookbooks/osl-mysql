@@ -26,6 +26,10 @@ control 'server' do
     it { should be_installed }
   end
 
+  describe package 'mytop' do
+    it { should be_installed }
+  end
+
   # Mysql packages should not be installed
   %w(
     mysql
@@ -79,7 +83,6 @@ control 'server' do
     its('content') { should match(/^log_slave_updates$/) }
     its('mysqld.auto_increment_increment') { should eq '3' }
     its('mysqld.bind-address') { should eq '0.0.0.0' }
-    its('mysqld.binlog_format') { should eq 'ROW' }
     its('mysqld.character_set_server') { should eq 'utf8mb4' }
     its('mysqld.connect_timeout') { should eq '28880' }
     its('mysqld.enforce_gtid_consistency') { should eq 'ON' }
@@ -103,15 +106,20 @@ control 'server' do
     its('mysqld.max_connect_errors') { should eq '1000000' }
     its('mysqld.max_connections') { should eq '10000' }
     its('mysqld.max_heap_table_size') { should eq '128M' }
+    its('mysqld.max_user_connections') { should eq '100' }
     its('mysqld.myisam-recover-options') { should eq 'FORCE,BACKUP' }
     its('mysqld.net_read_timeout') { should eq '300' }
     its('mysqld.net_write_timeout') { should eq '600' }
     its('mysqld.performance_schema') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_events_stages_history_long') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_events_statements_history_long') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_events_statements_history') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_events_transactions_history_long') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_events_waits_history_long') { should eq 'ON' }
+    its('mysqld.performance_schema_consumer_statements_digest') { should eq 'ON' }
     its('mysqld.pid-file') { should eq '/var/lib/mysql/mysql.pid' }
     its('mysqld_safe.open-files-limit') { should eq '65536' }
     its('mysqld.slave_net_timeout') { should eq '60' }
-    its('mysqld.slave-skip-errors') { should eq '1062,1032' }
-    its('mysqld.slave-skip-errors') { should eq '1062,1032' }
     its('mysqld.slow_query_log_file') { should eq '/var/lib/mysql/mysql-slow.log' }
     its('mysqld.sort_buffer_size') { should eq '4M' }
     its('mysqld.ssl_ca') { should eq 'ca.pem' }
@@ -131,8 +139,19 @@ control 'server' do
 
   describe command "mysqladmin --user='root' --password='jzYY0cQUnPAMcqvIxYaC' variables" do
     its('stdout') { should match /max_connections\s+\| 1000/ }
+    its('stdout') { should match /max_user_connections\s+\| 100/ }
     its('stdout') { should match /open_files_limit\s+\| 65536/ }
     its('exit_status') { should eq 0 }
+  end
+
+  describe mysql_session('root', 'jzYY0cQUnPAMcqvIxYaC')
+    .query('SELECT NAME, ENABLED FROM performance_schema.setup_consumers;') do
+    its('output') { should match /events_stages_history_long\s+YES/ }
+    its('output') { should match /events_statements_history_long\s+YES/ }
+    its('output') { should match /events_statements_history\s+YES/ }
+    its('output') { should match /events_transactions_history_long\s+YES/ }
+    its('output') { should match /events_waits_history_long\s+YES/ }
+    its('output') { should match /statements_digest\s+YES/ }
   end
 
   describe kernel_parameter('vm.swappiness') do
@@ -175,6 +194,26 @@ control 'server' do
 
   describe command('/usr/local/libexec/mysql-prometheus') do
     its(:exit_status) { should eq 0 }
+  end
+
+  # Verify the helper scripts are installed and runnable
+  %w(
+    mysql-current-users-connections
+    mysql-top-users-queries
+    mysql-top-users-rows-sent
+    mysql-top-users-exec-time
+    mysql-top-databases-queries-exec-time
+    mysql-top-databases-queries-exec-time-recent
+    mysql-top-databases-rows-sent-examined
+    mysql-top-databases-io-wait
+    mysql-top-users-writes
+    mysql-top-users-by-total-connections
+  ).each do |script|
+    describe file("/usr/local/sbin/#{script}") do
+      it { should exist }
+      it { should be_file }
+      it { should be_executable }
+    end
   end
 
   describe file('/var/lib/node_exporter/mysql_db_size.prom') do

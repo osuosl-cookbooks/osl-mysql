@@ -13,6 +13,37 @@ Cookbooks:: yum, nagios, sysctl, mysql
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
 
+## Helper monitoring scripts
+
+The `osl-mysql::server` recipe installs a set of small helper scripts under `/usr/local/sbin/` that are useful for
+ad-hoc troubleshooting and monitoring of MySQL.
+
+- `mysql-current-users-connections` — current simultaneous connections by user
+- `mysql-top-users-queries` — top users by query count (windowed)
+- `mysql-top-users-rows-sent` — top users by rows sent
+- `mysql-top-users-exec-time` — top users by total execution time (windowed)
+- `mysql-top-databases-queries-exec-time` — top databases by queries & exec time
+- `mysql-top-databases-queries-exec-time-recent` — same as above but for a recent window (token: `recent`)
+- `mysql-top-databases-rows-sent-examined` — rows sent / rows examined per database
+- `mysql-top-databases-io-wait` — I/O wait time per database
+- `mysql-top-users-writes` — counts modification (write) statements per user (uses token `writes` in the canonical
+  name)
+- `mysql-top-users-by-total-connections` — total cumulative connections per user
+
+Common options
+- Most helper scripts accept `--limit` (or `-n`) and a lookback window via `--hours`, `--minutes`, or `--seconds`
+  (mutually exclusive). They translate long options to short ones and use `getopts` internally.
+- Windowed scripts convert seconds to picoseconds for use with `performance_schema` timestamps (no action needed by
+  users).
+
+```bash
+/usr/local/sbin/mysql-top-users-queries --limit 10 --minutes 30
+```
+
+Notes
+- These scripts are simple diagnostic helpers — they rely on the MySQL client and server being available and the
+  `performance_schema` consumers being enabled when required.
+
 # Attributes
 
 # Recipes
