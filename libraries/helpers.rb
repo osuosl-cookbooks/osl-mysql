@@ -29,6 +29,7 @@ module OslMysql
         node.override['percona']['server']['innodb_flush_method'] = 'O_DIRECT'
         node.override['percona']['server']['innodb_log_buffer_size'] = '64M'
         node.override['percona']['server']['innodb_log_files_in_group'] = 2
+        node.override['percona']['server']['innodb_thread_concurrency'] = osl_total_cpu_cores
         if osl_percona_version == '8.0'
           node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
             innodb_redo_log_settings[:redo_log_capacity]
@@ -36,6 +37,12 @@ module OslMysql
         node.override['percona']['conf']['mysqld']['innodb_read_io_threads'] = innodb_io_threads
         node.override['percona']['conf']['mysqld']['innodb_write_io_threads'] = innodb_io_threads
         node.override['percona']['conf']['mysqld']['innodb_purge_threads'] = innodb_purge_threads
+        node.override['percona']['conf']['mysqld']['innodb_undo_log_truncate'] = 'ON'
+        node.override['percona']['conf']['mysqld']['innodb_max_undo_log_size'] = '1G'
+        node.override['percona']['conf']['mysqld']['thread_handling'] = 'pool-of-threads'
+        node.override['percona']['conf']['mysqld']['thread_pool_size'] = osl_total_cpu_cores
+        node.override['percona']['conf']['mysqld']['thread_pool_max_threads'] = 10000
+        node.override['percona']['conf']['mysqld']['thread_pool_oversubscribe'] = 3
         node.override['percona']['server']['join_buffer_size'] = '8M'
         node.override['percona']['server']['key_buffer_size'] = '32M'
         node.override['percona']['server']['log_bin_basename'] = '/var/lib/mysql/mysql-bin'
@@ -69,6 +76,7 @@ module OslMysql
         node.override['percona']['server']['thread_cache_size'] = 8 + (10000 / 100)
         node.override['percona']['server']['tmp_table_size'] = '128M'
         node.override['percona']['server']['transaction_isolation'] = 'READ-COMMITTED'
+        node.override['percona']['conf']['mysqld']['lock_wait_timeout'] = 120
         node.override['percona']['server']['wait_timeout'] = '900'
         node.override['percona']['skip_passwords'] = false
       end

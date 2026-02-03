@@ -93,8 +93,11 @@ control 'server' do
     its('mysqld.innodb_flush_log_at_trx_commit') { should eq '2' }
     its('mysqld.innodb_flush_method') { should eq 'O_DIRECT' }
     its('mysqld.innodb_log_buffer_size') { should eq '64M' }
+    its('mysqld.innodb_thread_concurrency') { should_not be_nil }
     its('mysqld.innodb_purge_threads') { should eq '4' }
     its('mysqld.innodb_read_io_threads') { should eq '4' }
+    its('mysqld.innodb_undo_log_truncate') { should eq 'ON' }
+    its('mysqld.innodb_max_undo_log_size') { should eq '1G' }
     its('mysqld.innodb_write_io_threads') { should eq '4' }
     its('mysqld.join_buffer_size') { should eq '8M' }
     its('mysqld.key_buffer_size') { should eq '32M' }
@@ -130,8 +133,13 @@ control 'server' do
     its('mysqld.table_definition_cache') { should eq '4096' }
     its('mysqld.table_open_cache') { should eq '10240' }
     its('mysqld.thread_cache_size') { should eq '108' }
+    its('mysqld.thread_handling') { should eq 'pool-of-threads' }
+    its('mysqld.thread_pool_size') { should_not be_nil }
+    its('mysqld.thread_pool_max_threads') { should eq '10000' }
+    its('mysqld.thread_pool_oversubscribe') { should eq '3' }
     its('mysqld.tmp_table_size') { should eq '128M' }
     its('mysqld.transaction_isolation') { should eq 'READ-COMMITTED' }
+    its('mysqld.lock_wait_timeout') { should eq '120' }
     its('mysqld.userstat') { should eq 'true' }
     its('mysqld.userstat') { should eq 'true' }
     its('mysqld.wait_timeout') { should eq '900' }
