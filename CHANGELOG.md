@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.1.1 (2026-02-03)
+------------------
+- Add Percona thread pool and performance tuning to prevent thread pile-up
+
 7.1.0 (2025-10-10)
 ------------------
 - Server setting adjustments and performance scripts
