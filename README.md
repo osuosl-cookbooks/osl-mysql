@@ -9,6 +9,8 @@ Cookbooks:: yum, nagios, sysctl, mysql
 ## Supports
 
 - AlmaLinux 8
+- AlmaLinux 9
+- AlmaLinux 10
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.

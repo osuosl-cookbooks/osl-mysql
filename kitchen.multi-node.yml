@@ -44,6 +44,11 @@ platforms:
       variables:
         os_image: "Almalinux 9"
         ssh_user_name: "almalinux"
+  - name: almalinux-10
+    driver:
+      variables:
+        os_image: "Almalinux 10"
+        ssh_user_name: "almalinux"
 
 suites:
   - name: multi-node
