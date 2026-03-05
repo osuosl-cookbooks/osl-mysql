@@ -30,7 +30,7 @@ module OslMysql
         node.override['percona']['server']['innodb_log_buffer_size'] = '64M'
         node.override['percona']['server']['innodb_log_files_in_group'] = 2
         node.override['percona']['server']['innodb_thread_concurrency'] = osl_total_cpu_cores
-        if osl_percona_version == '8.0'
+        if osl_percona_version == '8.0' || osl_percona_version == '8.4'
           node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
             innodb_redo_log_settings[:redo_log_capacity]
         end
@@ -176,7 +176,7 @@ module OslMysql
             8192
           end
 
-        if osl_percona_version == '8.0'
+        if osl_percona_version == '8.0' || osl_percona_version == '8.4'
           # Ensure capacity is at least 4MB * innodb_page_size / 512 (around 128MB for 16k pages)
           # Max total size is limited (around 512GB).
           # The rounding above should be fine.
@@ -203,8 +203,8 @@ module OslMysql
       # Calculate innodb_purge_threads
       def innodb_purge_threads
         cores = osl_total_cpu_cores
-        major_version = osl_percona_version
-        default_purge_threads = major_version == '8.0' ? 4 : 1
+        major_version = osl_percona_version.split('.').first
+        default_purge_threads = major_version == '8' ? 4 : 1
 
         if cores <= 4
           default_purge_threads
@@ -217,8 +217,8 @@ module OslMysql
 
       # Get appropriate SQL mode
       def osl_sql_modes
-        major_version = osl_percona_version
-        if major_version == '8.0'
+        major_version = osl_percona_version.split('.').first
+        if major_version == '8'
           # 8.0 default: ONLY_FULL_GROUP_BY, STRICT_TRANS_TABLES, NO_ZERO_IN_DATE, NO_ZERO_DATE,
           # ERROR_FOR_DIVISION_BY_ZERO, NO_ENGINE_SUBSTITUTION
           # NO_AUTO_CREATE_USER is removed in 8.0.
@@ -228,8 +228,8 @@ module OslMysql
 
       # Get character set and collation
       def osl_char_settings
-        major_version = osl_percona_version
-        if major_version == '8.0'
+        major_version = osl_percona_version.split('.').first
+        if major_version == '8'
           {
               character_set_server: 'utf8mb4',
               collation_server: 'utf8mb4_0900_ai_ci',

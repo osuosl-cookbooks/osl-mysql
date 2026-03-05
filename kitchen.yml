@@ -30,16 +30,33 @@ provisioner:
 platforms:
   - name: almalinux-8
   - name: almalinux-9
+  - name: almalinux-10
 
 suites:
   - name: server-80
     run_list:
       - recipe[osl-mysql::server]
+    attributes:
+      percona:
+        version: '8.0'
     verifier:
       inspec_tests:
         - test/integration/server
       inputs:
         version: '8.0'
+    excludes:
+      - almalinux-10   
+  - name: server-84
+    run_list:
+      - recipe[osl-mysql::server]
+    attributes:
+      percona:
+        version: '8.4'
+    verifier:
+      inspec_tests:
+        - test/integration/server
+      inputs:
+        version: '8.4'
   - name: mon-80
     run_list:
       - recipe[osl-mysql::mon]
