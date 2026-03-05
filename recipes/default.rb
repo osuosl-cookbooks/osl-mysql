@@ -18,5 +18,10 @@
 #
 include_recipe 'osl-selinux'
 
-node.default['percona']['version'] = '8.0'
+node.default['percona']['version'] = if node['platform_version'] >= 10
+                                       '8.4'
+                                     else
+                                       '8.0'
+                                     end
+
 node.default['percona']['client']['install_devel_package'] = true

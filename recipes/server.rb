@@ -34,6 +34,12 @@ end
 
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
+
+package 'mysql-libs' do
+  action :remove
+  only_if 'rpm -q mysql-libs'
+end
+
 include_recipe 'percona::backup'
 
 package 'mytop'
