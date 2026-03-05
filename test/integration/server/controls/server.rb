@@ -13,17 +13,22 @@ control 'server' do
         percona-server-server
         percona-server-devel
         percona-server-shared
+        percona-xtrabackup-80
       )
+    when '8.4'
+      %w(
+        percona-server-server
+        percona-server-devel
+        percona-server-shared
+        percona-xtrabackup-84
+      )
+
     end
 
   pkgs.each do |p|
     describe package(p) do
       it { should be_installed }
     end
-  end
-
-  describe package('percona-xtrabackup-80') do
-    it { should be_installed }
   end
 
   describe package 'mytop' do
@@ -70,7 +75,7 @@ control 'server' do
       its('mysqld.innodb_buffer_pool_size') { should eq '1833M' } unless vagrant || docker
     end
     case version
-    when '8.0'
+    when '8.0', '8.4'
       its('mysqld.collation_server') { should eq 'utf8mb4_0900_ai_ci' }
       its('mysqld.innodb_redo_log_capacity') { should eq '512M' }
       its('mysqld.innodb_file_format') { should_not eq 'barracuda' }
@@ -170,7 +175,8 @@ control 'server' do
     its('value') { should eq 37406 } unless vagrant || docker
   end
 
-  describe yum.repo("percona-ps-#{version.tr('.', '')}") do
+  percona_repo = version == '8.4' ? 'percona-ps-84-lts' : "percona-ps-#{version.tr('.', '')}"
+  describe yum.repo(percona_repo) do
     it { should be_enabled }
   end
 
