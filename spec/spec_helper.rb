@@ -32,5 +32,6 @@ shared_context 'common_stubs' do
     stub_command("mysqladmin --user=root --password='' version").and_return(true)
     stub_command('/usr/bin/test /etc/alternatives/mta -ef /usr/sbin/sendmail.postfix').and_return(true)
     stub_command('dnf module list mysql | grep -q "^mysql.*\\[x\\]"').and_return(true)
+    stub_command('rpm -q mysql-libs').and_return(true)
   end
 end
