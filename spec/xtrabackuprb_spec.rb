@@ -29,9 +29,13 @@ describe 'osl-mysql::xtrabackuprb' do
         it do
           expect(chef_run).to install_package('percona-xtrabackup')
         end
-      else
+      elsif pltfrm[:version].to_i < 10
         it do
           expect(chef_run).to install_package('percona-xtrabackup-80')
+        end
+      else
+        it do
+          expect(chef_run).to install_package('percona-xtrabackup-84')
         end
       end
       it do
