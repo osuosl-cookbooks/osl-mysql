@@ -57,7 +57,7 @@ suites:
         - test/integration/server
       inputs:
         version: '8.4'
-  - name: mon-80
+  - name: mon
     run_list:
       - recipe[osl-mysql::mon]
     verifier:
@@ -72,7 +72,7 @@ suites:
   - name: client
     run_list:
       - recipe[osl-mysql::client]
-  - name: client-percona-80
+  - name: client-percona
     run_list:
       - recipe[osl-mysql::client]
     attributes:
