@@ -69,22 +69,20 @@ control 'server' do
 
   describe mysql_conf('/etc/my.cnf') do
     case rel
-    when 9
+    when 9, 10
       its('mysqld.innodb_buffer_pool_size') { should eq '1829M' } unless vagrant || docker
     when 8
       its('mysqld.innodb_buffer_pool_size') { should eq '1833M' } unless vagrant || docker
     end
-    case version
-    when '8.0', '8.4'
-      its('mysqld.collation_server') { should eq 'utf8mb4_0900_ai_ci' }
-      its('mysqld.innodb_redo_log_capacity') { should eq '512M' }
-      its('mysqld.innodb_file_format') { should_not eq 'barracuda' }
-      its('mysqld.innodb_large_prefix') { should_not eq 'true' }
-      its('mysqld.innodb_log_file_size') { should_not eq '256M' } unless vagrant || docker
-      its('mysqld.query_cache_type') { should_not eq '0' }
-      its('mysqld.sql-mode') { should eq 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' }
-      its('content') { should_not match(/^log_warnings$/) }
-    end
+
+    its('mysqld.collation_server') { should eq 'utf8mb4_0900_ai_ci' }
+    its('mysqld.innodb_redo_log_capacity') { should eq '512M' }
+    its('mysqld.innodb_file_format') { should_not eq 'barracuda' }
+    its('mysqld.innodb_large_prefix') { should_not eq 'true' }
+    its('mysqld.innodb_log_file_size') { should_not eq '256M' } unless vagrant || docker
+    its('mysqld.query_cache_type') { should_not eq '0' }
+    its('mysqld.sql-mode') { should eq 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' }
+    its('content') { should_not match(/^log_warnings$/) }
     its('content') { should match(/^log_slave_updates$/) }
     its('mysqld.auto_increment_increment') { should eq '3' }
     its('mysqld.bind-address') { should eq '0.0.0.0' }
