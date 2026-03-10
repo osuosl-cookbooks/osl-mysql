@@ -8,7 +8,7 @@ describe 'osl-mysql::server' do
       context "on #{pltfrm[:platform]} #{pltfrm[:version]} with MySQL #{mysql_version}" do
         cached(:chef_run) do
           ChefSpec::SoloRunner.new(pltfrm) do |node|
-            node.normal['percona']['version'] = '8.0'
+            node.normal['percona']['version'] = mysql_version
           end.converge(described_recipe)
         end
 
