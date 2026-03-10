@@ -1,4 +1,1 @@
 name: client-percona
-inputs:
-  - name: version
-    value: '8.0'

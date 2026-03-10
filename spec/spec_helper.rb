@@ -11,9 +11,15 @@ ALMA_9 = {
   version: '9',
 }.freeze
 
+ALMA_10 = {
+  platform: 'almalinux',
+  version: '10',
+}.freeze
+
 ALLPLATFORMS = [
   ALMA_8,
   ALMA_9,
+  ALMA_10,
 ].freeze
 
 RSpec.configure do |config|
@@ -26,5 +32,6 @@ shared_context 'common_stubs' do
     stub_command("mysqladmin --user=root --password='' version").and_return(true)
     stub_command('/usr/bin/test /etc/alternatives/mta -ef /usr/sbin/sendmail.postfix').and_return(true)
     stub_command('dnf module list mysql | grep -q "^mysql.*\\[x\\]"').and_return(true)
+    stub_command('rpm -q mysql-libs').and_return(true)
   end
 end
