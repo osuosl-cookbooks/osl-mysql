@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.1.2 (2026-04-01)
+------------------
+- Add localhost grant to osl_mysql_test to fix auth failure
+
 7.1.1 (2026-02-03)
 ------------------
 - Add Percona thread pool and performance tuning to prevent thread pile-up
