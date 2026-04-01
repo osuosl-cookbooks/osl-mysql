@@ -37,6 +37,13 @@ describe mysql_session('bar', 'barbar').query('USE newuser_db; SELECT @@collatio
   its('output') { should match /latin1_swedish_ci/ }
 end
 
+# Verify that both localhost and % host grants exist for user foo
+describe mysql_session('root', 'osl_mysql_test').query("SELECT host FROM mysql.user WHERE user = 'foo' ORDER BY host") do
+  its('exit_status') { should eq 0 }
+  its('output') { should match /%/ }
+  its('output') { should match /localhost/ }
+end
+
 # Check to ensure that the failed resource did not go through
 describe mysql_session('root', 'osl_mysql_test').query('SHOW DATABASES LIKE \'failing_db\'') do
   its('output') { should eq '' }

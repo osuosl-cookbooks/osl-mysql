@@ -40,11 +40,20 @@ action :create do
     end
   end
   # Grant privilages
-  mariadb_user new_resource.username do
+  mariadb_user "#{new_resource.username}-remote" do
+    username new_resource.username
     ctrl_password new_resource.server_password
     password new_resource.password
     database_name new_resource.database
     host '%'
+    action [:create, :grant]
+  end
+
+  mariadb_user new_resource.username do
+    ctrl_password new_resource.server_password
+    password new_resource.password
+    database_name new_resource.database
+    host 'localhost'
     action [:create, :grant]
   end
 
