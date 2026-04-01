@@ -36,10 +36,31 @@ describe 'osl_mysql_test' do
     end
 
     it do
+      is_expected.to create_mariadb_user('foo-remote').with(
+        username: 'foo',
+        ctrl_password: 'osl_mysql_test',
+        password: 'bar',
+        database_name: 'db-one',
+        host: '%'
+      )
+    end
+
+    it do
+      is_expected.to grant_mariadb_user('foo-remote').with(
+        username: 'foo',
+        ctrl_password: 'osl_mysql_test',
+        password: 'bar',
+        database_name: 'db-one',
+        host: '%'
+      )
+    end
+
+    it do
       is_expected.to create_mariadb_user('foo').with(
         ctrl_password: 'osl_mysql_test',
         password: 'bar',
-        database_name: 'db-one'
+        database_name: 'db-one',
+        host: 'localhost'
       )
     end
 
@@ -47,7 +68,8 @@ describe 'osl_mysql_test' do
       is_expected.to grant_mariadb_user('foo').with(
         ctrl_password: 'osl_mysql_test',
         password: 'bar',
-        database_name: 'db-one'
+        database_name: 'db-one',
+        host: 'localhost'
       )
     end
 
