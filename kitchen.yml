@@ -44,7 +44,7 @@ suites:
       inputs:
         version: '8.0'
     excludes:
-      - almalinux-10   
+      - almalinux-10
   - name: server-84
     run_list:
       - recipe[osl-mysql::server]
@@ -56,6 +56,8 @@ suites:
         - test/integration/server
       inputs:
         version: '8.4'
+    excludes:
+      - almalinux-8
   - name: mon
     run_list:
       - recipe[osl-mysql::mon]

@@ -8,9 +8,12 @@ Cookbooks:: yum, nagios, sysctl, mysql
 
 ## Supports
 
-- AlmaLinux 8
-- AlmaLinux 9
-- AlmaLinux 10
+- AlmaLinux 8 — Percona Server 8.0 (default)
+- AlmaLinux 9 — Percona Server 8.0 (default)
+- AlmaLinux 10 — Percona Server 8.4 LTS (default)
+
+The default Percona version is selected automatically based on `node['platform_version']`. Override with
+`node['percona']['version']` if a different version is needed.
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
