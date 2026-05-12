@@ -19,6 +19,11 @@
 include_recipe 'osl-mysql'
 
 if node['osl-mysql']['enable_percona_client']
+  package 'mysql-libs' do
+    action :remove
+    only_if 'rpm -q mysql-libs'
+  end
+
   include_recipe 'percona::client'
 else
   mysql_client 'default' do

@@ -199,8 +199,7 @@ module OslMysql
       # Calculate innodb_purge_threads
       def innodb_purge_threads
         cores = osl_total_cpu_cores
-        major_version = osl_percona_version.split('.').first
-        default_purge_threads = major_version == '8' ? 4 : 1
+        default_purge_threads = 4
 
         if cores <= 4
           default_purge_threads
@@ -213,9 +212,6 @@ module OslMysql
 
       # Get appropriate SQL mode
       def osl_sql_modes
-        # 8.0 default: ONLY_FULL_GROUP_BY, STRICT_TRANS_TABLES, NO_ZERO_IN_DATE, NO_ZERO_DATE,
-        # ERROR_FOR_DIVISION_BY_ZERO, NO_ENGINE_SUBSTITUTION
-        # NO_AUTO_CREATE_USER is removed in 8.0.
         %w(ONLY_FULL_GROUP_BY STRICT_TRANS_TABLES NO_ZERO_IN_DATE NO_ZERO_DATE ERROR_FOR_DIVISION_BY_ZERO NO_ENGINE_SUBSTITUTION)
       end
 

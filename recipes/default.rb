@@ -18,7 +18,7 @@
 #
 include_recipe 'osl-selinux'
 
-node.default['percona']['version'] = if node['platform_version'] >= 10
+node.default['percona']['version'] = if node['platform_version'].to_i >= 10
                                        '8.4'
                                      else
                                        '8.0'
