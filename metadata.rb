@@ -15,7 +15,7 @@ depends          'osl-git'
 depends          'osl-nrpe'
 depends          'osl-postfix'
 depends          'osl-selinux'
-depends          'percona', '~> 4.0.0'
+depends          'percona', '~> 5.0.0'
 depends          'yum-osuosl'
 
 supports         'almalinux', '~> 8.0'

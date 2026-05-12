@@ -22,7 +22,6 @@ control 'server' do
         percona-server-shared
         percona-xtrabackup-84
       )
-
     end
 
   pkgs.each do |p|
