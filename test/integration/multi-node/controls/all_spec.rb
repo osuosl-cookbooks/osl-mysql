@@ -1,4 +1,7 @@
 control 'all' do
+  # Percona version is selected by platform in recipes/default.rb
+  version = os.release.to_i >= 10 ? '8.4' : '8.0'
+
   %w(11 12).each do |suff|
     describe host("10.1.0.#{suff}") do
       it { should be_reachable }
@@ -10,9 +13,9 @@ control 'all' do
   end
 
   %w(
-    Percona-Server-server-57
-    Percona-Server-devel-57
-    Percona-Server-shared-57
+    percona-server-server
+    percona-server-devel
+    percona-server-shared
   ).each do |p|
     describe package(p) do
       it { should be_installed }
@@ -62,7 +65,8 @@ control 'all' do
     its('value') { should eq 0 }
   end
 
-  describe yum.repo('percona-noarch') do
+  percona_repo = version == '8.4' ? 'percona-ps-84-lts' : "percona-ps-#{version.tr('.', '')}"
+  describe yum.repo(percona_repo) do
     it { should be_enabled }
   end
 

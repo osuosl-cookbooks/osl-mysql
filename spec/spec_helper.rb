@@ -33,5 +33,11 @@ shared_context 'common_stubs' do
     stub_command('/usr/bin/test /etc/alternatives/mta -ef /usr/sbin/sendmail.postfix').and_return(true)
     stub_command('dnf module list mysql | grep -q "^mysql.*\\[x\\]"').and_return(true)
     stub_command('rpm -q mysql-libs').and_return(true)
+    # percona::ssl (pulled in when replication ssl_enabled is true) reads this bag
+    stub_data_bag_item('passwords', 'ssl_replication').and_return(
+      'ca-cert' => 'ca',
+      'server' => { 'server-cert' => 'cert', 'server-key' => 'key' },
+      'client' => { 'client-cert' => 'cert', 'client-key' => 'key' }
+    )
   end
 end
