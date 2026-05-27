@@ -63,6 +63,23 @@ resource "openstack_compute_instance_v2" "chef_zero" {
     }
 }
 
+# Re-upload cookbooks and data bags to chef-zero on every apply so that
+# local recipe / data bag edits are picked up without recreating chef-zero.
+resource "null_resource" "knife_upload" {
+    triggers = {
+        always_run = timestamp()
+    }
+    provisioner "local-exec" {
+        command = "rake knife_upload"
+        environment = {
+            CHEF_SERVER = "${openstack_compute_instance_v2.chef_zero.network.0.fixed_ip_v4}"
+        }
+    }
+    depends_on = [
+        openstack_compute_instance_v2.chef_zero,
+    ]
+}
+
 resource "openstack_networking_port_v2" "source_server" {
     name            = "source_server"
     admin_state_up  = true
