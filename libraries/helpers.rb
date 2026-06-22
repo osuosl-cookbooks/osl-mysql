@@ -102,7 +102,7 @@ module OslMysql
       def osl_total_ram_mb
         # Calculate the InnoDB buffer pool size and instances
         # Ohai reports memory in kB
-        (node['memory']['total'].split('kB')[0].to_i / 1024) # in MB
+        (node['memory']['total'].split('kB').first.to_i / 1024) # in MB
       end
 
       def osl_total_cpu_cores
@@ -231,8 +231,8 @@ module OslMysql
         major_version = osl_percona_version
         if major_version == '8.0'
           {
-              character_set_server: 'utf8mb4',
-              collation_server: 'utf8mb4_0900_ai_ci',
+            character_set_server: 'utf8mb4',
+            collation_server: 'utf8mb4_0900_ai_ci',
           }
         end
       end
