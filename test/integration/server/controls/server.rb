@@ -226,13 +226,13 @@ control 'server' do
 
   describe file('/var/lib/node_exporter/mysql_db_size.prom') do
     [
-       /^mysql_db_size_start_time [0-9].+$/,
-       /^mysql_db_size\{name="information_schema"\} [0-9]+$/,
-       /^mysql_db_size\{name="mysql"\} [0-9].+$/,
-       /^mysql_db_size\{name="performance_schema"\} [0-9]+$/,
-       /^mysql_db_size_completion_time [0-9].+$/,
-     ].each do |line|
-       its(:content) { should match(line) }
-     end
+      /^mysql_db_size_start_time [0-9].+$/,
+      /^mysql_db_size\{name="information_schema"\} [0-9]+$/,
+      /^mysql_db_size\{name="mysql"\} [0-9].+$/,
+      /^mysql_db_size\{name="performance_schema"\} [0-9]+$/,
+      /^mysql_db_size_completion_time [0-9].+$/,
+    ].each do |line|
+      its(:content) { should match(line) }
+    end
   end
 end

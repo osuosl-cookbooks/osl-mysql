@@ -13,10 +13,10 @@ describe 'osl-mysql::xtrabackuprb' do
         expect { chef_run }.to_not raise_error
       end
       it do
-        expect(chef_run).to include_recipe('git')
+        expect(chef_run).to include_recipe('osl-git')
       end
       %w(
-        git
+        osl-git
         osl-postfix
         osl-mysql
         percona::package_repo

@@ -1,4 +1,4 @@
-include_recipe 'git'
+include_recipe 'osl-git'
 include_recipe 'osl-postfix'
 include_recipe 'osl-mysql'
 
