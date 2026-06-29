@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.1.3 (2026-06-29)
+------------------
+- cinc: updated dokken and kitchen files
+
 7.1.2 (2026-04-01)
 ------------------
 - Add localhost grant to osl_mysql_test to fix auth failure
