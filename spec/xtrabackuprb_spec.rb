@@ -12,9 +12,6 @@ describe 'osl-mysql::xtrabackuprb' do
       it do
         expect { chef_run }.to_not raise_error
       end
-      it do
-        expect(chef_run).to include_recipe('osl-git')
-      end
       %w(
         osl-git
         osl-postfix
@@ -25,13 +22,13 @@ describe 'osl-mysql::xtrabackuprb' do
           expect(chef_run).to include_recipe(r)
         end
       end
-      if pltfrm[:version].to_i < 8
+      if pltfrm[:version].to_i < 10
         it do
-          expect(chef_run).to install_package('percona-xtrabackup')
+          expect(chef_run).to install_package('percona-xtrabackup-80')
         end
       else
         it do
-          expect(chef_run).to install_package('percona-xtrabackup-80')
+          expect(chef_run).to install_package('percona-xtrabackup-84')
         end
       end
       it do
