@@ -216,12 +216,24 @@ control 'server' do
     mysql-top-databases-io-wait
     mysql-top-users-writes
     mysql-top-users-by-total-connections
+    mysql-replication-skip
   ).each do |script|
     describe file("/usr/local/sbin/#{script}") do
       it { should exist }
       it { should be_file }
       it { should be_executable }
     end
+  end
+
+  describe command('/usr/local/sbin/mysql-replication-skip --help') do
+    its('exit_status') { should eq 0 }
+    its('stdout') { should match(/Usage:/) }
+  end
+
+  # no replication channel on a standalone server: refuses safely
+  describe command('/usr/local/sbin/mysql-replication-skip') do
+    its('exit_status') { should eq 1 }
+    its('stderr') { should match(/no replication channel configured/) }
   end
 
   describe file('/var/lib/node_exporter/mysql_db_size.prom') do

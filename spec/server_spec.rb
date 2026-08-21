@@ -170,6 +170,7 @@ describe 'osl-mysql::server' do
         mysql-top-databases-io-wait
         mysql-top-users-writes
         mysql-top-users-by-total-connections
+        mysql-replication-skip
       ).each do |f|
         it do
           expect(chef_run).to create_cookbook_file("/usr/local/sbin/#{f}")

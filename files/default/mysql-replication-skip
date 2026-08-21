@@ -1,0 +1,250 @@
+#!/bin/bash -eu
+# Skip GTID replication apply errors by injecting empty transactions.
+#
+# When the replication SQL thread has stopped on a row-level apply error
+# (1032: row not found, 1062: duplicate key), inject an empty transaction
+# for the failing GTID and restart the applier, repeating up to --max-skips
+# times. Every skipped GTID is appended to the log file so the resulting
+# drift can be audited and repaired later (pt-table-checksum, or rebuild
+# the replica if the drift is extensive).
+#
+# Refuses to touch any other error number, a manually stopped SQL thread,
+# or a server without gtid_mode=ON. Assumes the default replication channel.
+#
+# Usage: mysql-replication-skip [OPTIONS]
+#
+# Options:
+#   -n, --max-skips N     Maximum transactions to skip in one run (default: 10)
+#   -e, --errors LIST     Comma-separated error numbers to skip (default: 1032)
+#   -w, --wait N          Seconds to wait after restart before rechecking (default: 5)
+#   -d, --dry-run         Show what would be skipped without changing anything
+#   -h, --help            Show this help message
+
+LOG_FILE=/var/log/mysql-replication-skip.log
+MYSQL='mysql --defaults-extra-file=/root/.my.cnf'
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTIONS]
+
+Skip GTID replication apply errors by injecting empty transactions,
+logging every skipped GTID to ${LOG_FILE}.
+
+Options:
+  -n, --max-skips N     Maximum transactions to skip in one run (default: 10)
+  -e, --errors LIST     Comma-separated error numbers to skip (default: 1032)
+  -w, --wait N          Seconds to wait after restart before rechecking (default: 5)
+  -d, --dry-run         Show what would be skipped without changing anything
+  -h, --help            Show this help message
+
+Examples:
+  $0                    # skip up to 10 consecutive 1032 errors
+  $0 --errors 1032,1062 # also skip duplicate-key errors
+  $0 --dry-run          # report the failing GTID without skipping it
+
+After a successful run, verify consistency with pt-table-checksum and
+repair any drift; every skip leaves the replica diverged from the source.
+EOF
+}
+
+MAX_SKIPS=10
+ERRORS=1032
+WAIT=5
+DRY_RUN=0
+
+# Translate long options to short options so we can use getopts
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --max-skips)
+            ARGS+=('-n')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --errors)
+            ARGS+=('-e')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --wait)
+            ARGS+=('-w')
+            ARGS+=("$2")
+            shift 2
+            ;;
+        --dry-run)
+            ARGS+=('-d')
+            shift
+            ;;
+        --help)
+            ARGS+=('-h')
+            shift
+            ;;
+        *)
+            ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+set -- "${ARGS[@]}"
+
+while getopts ':n:e:w:dh' opt; do
+    case "$opt" in
+        n)
+            MAX_SKIPS="$OPTARG"
+            ;;
+        e)
+            ERRORS="$OPTARG"
+            ;;
+        w)
+            WAIT="$OPTARG"
+            ;;
+        d)
+            DRY_RUN=1
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            usage
+            exit 2
+            ;;
+        ?)
+            echo "Unknown option: -$OPTARG" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
+if ! [[ "$MAX_SKIPS" =~ ^[0-9]+$ ]] || [[ "$MAX_SKIPS" -le 0 ]]; then
+    echo "--max-skips must be a positive integer" >&2
+    exit 2
+fi
+if ! [[ "$WAIT" =~ ^[0-9]+$ ]]; then
+    echo "--wait must be a non-negative integer" >&2
+    exit 2
+fi
+if ! [[ "$ERRORS" =~ ^[0-9]+(,[0-9]+)*$ ]]; then
+    echo "--errors must be a comma-separated list of error numbers" >&2
+    exit 2
+fi
+
+sql() {
+    $MYSQL --batch --skip-column-names -e "$1"
+}
+
+log_line() {
+    local line
+    line="$(date '+%F %T') $*"
+    echo "$line"
+    echo "$line" >> "$LOG_FILE"
+}
+
+die() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
+
+applier_state() {
+    # ON when every applier thread is running, OFF if any has stopped,
+    # empty when replication is not configured at all
+    sql 'SELECT SERVICE_STATE FROM performance_schema.replication_applier_status' | sort -u | head -1
+}
+
+worker_error() {
+    # error number, failing GTID, and message of the first failed worker
+    sql "SELECT LAST_ERROR_NUMBER, APPLYING_TRANSACTION, LAST_ERROR_MESSAGE
+         FROM performance_schema.replication_applier_status_by_worker
+         WHERE LAST_ERROR_NUMBER <> 0
+         ORDER BY LAST_ERROR_TIMESTAMP LIMIT 1"
+}
+
+[[ "$(sql 'SELECT @@gtid_mode')" == ON ]] || \
+    die 'gtid_mode is not ON; this tool only knows how to skip GTID transactions'
+
+# STOP/START REPLICA appeared in 8.0.22; SLAVE syntax was removed in 8.4
+if printf '8.0.22\n%s\n' "$(sql 'SELECT VERSION()' | cut -d- -f1)" | sort -C -V; then
+    KW=REPLICA
+else
+    KW=SLAVE
+fi
+
+SKIPPED=0
+while :; do
+    STATE=$(applier_state)
+    [[ -n "$STATE" ]] || die 'no replication channel configured on this server'
+
+    if [[ "$STATE" == ON ]]; then
+        if [[ "$SKIPPED" -eq 0 ]]; then
+            echo 'Replication SQL thread is running; nothing to do.'
+        else
+            log_line "SQL thread running again after skipping $SKIPPED transaction(s)"
+            echo "Run pt-table-checksum against the source and repair the drift" \
+                 "(or rebuild this replica); see $LOG_FILE for the skipped GTIDs."
+        fi
+        exit 0
+    fi
+
+    ERR=$(worker_error)
+    if [[ -z "$ERR" ]]; then
+        # the applier may still be in the middle of stopping; re-read once
+        sleep 2
+        ERR=$(worker_error)
+        [[ -n "$ERR" ]] || \
+            die 'SQL thread is stopped but no worker reports an error;' \
+                "refusing to guess. Start it manually with: START $KW SQL_THREAD"
+    fi
+
+    ERRNO=$(cut -f1 <<< "$ERR")
+    GTID=$(cut -f2 <<< "$ERR")
+    ERRMSG=$(cut -f3- <<< "$ERR")
+
+    case ",$ERRORS," in
+        *",$ERRNO,"*) ;;
+        *)
+            die "error $ERRNO is not in the skip list ($ERRORS); refusing." \
+                "Worker error: $ERRMSG"
+            ;;
+    esac
+
+    # APPLYING_TRANSACTION is normally populated; fall back to the GTID
+    # quoted in the worker error message
+    GTID_RE='^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}(:[A-Za-z0-9_]+)?:[0-9]+$'
+    if ! [[ "$GTID" =~ $GTID_RE ]]; then
+        GTID=$(sed -n "s/.*transaction '\([^']*\)'.*/\1/p" <<< "$ERRMSG")
+        [[ "$GTID" =~ $GTID_RE ]] || \
+            die "could not determine the failing GTID. Worker error: $ERRMSG"
+    fi
+
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo "Would skip $GTID (error $ERRNO): $ERRMSG"
+        exit 0
+    fi
+
+    if [[ "$SKIPPED" -ge "$MAX_SKIPS" ]]; then
+        die "reached --max-skips=$MAX_SKIPS and the applier is still failing;" \
+            'the drift is likely extensive. Investigate or rebuild the replica' \
+            'instead of skipping further.'
+    fi
+
+    # committing with GTID_NEXT set is blocked by super_read_only
+    SRO=$(sql 'SELECT @@super_read_only')
+    if [[ "$SRO" == 1 ]]; then
+        sql 'SET GLOBAL super_read_only=OFF'
+    fi
+    INJECT_RC=0
+    $MYSQL -e "SET GTID_NEXT='$GTID'; BEGIN; COMMIT; SET GTID_NEXT='AUTOMATIC'" || INJECT_RC=$?
+    if [[ "$SRO" == 1 ]]; then
+        sql 'SET GLOBAL super_read_only=ON'
+    fi
+    [[ "$INJECT_RC" -eq 0 ]] || die "failed to inject an empty transaction for $GTID"
+
+    log_line "skipped $GTID (error $ERRNO): $ERRMSG"
+    SKIPPED=$((SKIPPED + 1))
+
+    sql "START $KW SQL_THREAD"
+    sleep "$WAIT"
+done
