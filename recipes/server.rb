@@ -68,6 +68,7 @@ end
   mysql-top-databases-io-wait
   mysql-top-users-writes
   mysql-top-users-by-total-connections
+  mysql-replication-skip
 ).each do |f|
   cookbook_file "/usr/local/sbin/#{f}" do
     source f
