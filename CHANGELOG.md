@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.1.4 (2026-08-21)
+------------------
+- Add mysql-replication-skip tool for GTID replication repair
+
 7.1.3 (2026-06-29)
 ------------------
 - cinc: updated dokken and kitchen files
