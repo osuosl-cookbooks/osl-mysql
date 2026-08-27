@@ -206,6 +206,10 @@ while :; do
         *",$ERRNO,"*) ;;
         *)
             die "error $ERRNO is not in the skip list ($ERRORS); refusing." \
+                'Unlisted errors (e.g. 1146 missing table) usually mean' \
+                'schema-level drift that skipping cannot converge; backfill' \
+                'the schema from the source or rebuild the replica instead:' \
+                'https://docs.osuosl.org/software/mysql/db_migration.html' \
                 "Worker error: $ERRMSG"
             ;;
     esac
