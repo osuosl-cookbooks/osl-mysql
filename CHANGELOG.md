@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+7.1.5 (2026-08-27)
+------------------
+- Explain schema-level drift in mysql-replication-skip refusal message
+
 7.1.4 (2026-08-21)
 ------------------
 - Add mysql-replication-skip tool for GTID replication repair
