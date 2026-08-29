@@ -125,11 +125,11 @@ task :unit do
 end
 
 task :destroy_all do
-  run_command('rm Gemfile.lock && rm Berksfile.lock && rm -rf cookbooks/')
+  run_command('rm -rf Gemfile.lock && rm -rf Berksfile.lock && rm -rf cookbooks/')
 end
 
 desc 'Vendor your cookbooks/'
-task :berks_vendor do
+task berks_vendor: :clean do
   run_command('berks vendor cookbooks')
 end
 

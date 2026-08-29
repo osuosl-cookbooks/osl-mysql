@@ -17,7 +17,8 @@ control 'xtrabackuprb' do
     its(:exit_status) { should eq 0 }
   end
 
-  describe package('percona-xtrabackup-80') do
+  version = os.release.to_i < 10 ? '80' : '84'
+  describe package("percona-xtrabackup-#{version}") do
     it { should be_installed }
   end
 end
