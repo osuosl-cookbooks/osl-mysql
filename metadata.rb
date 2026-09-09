@@ -18,5 +18,5 @@ depends          'osl-selinux'
 depends          'percona', '~> 4.0.0'
 depends          'yum-osuosl'
 
-supports         'almalinux', '~> 8.0'
-supports         'almalinux', '~> 9.0'
+supports 'almalinux', '~> 8.0'
+supports 'almalinux', '~> 9.0'
