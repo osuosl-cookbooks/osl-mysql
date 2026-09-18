@@ -18,4 +18,7 @@
 #
 node.default['percona']['server']['role'] = 'source'
 node.default['percona']['server']['replication']['username'] = 'replication'
+# MySQL 8.x defaults the replication user to caching_sha2_password, which refuses
+# to authenticate over a plaintext link. Require SSL for replication.
+node.default['percona']['server']['replication']['ssl_enabled'] = true
 include_recipe 'osl-mysql::server'
