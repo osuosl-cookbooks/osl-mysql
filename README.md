@@ -4,7 +4,7 @@ OSL's MySQL tuning defaults.
 This Cookbook sets up MySQL configuration defaults, enables the Percona yum repository, configures and pins the mysql uid/gid, sets sysctl vm.swappiness to 0, and installs /root/.my.cnf with the default MySQL root user and password.
 
 # Requirements
-Cookbooks:: yum, nagios, sysctl, mysql
+Cookbooks:: mariadb, mysql, osl-firewall, osl-git, osl-nrpe, osl-postfix, osl-selinux, percona, yum-osuosl
 
 ## Supports
 
@@ -17,6 +17,18 @@ The default Percona version is selected automatically based on `node['platform_v
 
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
+
+## Replication over TLS
+
+`osl-mysql::source` and `osl-mysql::replica` leave percona's
+`node['percona']['server']['replication']['ssl_enabled']` at its default of `false`. To replicate over TLS, the
+calling recipe sets it to `true` before including them, and the node's percona encrypted data bag
+(`node['percona']['encrypted_data_bag']`) needs an `ssl_replication` item with the CA, server and client
+certificates. Chef does not enable it on the existing production clusters. A new 8.x cluster whose replication user is
+created with the default `caching_sha2_password` plugin needs it, since that plugin will not authenticate over an
+unencrypted link without RSA key exchange. The `multi_node_test` fixture enables it, and its replica currently fails
+CA verification on every platform: percona hardcodes the replica's CA path while the source presents the wildcard
+certificate. See [sous-chefs/percona#513](https://github.com/sous-chefs/percona/pull/513).
 
 ## Helper monitoring scripts
 
