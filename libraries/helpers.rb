@@ -91,6 +91,11 @@ module OslMysql
         end
       end
 
+      # Percona Server 8.4 LTS on EL10; EL8 and EL9 stay on 8.0
+      def osl_mysql_default_percona_version
+        node['platform_version'].to_i >= 10 ? '8.4' : '8.0'
+      end
+
       private
 
       def osl_percona_version
@@ -174,9 +179,8 @@ module OslMysql
             8192
           end
 
-        # Ensure capacity is at least 4MB * innodb_page_size / 512 (around 128MB for 16k pages)
-        # Max total size is limited (around 512GB).
-        # The rounding above should be fine.
+        # Capacity must be at least 4MB * innodb_page_size / 512 (~128MB for 16k pages);
+        # the 256M rounding floor above keeps it there.
         {
           redo_log_capacity: "#{rounded_capacity_mb}M",
         }

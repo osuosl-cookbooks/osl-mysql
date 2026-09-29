@@ -14,6 +14,9 @@ describe 'osl-mysql::default' do
       it do
         expect(chef_run).to include_recipe('osl-selinux::default')
       end
+      it do
+        expect(chef_run.node['percona']['version']).to eq({ '8' => '8.0', '9' => '8.0', '10' => '8.4' }[pltfrm[:version]])
+      end
     end
   end
 end

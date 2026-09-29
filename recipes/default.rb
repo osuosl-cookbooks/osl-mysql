@@ -18,10 +18,6 @@
 #
 include_recipe 'osl-selinux'
 
-node.default['percona']['version'] = if node['platform_version'] >= 10
-                                       '8.4'
-                                     else
-                                       '8.0'
-                                     end
+node.default['percona']['version'] = osl_mysql_default_percona_version
 
 node.default['percona']['client']['install_devel_package'] = true
