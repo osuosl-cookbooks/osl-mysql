@@ -31,7 +31,7 @@ module OslMysql
         node.override['percona']['server']['innodb_log_files_in_group'] = 2
         node.override['percona']['server']['innodb_thread_concurrency'] = osl_total_cpu_cores
         node.override['percona']['conf']['mysqld']['innodb_redo_log_capacity'] =
-            innodb_redo_log_settings[:redo_log_capacity]
+          innodb_redo_log_settings[:redo_log_capacity]
         node.override['percona']['conf']['mysqld']['innodb_read_io_threads'] = innodb_io_threads
         node.override['percona']['conf']['mysqld']['innodb_write_io_threads'] = innodb_io_threads
         node.override['percona']['conf']['mysqld']['innodb_purge_threads'] = innodb_purge_threads
@@ -222,8 +222,8 @@ module OslMysql
       # Get character set and collation
       def osl_char_settings
         {
-            character_set_server: 'utf8mb4',
-            collation_server: 'utf8mb4_0900_ai_ci',
+          character_set_server: 'utf8mb4',
+          collation_server: 'utf8mb4_0900_ai_ci',
         }
       end
     end
