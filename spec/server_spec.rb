@@ -198,6 +198,18 @@ describe 'osl-mysql::server' do
               minute: '*/30'
             )
         end
+
+        it { expect(chef_run).to remove_package('mysql-libs') }
+
+        context 'without mysql-libs installed' do
+          cached(:chef_run) do
+            ChefSpec::SoloRunner.new(pltfrm) do |node|
+              node.normal['percona']['version'] = mysql_version
+            end.converge(described_recipe)
+          end
+          before { stub_command('rpm -q mysql-libs').and_return(false) }
+          it { expect(chef_run).to_not remove_package('mysql-libs') }
+        end
       end
     end
   end

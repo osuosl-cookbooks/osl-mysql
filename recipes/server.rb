@@ -35,6 +35,7 @@ end
 include_recipe 'percona::server'
 include_recipe 'percona::toolkit'
 
+# Name-only check: dnf resolves mysql-libs by provides, which matches percona-server-shared
 package 'mysql-libs' do
   action :remove
   only_if 'rpm -q mysql-libs'
