@@ -28,6 +28,9 @@ describe 'osl-mysql::client' do
         it do
           expect(chef_run).to include_recipe('percona::client')
         end
+        it do
+          expect(chef_run).to remove_package('mysql-libs')
+        end
       end
     end
   end

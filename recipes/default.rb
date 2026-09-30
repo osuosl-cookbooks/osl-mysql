@@ -18,5 +18,6 @@
 #
 include_recipe 'osl-selinux'
 
-node.default['percona']['version'] = '8.0'
+node.default['percona']['version'] = osl_mysql_default_percona_version
+
 node.default['percona']['client']['install_devel_package'] = true

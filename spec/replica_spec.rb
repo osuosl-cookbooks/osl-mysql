@@ -77,6 +77,31 @@ describe 'osl-mysql::replica' do
         it do
           expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content("SOURCE_HOST='192.0.3.100'")
         end
+
+        it do
+          expect(chef_run).to_not include_recipe('percona::ssl')
+        end
+
+        it do
+          expect(chef_run).to_not render_file('/etc/mysql/replication.sql').with_content('SOURCE_SSL=1')
+        end
+      end
+
+      context 'with replication ssl enabled' do
+        cached(:chef_run) do
+          ChefSpec::SoloRunner.new(p) do |node|
+            node.automatic['osl-mysql']['replication']['source_ip'] = '192.0.3.100'
+            node.normal['percona']['server']['replication']['ssl_enabled'] = true
+          end.converge(described_recipe)
+        end
+
+        it do
+          expect(chef_run).to include_recipe('percona::ssl')
+        end
+
+        it do
+          expect(chef_run).to render_file('/etc/mysql/replication.sql').with_content('SOURCE_SSL=1')
+        end
       end
     end
   end

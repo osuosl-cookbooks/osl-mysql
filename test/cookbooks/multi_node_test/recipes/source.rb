@@ -2,6 +2,10 @@
 # node.default['percona']['server']['enforce_gtid_consistency'] = 'ON'
 # node.default['percona']['server']['log_slave_updates'] = true
 
+# MySQL 8.x defaults the replication user to caching_sha2_password, which refuses
+# to authenticate over a plaintext link, so replicate over SSL.
+node.default['percona']['server']['replication']['ssl_enabled'] = true
+
 include_recipe 'multi_node_test::network'
 include_recipe 'osl-mysql::source'
 include_recipe 'multi_node_test::certificate'
