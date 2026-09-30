@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+8.0.0 (2026-09-30)
+------------------
+- Add AlmaLinux 10 and Percona Server 8.4 support
+
 7.1.6 (2026-09-09)
 ------------------
 - chef 19 update
