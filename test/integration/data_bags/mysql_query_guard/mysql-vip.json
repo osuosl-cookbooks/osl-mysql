@@ -1,0 +1,12 @@
+{
+  "id": "mysql-vip",
+  "rules": [
+    {
+      "user": "guarded_user",
+      "busy_time": 60
+    },
+    {
+      "user": "other_user"
+    }
+  ]
+}

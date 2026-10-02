@@ -18,6 +18,12 @@ The default Percona version is selected automatically based on `node['platform_v
 # Usage
 include_recipe "osl-mysql::server" and run Chef.  It should take care of the rest.
 
+## Resources
+
+- [osl\_mysql\_query\_guard](documentation/resource_osl_mysql_query_guard.md): kills a guarded user's long-running
+  queries with `pt-kill`. The `osl-mysql::query_guard` recipe configures it from a data bag item per cluster.
+- [osl\_mysql\_test](documentation/resource_osl_mysql_test.md): a MariaDB server, user and database for test fixtures.
+
 ## Replication over TLS
 
 `osl-mysql::source` and `osl-mysql::replica` leave percona's

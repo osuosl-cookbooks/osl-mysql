@@ -219,6 +219,41 @@ module OslMysql
         %w(ONLY_FULL_GROUP_BY STRICT_TRANS_TABLES NO_ZERO_IN_DATE NO_ZERO_DATE ERROR_FOR_DIVISION_BY_ZERO NO_ENGINE_SUBSTITUTION)
       end
 
+      def osl_mysql_query_guard_unit(user)
+        "pt-kill-#{user}.service"
+      end
+
+      # Maps each guarded user to its busy time, falling back to the resource default
+      def osl_mysql_query_guard_rules(rules, busy_time)
+        rules.to_h { |r| [r['user'] || r[:user], r['busy_time'] || r[:busy_time] || busy_time] }
+      end
+
+      # Without --match-command, pt-kill skips the busy-time test for anything but Query and kills idle threads.
+      # $$ is systemd's escape for a literal $, which anchors each regex.
+      def osl_mysql_query_guard_content(user, busy_time, interval, defaults_file)
+        {
+          Unit: {
+            Description: "pt-kill guard for MySQL user #{user}",
+            After: 'mysqld.service',
+          },
+          Service: {
+            ExecStart: "/usr/bin/pt-kill --defaults-file=#{defaults_file} --match-user ^#{user}$$ " \
+                       '--match-command ^(Query|Execute)$$ --kill-busy-commands Query,Execute ' \
+                       "--busy-time #{busy_time} --victims all --kill-query --print --no-version-check " \
+                       "--sentinel /run/pt-kill-#{user}.sentinel --interval #{interval}",
+            Restart: 'always',
+            RestartSec: 5,
+          },
+          Install: {
+            WantedBy: 'multi-user.target',
+          },
+        }
+      end
+
+      def osl_mysql_query_guard_units_on_disk
+        Dir.glob('/etc/systemd/system/pt-kill-*.service').map { |f| ::File.basename(f) }.sort
+      end
+
       # Get character set and collation
       def osl_char_settings
         {
