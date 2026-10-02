@@ -60,7 +60,6 @@ describe 'osl-mysql::mon' do
           )
       end
       %w(
-        innodb
         pidfile
         processlist
         replication-delay
@@ -72,6 +71,7 @@ describe 'osl-mysql::mon' do
             )
         end
       end
+      it { expect(chef_run).to remove_nrpe_check('pmp-check-mysql-innodb') }
     end
   end
 end

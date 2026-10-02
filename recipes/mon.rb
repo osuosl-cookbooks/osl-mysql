@@ -48,7 +48,6 @@ template "#{node['nrpe']['conf_dir']}/mysql.cnf" do
 end
 
 %w(
-  innodb
   pidfile
   processlist
   replication-delay
@@ -57,4 +56,11 @@ end
     command "#{node['nrpe']['plugin_dir']}/pmp-check-mysql-#{c}"
     action :add
   end
+end
+
+# Its INFORMATION_SCHEMA.INNODB_LOCK_WAITS query always returns OK on MySQL 8.0, where that table is gone; the
+# MysqlHistoryListLong alert covers long transactions. Delete this resource in a later release.
+nrpe_check 'pmp-check-mysql-innodb' do
+  command "#{node['nrpe']['plugin_dir']}/pmp-check-mysql-innodb"
+  action :remove
 end
