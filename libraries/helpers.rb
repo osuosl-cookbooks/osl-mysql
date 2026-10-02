@@ -15,7 +15,7 @@ module OslMysql
         # enable user monitoring by default
         node.override['percona']['conf']['mysqld']['userstat'] = true
         node.override['percona']['server']['bind_address'] = '0.0.0.0'
-        node.override['percona']['server']['connect_timeout'] = '28880'
+        node.override['percona']['server']['connect_timeout'] = '10'
         node.override['percona']['server']['character_set'] = osl_char_settings[:character_set_server]
         node.override['percona']['server']['collation'] = osl_char_settings[:collation_server]
         node.override['percona']['server']['debian_username'] = 'root'

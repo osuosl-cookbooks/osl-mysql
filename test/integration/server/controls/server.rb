@@ -86,7 +86,7 @@ control 'server' do
     its('mysqld.auto_increment_increment') { should eq '3' }
     its('mysqld.bind-address') { should eq '0.0.0.0' }
     its('mysqld.character_set_server') { should eq 'utf8mb4' }
-    its('mysqld.connect_timeout') { should eq '28880' }
+    its('mysqld.connect_timeout') { should eq '10' }
     its('mysqld.enforce_gtid_consistency') { should eq 'ON' }
     its('mysqld.gtid_mode') { should eq 'ON' }
     its('mysqld.innodb_buffer_pool_instances') { should eq '2' } unless vagrant || docker
@@ -148,6 +148,7 @@ control 'server' do
   end
 
   describe command "mysqladmin --user='root' --password='jzYY0cQUnPAMcqvIxYaC' variables" do
+    its('stdout') { should match /\| connect_timeout\s+\| 10\s+\|/ }
     its('stdout') { should match /max_connections\s+\| 1000/ }
     its('stdout') { should match /max_user_connections\s+\| 100/ }
     its('stdout') { should match /open_files_limit\s+\| 65536/ }

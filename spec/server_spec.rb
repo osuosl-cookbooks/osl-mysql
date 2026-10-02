@@ -48,7 +48,7 @@ describe 'osl-mysql::server' do
           'bind-address = 0.0.0.0',
           /character_set_server\s+= utf8mb4/,
           /collation_server\s+= utf8mb4_0900_ai_ci/,
-          /connect_timeout\s+= 28880/,
+          /connect_timeout\s+= 10$/,
           'enforce_gtid_consistency = ON',
           'gtid_mode = ON',
           /innodb_buffer_pool_instances\s+= 1/,
