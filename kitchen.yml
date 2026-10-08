@@ -85,3 +85,15 @@ suites:
   - name: osl_mysql_test
     run_list:
       - recipe[resources_test::osl_mysql_test]
+  - name: query_guard
+    run_list:
+      - recipe[resources_test::osl_mysql_query_guard]
+      - recipe[osl-mysql::query_guard]
+    attributes:
+      percona:
+        version: '8.0'
+    verifier:
+      inspec_tests:
+        - test/integration/query_guard
+    excludes:
+      - almalinux-10
