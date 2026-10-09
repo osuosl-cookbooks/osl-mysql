@@ -90,6 +90,8 @@ module OslMysql
       # nil only when mysqld is down (my.cnf applies on the next start); the mysql client exits 1 for
       # SQL errors too, so the ping keeps a typo or bad password from being skipped forever.
       def osl_mysql_global_variable_value(variable, defaults_file)
+        # mysqladmin exits 1 for a missing defaults file too, which would read as mysqld being down
+        raise "#{defaults_file} is not readable" unless ::File.readable?(defaults_file)
         return unless shell_out('mysqladmin', "--defaults-file=#{defaults_file}", 'ping').exitstatus == 0
 
         shell_out!('mysql', "--defaults-file=#{defaults_file}", '-NBe', "SELECT @@GLOBAL.#{variable}").stdout.strip

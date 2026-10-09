@@ -4,8 +4,10 @@ default_action :set
 unified_mode true
 
 property :variable, String, name_property: true, regex: /\A[a-z0-9_]+\z/
-# Digits only: @@GLOBAL reports numbers plainly, so the comparison is exact (no 128M vs 134217728)
-property :value, [String, Integer], required: true, coerce: proc(&:to_s), regex: /\A\d+\z/
+# Digits only, leading zeros dropped: @@GLOBAL reports '10' for 010 and bytes for 128M, so anything
+# else would never compare equal and SET would run on every converge.
+property :value, [String, Integer], required: true, regex: /\A\d+\z/,
+                                    coerce: proc { |v| v.to_s.match?(/\A\d+\z/) ? Integer(v.to_s, 10).to_s : v.to_s }
 property :defaults_file, String, default: '/root/.my.cnf'
 
 action :set do

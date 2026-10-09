@@ -13,6 +13,17 @@ RSpec.describe OslMysql::Cookbook::Helpers do
     let(:ping) { ['mysqladmin', '--defaults-file=/root/.my.cnf', 'ping'] }
     let(:select) { ['mysql', '--defaults-file=/root/.my.cnf', '-NBe', 'SELECT @@GLOBAL.connect_timeout'] }
 
+    before do
+      allow(File).to receive(:readable?).and_call_original
+      allow(File).to receive(:readable?).with('/root/.my.cnf').and_return(true)
+    end
+
+    it 'raises without pinging when the defaults file is unreadable' do
+      allow(File).to receive(:readable?).with('/root/.my.cnf').and_return(false)
+      expect(subject).to_not receive(:shell_out)
+      expect { subject.osl_mysql_global_variable_value('connect_timeout', '/root/.my.cnf') }.to raise_error(RuntimeError, /not readable/)
+    end
+
     it 'returns the live value when mysqld answers' do
       allow(subject).to receive(:shell_out).with(*ping).and_return(double(exitstatus: 0))
       allow(subject).to receive(:shell_out!).with(*select).and_return(double(stdout: "28880\n"))
