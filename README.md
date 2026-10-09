@@ -36,8 +36,9 @@ changes, or before the first `grants.sql` is written after a failed first start 
 step re-run), since percona's grants need a running server. Other restarts remain, such as the one osl-nodes'
 `certificate_manage` triggers when the TLS certificate is renewed. How a change reaches the running server:
 
-- A dynamic variable `osl-mysql::server` declares with `osl_mysql_global_variable` (today `connect_timeout`):
-  Chef runs `SET GLOBAL` itself on the next converge.
+- A dynamic variable `osl-mysql::server` declares with `osl_mysql_global_variable` (`connect_timeout`,
+  `auto_increment_increment`, and `auto_increment_offset` when the node sets one): Chef runs `SET GLOBAL` itself on
+  the next converge.
 - Any other dynamic variable: `SET GLOBAL <variable> = <value>` by hand on every node, or declare it with
   `osl_mysql_global_variable` in `osl-mysql::server`.
 - Anything else: restart one node at a time, the passive node first, then move the VIP to it and restart the

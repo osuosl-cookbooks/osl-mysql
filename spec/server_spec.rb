@@ -138,6 +138,20 @@ describe 'osl-mysql::server' do
             value: chef_run.node['percona']['server']['connect_timeout']
           )
         end
+        it { expect(chef_run).to set_osl_mysql_global_variable('auto_increment_increment').with(value: '3') }
+        it { expect(chef_run).to_not set_osl_mysql_global_variable('auto_increment_offset') }
+
+        context 'with an auto_increment_offset set' do
+          cached(:chef_run) do
+            ChefSpec::SoloRunner.new(pltfrm) do |node|
+              node.normal['percona']['version'] = mysql_version
+              node.override['percona']['conf']['mysqld']['auto_increment_offset'] = '2'
+            end.converge(described_recipe)
+          end
+
+          it { expect(chef_run).to set_osl_mysql_global_variable('auto_increment_offset').with(value: '2') }
+          it { expect(chef_run).to render_file('/etc/my.cnf').with_content(/^auto_increment_offset = 2$/) }
+        end
 
         context 'with an initialized datadir' do
           cached(:chef_run) do
