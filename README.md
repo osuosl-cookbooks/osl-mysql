@@ -20,6 +20,8 @@ include_recipe "osl-mysql::server" and run Chef.  It should take care of the res
 
 ## Resources
 
+- [osl\_mysql\_global\_variable](documentation/resource_osl_mysql_global_variable.md): sets a dynamic system
+  variable on the running server with `SET GLOBAL` when its live value differs.
 - [osl\_mysql\_query\_guard](documentation/resource_osl_mysql_query_guard.md): kills a guarded user's long-running
   queries with `pt-kill`. The `osl-mysql::query_guard` recipe configures it from a data bag item per cluster.
 - [osl\_mysql\_test](documentation/resource_osl_mysql_test.md): a MariaDB server, user and database for test fixtures.
@@ -29,9 +31,12 @@ include_recipe "osl-mysql::server" and run Chef.  It should take care of the res
 `osl-mysql::server` only lets percona restart mysqld after writing `my.cnf` while the datadir is still
 uninitialized, because that restart is how percona starts mysqld on a new node. Once `mysql.ibd` exists, a
 change to `my.cnf` is written but mysqld keeps running, so a release can never restart both nodes of a cluster
-in the same Chef window. Apply the change by hand:
+in the same Chef window. How a change reaches the running server:
 
-- A dynamic variable: `SET GLOBAL <variable> = <value>` on every node, before or after the release.
+- A dynamic variable `osl-mysql::server` declares with `osl_mysql_global_variable` (today `connect_timeout`):
+  Chef runs `SET GLOBAL` itself on the next converge.
+- Any other dynamic variable: `SET GLOBAL <variable> = <value>` by hand on every node, or declare it with
+  `osl_mysql_global_variable` in `osl-mysql::server`.
 - Anything else: restart one node at a time, the passive node first, then move the VIP to it and restart the
   other.
 

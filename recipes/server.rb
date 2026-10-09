@@ -33,6 +33,12 @@ selinux_fcontext '/var/log/mysql(/.*)?' do
 end
 
 include_recipe 'percona::server'
+
+# my.cnf changes no longer restart an initialized mysqld, so apply dynamic settings to the running server
+osl_mysql_global_variable 'connect_timeout' do
+  value node['percona']['server']['connect_timeout']
+end
+
 include_recipe 'percona::toolkit'
 
 # Name-only check: dnf resolves mysql-libs by provides, which matches percona-server-shared

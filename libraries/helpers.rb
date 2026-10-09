@@ -87,6 +87,14 @@ module OslMysql
         ::File.exist?("#{datadir}/mysql.ibd") || ::File.exist?("#{datadir}/mysql/user.frm")
       end
 
+      # nil only when mysqld is down (my.cnf applies on the next start); the mysql client exits 1 for
+      # SQL errors too, so the ping keeps a typo or bad password from being skipped forever.
+      def osl_mysql_global_variable_value(variable, defaults_file)
+        return unless shell_out('mysqladmin', "--defaults-file=#{defaults_file}", 'ping').exitstatus == 0
+
+        shell_out!('mysql', "--defaults-file=#{defaults_file}", '-NBe', "SELECT @@GLOBAL.#{variable}").stdout.strip
+      end
+
       def osl_min_free_kbytes
         # Set to 1% of total memory
         # https://discuss.aerospike.com/t/how-to-tune-the-linux-kernel-for-memory-performance/4195

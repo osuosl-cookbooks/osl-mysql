@@ -127,6 +127,12 @@ describe 'osl-mysql::server' do
         # A new node still needs the restart: percona never starts mysqld any other way
         it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:restart).immediately }
 
+        it do
+          expect(chef_run).to set_osl_mysql_global_variable('connect_timeout').with(
+            value: chef_run.node['percona']['server']['connect_timeout']
+          )
+        end
+
         context 'with an initialized datadir' do
           cached(:chef_run) do
             allow(File).to receive(:exist?).and_call_original
