@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+8.2.0 (2026-10-09)
+------------------
+- Set connect_timeout to 10 and stop my.cnf changes restarting mysqld
+
 8.1.1 (2026-10-09)
 ------------------
 - Retire the pmp-check-mysql-innodb NRPE check
