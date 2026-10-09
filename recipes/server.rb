@@ -34,6 +34,19 @@ end
 
 include_recipe 'percona::server'
 
+# Without auto_restart nothing would start a stopped mysqld, and percona's grants.sql would then fail;
+# :start leaves a running mysqld alone.
+edit_resource!(:template, node['percona']['main_config_file']) do
+  notifies :start, 'service[mysql]', :immediately
+end
+
+# After a failed first restart my.cnf no longer changes, so start mysqld and set the root password
+# before the first grants.sql; percona skipped its password step while mysqld was down.
+edit_resource!(:template, '/etc/mysql/grants.sql') do
+  notifies :start, 'service[mysql]', :before
+  notifies :run, 'execute[Update MySQL root password]', :before
+end
+
 # my.cnf changes no longer restart an initialized mysqld, so apply dynamic settings to the running server
 osl_mysql_global_variable 'connect_timeout' do
   value node['percona']['server']['connect_timeout']

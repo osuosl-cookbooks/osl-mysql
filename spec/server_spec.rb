@@ -126,6 +126,12 @@ describe 'osl-mysql::server' do
 
         # A new node still needs the restart: percona never starts mysqld any other way
         it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:restart).immediately }
+        it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:start).immediately }
+        it { expect(chef_run.template('/etc/mysql/grants.sql')).to notify('service[mysql]').to(:start).before }
+        it do
+          expect(chef_run.template('/etc/mysql/grants.sql')).to \
+            notify('execute[Update MySQL root password]').to(:run).before
+        end
 
         it do
           expect(chef_run).to set_osl_mysql_global_variable('connect_timeout').with(
@@ -143,6 +149,14 @@ describe 'osl-mysql::server' do
           end
 
           it { expect(chef_run.template('/etc/my.cnf')).to_not notify('service[mysql]').to(:restart) }
+          # A stopped mysqld still comes back, or percona's grants.sql fails
+          it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:start).immediately }
+          # After a failed first restart my.cnf is unchanged, so the first grants.sql brings mysqld up
+          it { expect(chef_run.template('/etc/mysql/grants.sql')).to notify('service[mysql]').to(:start).before }
+          it do
+            expect(chef_run.template('/etc/mysql/grants.sql')).to \
+              notify('execute[Update MySQL root password]').to(:run).before
+          end
         end
 
         context '256G RAM' do
