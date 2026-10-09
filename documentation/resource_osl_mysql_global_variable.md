@@ -3,7 +3,8 @@
 Sets a dynamic MySQL system variable on the running server with `SET GLOBAL`, when its live value differs from the
 one given. `osl-mysql::server` no longer restarts an initialized mysqld when `my.cnf` changes, so this is how a new
 value for a dynamic setting reaches servers that are already running. `osl-mysql::server` declares it for
-`connect_timeout`, with the value taken from the same percona attribute that renders `my.cnf`.
+`connect_timeout`, `auto_increment_increment`, and `auto_increment_offset` when the node sets one, each with the value
+taken from the same percona attribute that renders `my.cnf`.
 
 - The variable must be dynamic. A read-only variable makes `SET GLOBAL` fail on every Chef run.
 - The value must match what `my.cnf` holds, or the running server and the next restart disagree. Take it from the

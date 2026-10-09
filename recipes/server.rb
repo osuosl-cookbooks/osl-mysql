@@ -52,6 +52,17 @@ osl_mysql_global_variable 'connect_timeout' do
   value node['percona']['server']['connect_timeout']
 end
 
+osl_mysql_global_variable 'auto_increment_increment' do
+  value node['percona']['conf']['mysqld']['auto_increment_increment']
+end
+
+# Each writable node of a cluster sets its own offset (osl-nodes); a lone server keeps MySQL's default
+if node['percona']['conf']['mysqld']['auto_increment_offset']
+  osl_mysql_global_variable 'auto_increment_offset' do
+    value node['percona']['conf']['mysqld']['auto_increment_offset']
+  end
+end
+
 include_recipe 'percona::toolkit'
 
 # Name-only check: dnf resolves mysql-libs by provides, which matches percona-server-shared
