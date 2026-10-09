@@ -48,7 +48,7 @@ describe 'osl-mysql::server' do
           'bind-address = 0.0.0.0',
           /character_set_server\s+= utf8mb4/,
           /collation_server\s+= utf8mb4_0900_ai_ci/,
-          /connect_timeout\s+= 28880/,
+          /connect_timeout\s+= 10$/,
           'enforce_gtid_consistency = ON',
           'gtid_mode = ON',
           /innodb_buffer_pool_instances\s+= 1/,
@@ -122,6 +122,41 @@ describe 'osl-mysql::server' do
           'query_cache_type = 0',
         ].each do |line|
           it { expect(chef_run).to_not render_file('/etc/my.cnf').with_content(line) }
+        end
+
+        # A new node still needs the restart: percona never starts mysqld any other way
+        it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:restart).immediately }
+        it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:start).immediately }
+        it { expect(chef_run.template('/etc/mysql/grants.sql')).to notify('service[mysql]').to(:start).before }
+        it do
+          expect(chef_run.template('/etc/mysql/grants.sql')).to \
+            notify('execute[Update MySQL root password]').to(:run).before
+        end
+
+        it do
+          expect(chef_run).to set_osl_mysql_global_variable('connect_timeout').with(
+            value: chef_run.node['percona']['server']['connect_timeout']
+          )
+        end
+
+        context 'with an initialized datadir' do
+          cached(:chef_run) do
+            allow(File).to receive(:exist?).and_call_original
+            allow(File).to receive(:exist?).with('/var/lib/mysql/mysql.ibd').and_return(true)
+            ChefSpec::SoloRunner.new(pltfrm) do |node|
+              node.normal['percona']['version'] = mysql_version
+            end.converge(described_recipe)
+          end
+
+          it { expect(chef_run.template('/etc/my.cnf')).to_not notify('service[mysql]').to(:restart) }
+          # A stopped mysqld still comes back, or percona's grants.sql fails
+          it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:start).immediately }
+          # After a failed first restart my.cnf is unchanged, so the first grants.sql brings mysqld up
+          it { expect(chef_run.template('/etc/mysql/grants.sql')).to notify('service[mysql]').to(:start).before }
+          it do
+            expect(chef_run.template('/etc/mysql/grants.sql')).to \
+              notify('execute[Update MySQL root password]').to(:run).before
+          end
         end
 
         context '256G RAM' do

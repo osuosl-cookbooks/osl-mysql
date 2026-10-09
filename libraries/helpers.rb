@@ -15,7 +15,7 @@ module OslMysql
         # enable user monitoring by default
         node.override['percona']['conf']['mysqld']['userstat'] = true
         node.override['percona']['server']['bind_address'] = '0.0.0.0'
-        node.override['percona']['server']['connect_timeout'] = '28880'
+        node.override['percona']['server']['connect_timeout'] = '10'
         node.override['percona']['server']['character_set'] = osl_char_settings[:character_set_server]
         node.override['percona']['server']['collation'] = osl_char_settings[:collation_server]
         node.override['percona']['server']['debian_username'] = 'root'
@@ -77,6 +77,24 @@ module OslMysql
         node.override['percona']['conf']['mysqld']['lock_wait_timeout'] = 120
         node.override['percona']['server']['wait_timeout'] = '900'
         node.override['percona']['skip_passwords'] = false
+        # percona only starts mysqld by restarting it after writing my.cnf; once the datadir exists,
+        # a my.cnf change waits for SET GLOBAL or a planned restart instead of both nodes bouncing.
+        node.override['percona']['auto_restart'] = !osl_mysql_initialized?(node['percona']['server']['datadir'])
+      end
+
+      # Same test as percona's 'setup mysql datadir' guard
+      def osl_mysql_initialized?(datadir)
+        ::File.exist?("#{datadir}/mysql.ibd") || ::File.exist?("#{datadir}/mysql/user.frm")
+      end
+
+      # nil only when mysqld is down (my.cnf applies on the next start); the mysql client exits 1 for
+      # SQL errors too, so the ping keeps a typo or bad password from being skipped forever.
+      def osl_mysql_global_variable_value(variable, defaults_file)
+        # mysqladmin exits 1 for a missing defaults file too, which would read as mysqld being down
+        raise "#{defaults_file} is not readable" unless ::File.readable?(defaults_file)
+        return unless shell_out('mysqladmin', "--defaults-file=#{defaults_file}", 'ping').exitstatus == 0
+
+        shell_out!('mysql', "--defaults-file=#{defaults_file}", '-NBe', "SELECT @@GLOBAL.#{variable}").stdout.strip
       end
 
       def osl_min_free_kbytes

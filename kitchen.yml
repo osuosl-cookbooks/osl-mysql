@@ -97,3 +97,14 @@ suites:
         - test/integration/query_guard
     excludes:
       - almalinux-10
+  - name: global_variable
+    run_list:
+      - recipe[resources_test::osl_mysql_global_variable]
+    attributes:
+      percona:
+        version: '8.0'
+    verifier:
+      inspec_tests:
+        - test/integration/global_variable
+    excludes:
+      - almalinux-10
