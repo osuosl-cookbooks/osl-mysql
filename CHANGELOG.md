@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+8.1.1 (2026-10-09)
+------------------
+- Retire the pmp-check-mysql-innodb NRPE check
+
 8.1.0 (2026-10-08)
 ------------------
 - Add a pt-kill query guard driven by a data bag
