@@ -24,6 +24,17 @@ include_recipe "osl-mysql::server" and run Chef.  It should take care of the res
   queries with `pt-kill`. The `osl-mysql::query_guard` recipe configures it from a data bag item per cluster.
 - [osl\_mysql\_test](documentation/resource_osl_mysql_test.md): a MariaDB server, user and database for test fixtures.
 
+## Configuration changes and restarts
+
+`osl-mysql::server` only lets percona restart mysqld after writing `my.cnf` while the datadir is still
+uninitialized, because that restart is how percona starts mysqld on a new node. Once `mysql.ibd` exists, a
+change to `my.cnf` is written but mysqld keeps running, so a release can never restart both nodes of a cluster
+in the same Chef window. Apply the change by hand:
+
+- A dynamic variable: `SET GLOBAL <variable> = <value>` on every node, before or after the release.
+- Anything else: restart one node at a time, the passive node first, then move the VIP to it and restart the
+  other.
+
 ## Replication over TLS
 
 `osl-mysql::source` and `osl-mysql::replica` leave percona's

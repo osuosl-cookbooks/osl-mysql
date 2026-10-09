@@ -77,6 +77,14 @@ module OslMysql
         node.override['percona']['conf']['mysqld']['lock_wait_timeout'] = 120
         node.override['percona']['server']['wait_timeout'] = '900'
         node.override['percona']['skip_passwords'] = false
+        # percona only starts mysqld by restarting it after writing my.cnf; once the datadir exists,
+        # a my.cnf change waits for SET GLOBAL or a planned restart instead of both nodes bouncing.
+        node.override['percona']['auto_restart'] = !osl_mysql_initialized?(node['percona']['server']['datadir'])
+      end
+
+      # Same test as percona's 'setup mysql datadir' guard
+      def osl_mysql_initialized?(datadir)
+        ::File.exist?("#{datadir}/mysql.ibd") || ::File.exist?("#{datadir}/mysql/user.frm")
       end
 
       def osl_min_free_kbytes

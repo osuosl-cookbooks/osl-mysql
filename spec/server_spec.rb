@@ -124,6 +124,21 @@ describe 'osl-mysql::server' do
           it { expect(chef_run).to_not render_file('/etc/my.cnf').with_content(line) }
         end
 
+        # A new node still needs the restart: percona never starts mysqld any other way
+        it { expect(chef_run.template('/etc/my.cnf')).to notify('service[mysql]').to(:restart).immediately }
+
+        context 'with an initialized datadir' do
+          cached(:chef_run) do
+            allow(File).to receive(:exist?).and_call_original
+            allow(File).to receive(:exist?).with('/var/lib/mysql/mysql.ibd').and_return(true)
+            ChefSpec::SoloRunner.new(pltfrm) do |node|
+              node.normal['percona']['version'] = mysql_version
+            end.converge(described_recipe)
+          end
+
+          it { expect(chef_run.template('/etc/my.cnf')).to_not notify('service[mysql]').to(:restart) }
+        end
+
         context '256G RAM' do
           cached(:chef_run) do
             ChefSpec::SoloRunner.new(pltfrm) do |node|
