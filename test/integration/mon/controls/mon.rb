@@ -10,8 +10,11 @@ control 'mon' do
     its('client.password') { should eq 'ToJzwUyqQmyV4GgMVpz0' }
   end
 
+  describe file('/etc/nagios/nrpe.d/pmp-check-mysql-innodb.cfg') do
+    it { should_not exist }
+  end
+
   %w(
-    innodb
     pidfile
     processlist
     replication-delay
