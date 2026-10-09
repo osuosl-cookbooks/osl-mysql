@@ -3,6 +3,10 @@ osl-mysql CHANGELOG
 This file is used to list changes made in each version of the
 osl-mysql cookbook.
 
+8.3.0 (2026-10-09)
+------------------
+- Apply auto_increment settings to the running server
+
 8.2.0 (2026-10-09)
 ------------------
 - Set connect_timeout to 10 and stop my.cnf changes restarting mysqld
